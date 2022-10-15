@@ -1,0 +1,32 @@
+name: AndroidCI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      # Run Unit Tests
+      - run: ./gradlew testDebugUnitTest
+        continue-on-error: false
+
+      # Check ktlint formatting
+      - run: ./gradlew ktlintCheck
+        continue-on-error: false
+
+      # Check Android Linting.
+      - run: ./gradlew lintDebug
+      - uses: yutailang0119/action-android-lint@v3
+        with:
+          report-path: build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+        continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.

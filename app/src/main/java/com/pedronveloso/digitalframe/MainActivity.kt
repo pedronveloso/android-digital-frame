@@ -8,16 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pedronveloso.digitalframe.elements.ClockViewModel
+import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     hideSystemUI(LocalView.current)
-                    MainScreen()
+                    MainScreen(photosBackgroundViewModel = viewModel(), clockViewModel = viewModel())
                 }
             }
         }
@@ -52,14 +51,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
-    Column(
+fun MainScreen(photosBackgroundViewModel: PhotosBackgroundViewModel, clockViewModel: ClockViewModel) {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxHeight()
     ) {
-        Text(text = stringResource(R.string.app_name))
+        photosBackgroundViewModel.RenderBackground()
+        clockViewModel.RenderClock()
     }
 }

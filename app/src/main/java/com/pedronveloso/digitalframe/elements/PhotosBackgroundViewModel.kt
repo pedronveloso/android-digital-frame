@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 data class PhotoResource(@DrawableRes val id: Int = R.drawable.photo1)
 
@@ -29,7 +30,7 @@ class PhotosBackgroundViewModel(
 
     private fun repeatedExecution() {
         viewModelScope.launch {
-            delay(20000)
+            delay(20.seconds)
             val nextPhotoId = listOf(R.drawable.photo1, R.drawable.photo2, R.drawable.photo3, R.drawable.photo4).random()
             currentPhoto = PhotoResource(nextPhotoId)
             repeatedExecution()

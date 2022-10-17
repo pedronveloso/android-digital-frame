@@ -23,6 +23,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 class ClockViewModel(
     private val savedState: SavedStateHandle
@@ -36,8 +37,8 @@ class ClockViewModel(
 
     private fun repeatedExecution() {
         viewModelScope.launch {
-            delay(1000)
             currentTime = LocalDateTime.now()
+            delay(1.seconds)
             repeatedExecution()
         }
     }

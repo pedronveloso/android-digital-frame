@@ -17,8 +17,11 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedronveloso.digitalframe.elements.ClockViewModel
 import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
+import com.pedronveloso.digitalframe.elements.WeatherViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +38,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     hideSystemUI(LocalView.current)
-                    MainScreen(photosBackgroundViewModel = viewModel(), clockViewModel = viewModel())
+                    MainScreen(
+                        photosBackgroundViewModel = viewModel(),
+                        clockViewModel = viewModel(),
+                        weatherViewModel = viewModel()
+                    )
                 }
             }
         }
@@ -51,7 +58,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(photosBackgroundViewModel: PhotosBackgroundViewModel, clockViewModel: ClockViewModel) {
+fun MainScreen(
+    photosBackgroundViewModel: PhotosBackgroundViewModel,
+    clockViewModel: ClockViewModel,
+    weatherViewModel: WeatherViewModel
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,5 +70,6 @@ fun MainScreen(photosBackgroundViewModel: PhotosBackgroundViewModel, clockViewMo
     ) {
         photosBackgroundViewModel.RenderBackground()
         clockViewModel.RenderClock()
+        weatherViewModel.RenderWeather()
     }
 }

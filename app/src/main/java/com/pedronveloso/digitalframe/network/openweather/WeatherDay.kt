@@ -14,8 +14,8 @@ data class WeatherDay(
     val humidity: Int,
     val pressure: Int,
     val speed: Double,
-    val sunrise: Int,
-    val sunset: Int,
+    val sunrise: LocalDateTime,
+    val sunset: LocalDateTime,
 
     @SerializedName("temp")
     val temperatures: Temperatures,

@@ -138,6 +138,7 @@ class WeatherViewModel @Inject constructor(
             val iconId = when (iconMain) {
                 "Clouds" -> R.drawable.cloudy_day
                 "Clear" -> R.drawable.sun
+                "Rain" -> R.drawable.cloud_rain
                 else -> R.drawable.ic_launcher_foreground
             }
             Image(painter = painterResource(id = iconId), contentDescription = null)

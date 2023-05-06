@@ -1,11 +1,19 @@
 package com.pedronveloso.digitalframe.elements
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
+import com.pedronveloso.digitalframe.data.GlobalValues
 import com.pedronveloso.digitalframe.data.exceptions.NetworkException
 import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.network.NetworkResult
@@ -37,7 +46,10 @@ class WeatherViewModel @Inject constructor(
     private val apiService: OpenWeatherService
 ) : ViewModel() {
 
-    var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
+    private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
+    private var newXDrift by mutableStateOf(0)
+    private var newYDrift by mutableStateOf(0)
+
 
     init {
         repeatedExecution()
@@ -68,13 +80,32 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun RenderWeather(use24HClock: Boolean = false) {
+        var counter by remember {
+            mutableStateOf(0)
+        }
+        LaunchedEffect(counter) {
+            delay(GlobalValues.TEXT_SHIFT_CADENCE_MS)
+            counter += 1
+            newXDrift = (Math.random() * 50).toInt() - 25
+            newYDrift = (Math.random() * 50).toInt() - 25
+        }
+
+        AnimatedContent(targetState = newXDrift,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(2000, delayMillis = 0)) with
+                        fadeOut(animationSpec = tween(0))
+            }) {
+            
+
         Column(
             Modifier
                 .padding(32.dp)
                 .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .offset(x = newXDrift.dp, y = newYDrift.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
@@ -94,13 +125,8 @@ class WeatherViewModel @Inject constructor(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Morning.
                         val weatherDay = (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
-                        DrawWeatherElementEdges(
-                            use24HClock = use24HClock,
-                            temperature = weatherDay.temperatures.morn,
-                            timeLabel = weatherDay.sunrise
-                        )
+
 
                         // Noon.
                         Spacer(modifier = Modifier.size(16.dp))
@@ -109,17 +135,10 @@ class WeatherViewModel @Inject constructor(
                             temperature = weatherDay.temperatures.day,
                             iconMain = weatherDay.weather.first().main
                         )
-
-                        // Evening.
-                        Spacer(modifier = Modifier.size(16.dp))
-                        DrawWeatherElementEdges(
-                            use24HClock = use24HClock,
-                            temperature = weatherDay.temperatures.eve,
-                            timeLabel = weatherDay.sunset
-                        )
                     }
                 }
             }
+        }
         }
     }
 
@@ -142,9 +161,6 @@ class WeatherViewModel @Inject constructor(
                 else -> R.drawable.ic_launcher_foreground
             }
             Image(painter = painterResource(id = iconId), contentDescription = null)
-
-            // TODO: Use actual time stamp.
-            Text(text = "12:00", style = MyTypography.titleMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
         }
     }
 

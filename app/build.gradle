@@ -87,7 +87,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Java 8 Desugaring. 🍬
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.2"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
 
     // Dev Tooling.
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"

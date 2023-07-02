@@ -3,12 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
+    id "org.jlleitschuh.gradle.ktlint" version "11.4.2"
 }
 
 
 ktlint {
-    version.set("0.44.0")
+    version.set("0.49.1")
     disabledRules = ["no-wildcard-imports"]
 }
 
@@ -21,7 +21,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.0.1-Alpha"
+        versionName "0.0.2-Alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,20 +33,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
 
         // Flag to enable support for the new language APIs.
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.3.2"
+        kotlinCompilerExtensionVersion "1.4.8"
     }
     packagingOptions {
         resources {
@@ -58,7 +61,7 @@ android {
 dependencies {
 
     // Android X Libraries.
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
 
     // ViewModel & Lifecycle.
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -68,12 +71,11 @@ dependencies {
 
     // Jetpack Compose.
     implementation "androidx.compose.ui:ui:$compose_version"
-    //noinspection GradleDependency
-    implementation 'androidx.compose.material3:material3:1.1.0-alpha01'
+    implementation 'androidx.compose.material3:material3:1.1.1'
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.activity:activity-compose:1.6.1'
-    implementation 'androidx.test.ext:junit-ktx:1.1.3'
-    implementation 'androidx.navigation:navigation-compose:2.5.3'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
+    implementation 'androidx.navigation:navigation-compose:2.6.0'
 
     // Networking libraries.
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -91,12 +93,17 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
 
     // Unit testing support.
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }

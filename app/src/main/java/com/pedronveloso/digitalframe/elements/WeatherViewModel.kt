@@ -31,6 +31,7 @@ import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.network.NetworkResult
 import com.pedronveloso.digitalframe.network.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.network.openweather.OpenWeatherService
+import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.MyTypography
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -73,6 +74,7 @@ class WeatherViewModel @Inject constructor(
                     weatherState =
                         UiResult.failure(NetworkException())
                 }
+
                 is NetworkResult.Success -> {
                     weatherState = UiResult.success(result.data)
                 }
@@ -80,65 +82,81 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun RenderWeather(use24HClock: Boolean = false) {
-        var counter by remember {
-            mutableStateOf(0)
-        }
-        LaunchedEffect(counter) {
-            delay(GlobalValues.TEXT_SHIFT_CADENCE_MS)
-            counter += 1
-            newXDrift = (Math.random() * 50).toInt() - 25
-            newYDrift = (Math.random() * 50).toInt() - 25
-        }
-
-        AnimatedContent(targetState = newXDrift,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(2000, delayMillis = 0)) with
-                        fadeOut(animationSpec = tween(0))
-            }) {
-            
-
-        Column(
-            Modifier
-                .padding(32.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .offset(x = newXDrift.dp, y = newYDrift.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
-        ) {
-            when (weatherState) {
-                is UiResult.Blank -> {
-                    Text(text = "No weather data", style = MyTypography.titleMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
-                }
-                // TODO: If failed to get new weather data, use latest known data.
-                is UiResult.Failure -> {
-                    Text(text = "Failed to get weather data", style = MyTypography.titleMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
-                }
-                is UiResult.Loading -> {
-                    Text(text = "loading...", style = MyTypography.titleMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
-                }
-                is UiResult.Success -> {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val weatherDay = (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
-
-
-                        // Noon.
-                        Spacer(modifier = Modifier.size(16.dp))
-                        DrawWeatherElementWithIcon(
-                            use24HClock = use24HClock,
-                            temperature = weatherDay.temperatures.day,
-                            iconMain = weatherDay.weather.first().main
+        FadingComposable {
+            Column(
+                Modifier
+                    .padding(32.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .offset(x = newXDrift.dp, y = newYDrift.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
+            ) {
+                when (weatherState) {
+                    is UiResult.Blank -> {
+                        Text(
+                            text = "No weather data",
+                            style = MyTypography.titleMedium.copy(
+                                color = Color.White,
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(0f, 2f),
+                                    blurRadius = 1f
+                                )
+                            )
                         )
+                    }
+                    // TODO: If failed to get new weather data, use latest known data.
+                    is UiResult.Failure -> {
+                        Text(
+                            text = "Failed to get weather data",
+                            style = MyTypography.titleMedium.copy(
+                                color = Color.White,
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(0f, 2f),
+                                    blurRadius = 1f
+                                )
+                            )
+                        )
+                    }
+
+                    is UiResult.Loading -> {
+                        Text(
+                            text = "loading...",
+                            style = MyTypography.titleMedium.copy(
+                                color = Color.White,
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(0f, 2f),
+                                    blurRadius = 1f
+                                )
+                            )
+                        )
+                    }
+
+                    is UiResult.Success -> {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val weatherDay =
+                                (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
+
+
+                            // Noon.
+                            Spacer(modifier = Modifier.size(16.dp))
+                            DrawWeatherElementWithIcon(
+                                use24HClock = use24HClock,
+                                temperature = weatherDay.temperatures.day,
+                                iconMain = weatherDay.weather.first().main
+                            )
+                        }
                     }
                 }
             }
-        }
         }
     }
 
@@ -151,7 +169,13 @@ class WeatherViewModel @Inject constructor(
             // Temperature.
             val dayTempValue = temperature.roundToInt()
             val dayTemp = "$dayTempValue °C"
-            Text(text = dayTemp, style = MyTypography.displayMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
+            Text(
+                text = dayTemp,
+                style = MyTypography.displayMedium.copy(
+                    color = Color.White,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)
+                )
+            )
 
             // Icon.
             val iconId = when (iconMain) {
@@ -165,7 +189,11 @@ class WeatherViewModel @Inject constructor(
     }
 
     @Composable
-    fun DrawWeatherElementEdges(use24HClock: Boolean, temperature: Double, timeLabel: LocalDateTime) {
+    fun DrawWeatherElementEdges(
+        use24HClock: Boolean,
+        temperature: Double,
+        timeLabel: LocalDateTime
+    ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -173,7 +201,13 @@ class WeatherViewModel @Inject constructor(
             // Temperature.
             val dayTempValue = temperature.roundToInt()
             val dayTemp = "$dayTempValue °C"
-            Text(text = dayTemp, style = MyTypography.displayMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
+            Text(
+                text = dayTemp,
+                style = MyTypography.displayMedium.copy(
+                    color = Color.White,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)
+                )
+            )
 
             // Time.
             val formatter: DateTimeFormatter =
@@ -182,7 +216,13 @@ class WeatherViewModel @Inject constructor(
                 } else {
                     DateTimeFormatter.ofPattern("hh:mm a")
                 }
-            Text(text = formatter.format(timeLabel), style = MyTypography.titleMedium.copy(color = Color.White, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)))
+            Text(
+                text = formatter.format(timeLabel),
+                style = MyTypography.titleMedium.copy(
+                    color = Color.White,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f), blurRadius = 1f)
+                )
+            )
         }
     }
 }

@@ -81,6 +81,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.google.code.gson:gson:$retrofit_gson_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "io.coil-kt:coil-compose:$coil_version"
 
     // Dependency Injection.
     implementation "com.google.dagger:hilt-android:$hilt_version"

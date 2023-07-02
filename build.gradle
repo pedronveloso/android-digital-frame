@@ -5,6 +5,7 @@ buildscript {
         retrofit_version = '2.9.0'
         retrofit_gson_version = '2.10.1'
         hilt_version = '2.46.1'
+        coil_version = '1.4.0'
     }
 
     dependencies {

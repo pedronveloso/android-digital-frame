@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -22,11 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import coil.compose.rememberImagePainter
 import com.pedronveloso.digitalframe.R
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 data class PhotoResource(@DrawableRes val id: Int = R.drawable.photo1)

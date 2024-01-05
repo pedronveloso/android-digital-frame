@@ -40,14 +40,14 @@ class PhotosBackgroundViewModel(
     @Composable
     fun RenderBackground() {
         // Will render background image with a Ken Burns effect.
-        val infiniteTransition = rememberInfiniteTransition()
+        val infiniteTransition = rememberInfiniteTransition(label = "ken-burns-bg")
         val scale by infiniteTransition.animateFloat(
             initialValue = 1f,
             targetValue = 1.3f,
             animationSpec = infiniteRepeatable(
                 animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
-            )
+            ), label = "ken-burns-bg-scale"
         )
         val offsetX by infiniteTransition.animateFloat(
             initialValue = 0f,
@@ -55,7 +55,7 @@ class PhotosBackgroundViewModel(
             animationSpec = infiniteRepeatable(
                 animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
-            )
+            ), label = "ken-burns-bg-offset-x"
         )
         val offsetY by infiniteTransition.animateFloat(
             initialValue = 0f,
@@ -63,7 +63,7 @@ class PhotosBackgroundViewModel(
             animationSpec = infiniteRepeatable(
                 animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
-            )
+            ), label = "ken-burns-bg-offset-y"
         )
         LaunchedEffect(key1 = true) {
             while (true) {

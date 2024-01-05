@@ -55,5 +55,12 @@ val MyTypography = Typography(
         fontSize = 46.sp,
         lineHeight = 48.sp,
         letterSpacing = 0.5.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 38.sp,
+        lineHeight = 44.sp,
+        letterSpacing = 0.5.sp
     )
 )

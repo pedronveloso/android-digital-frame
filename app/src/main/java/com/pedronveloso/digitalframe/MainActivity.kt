@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedronveloso.digitalframe.elements.ClockViewModel
+import com.pedronveloso.digitalframe.elements.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
 import com.pedronveloso.digitalframe.elements.WeatherViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
@@ -41,7 +42,8 @@ class MainActivity : ComponentActivity() {
                     MainScreen(
                         photosBackgroundViewModel = viewModel(),
                         clockViewModel = viewModel(),
-                        weatherViewModel = viewModel()
+                        weatherViewModel = viewModel(),
+                        countdownViewModel = viewModel(),
                     )
                 }
             }
@@ -61,7 +63,8 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     photosBackgroundViewModel: PhotosBackgroundViewModel,
     clockViewModel: ClockViewModel,
-    weatherViewModel: WeatherViewModel
+    weatherViewModel: WeatherViewModel,
+    countdownViewModel: CountdownViewModel
 ) {
     Box(
         modifier = Modifier
@@ -71,5 +74,6 @@ fun MainScreen(
         photosBackgroundViewModel.RenderBackground()
         clockViewModel.RenderClock()
         weatherViewModel.RenderWeather()
+        countdownViewModel.CountdownDisplay()
     }
 }

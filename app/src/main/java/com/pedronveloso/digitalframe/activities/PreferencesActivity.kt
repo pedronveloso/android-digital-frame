@@ -2,6 +2,8 @@ package com.pedronveloso.digitalframe.activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +32,7 @@ import com.pedronveloso.digitalframe.ui.MyTypography
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import kotlin.math.max
 
 class PreferencesActivity : ComponentActivity() {
 
@@ -100,20 +103,44 @@ fun copyImagesToInternalStorage(context: Context, imageUris: List<Uri>, director
         directory.mkdir()
     }
 
+    val largestDimen = (getLargestScreenDimension(context) * 1.1).toInt()
+
     imageUris.forEach { uri ->
         val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-        inputStream?.let { stream ->
+        inputStream?.use { stream ->
             val outputFile = File(directory, uri.lastPathSegment ?: "image_${System.currentTimeMillis()}.jpg")
-            val outputStream = FileOutputStream(outputFile)
+            val tempFile = File.createTempFile("temp", null, context.cacheDir)
 
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (stream.read(buffer).also { length = it } > 0) {
-                outputStream.write(buffer, 0, length)
+            tempFile.outputStream().use { fileOut ->
+                stream.copyTo(fileOut)
             }
 
-            outputStream.close()
-            stream.close()
+            val resizedImage = resizeImage(tempFile, largestDimen)
+            val outputStream = FileOutputStream(outputFile)
+            resizedImage.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)
+
+            tempFile.delete()
         }
     }
 }
+
+
+fun getLargestScreenDimension(context: Context): Int {
+    val displayMetrics = context.resources.displayMetrics
+    return max(displayMetrics.widthPixels, displayMetrics.heightPixels)
+}
+
+fun resizeImage(file: File, targetSize: Int): Bitmap {
+    val options = BitmapFactory.Options().apply {
+        inJustDecodeBounds = true
+    }
+    BitmapFactory.decodeFile(file.absolutePath, options)
+    val (width, height) = options.run { outWidth to outHeight }
+    val scaleFactor = max(width, height).toFloat() / targetSize
+
+    options.inJustDecodeBounds = false
+    options.inSampleSize = max(1, scaleFactor.toInt())
+
+    return BitmapFactory.decodeFile(file.absolutePath, options)
+}
+

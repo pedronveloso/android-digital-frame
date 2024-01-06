@@ -86,8 +86,8 @@ class CountdownViewModel(
                     .offset(x = newXDrift.dp, y = newYDrift.dp)
             ) {
                 Text(
-                    text = "DAYS UNTIL 2ND TRIMESTER",
-                    style = MyTypography.titleLarge.copy(
+                    text = "$daysUntil Days",
+                    style = MyTypography.displayMedium.copy(
                         color = Color.White,
                         shadow = Shadow(
                             color = Color.Black,
@@ -97,8 +97,8 @@ class CountdownViewModel(
                     )
                 )
                 Text(
-                    text = "$daysUntil Days",
-                    style = MyTypography.displaySmall.copy(
+                    text = "UNTIL 2ND TRIMESTER",
+                    style = MyTypography.bodyLarge.copy(
                         color = Color.White,
                         shadow = Shadow(
                             color = Color.Black,

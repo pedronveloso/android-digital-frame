@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel.Companion.BACKGROUND_PHOTOS_DIR
 import com.pedronveloso.digitalframe.ui.MyTypography
 import java.io.File
 import java.io.FileOutputStream
@@ -60,7 +61,7 @@ class PreferencesActivity : ComponentActivity() {
         }
         if (showImagePicker) {
             ImagePickerLauncher { uris ->
-                copyImagesToInternalStorage(context, uris, "background")
+                copyImagesToInternalStorage(context, uris, BACKGROUND_PHOTOS_DIR)
                 showImagePicker = false
             }
         }

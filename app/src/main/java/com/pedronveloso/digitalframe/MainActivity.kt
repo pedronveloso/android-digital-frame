@@ -37,6 +37,7 @@ import com.pedronveloso.digitalframe.activities.PreferencesActivity
 import com.pedronveloso.digitalframe.elements.ClockViewModel
 import com.pedronveloso.digitalframe.elements.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
+import com.pedronveloso.digitalframe.elements.RenderBackground
 import com.pedronveloso.digitalframe.elements.WeatherViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -104,7 +105,7 @@ fun MainScreen(
                 )
             }
     ) {
-        photosBackgroundViewModel.RenderBackground()
+        RenderBackground(viewModel = photosBackgroundViewModel)
         clockViewModel.RenderClock()
         weatherViewModel.RenderWeather()
         countdownViewModel.CountdownDisplay()

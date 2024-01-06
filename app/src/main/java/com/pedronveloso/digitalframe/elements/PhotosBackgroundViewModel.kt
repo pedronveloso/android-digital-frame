@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe.elements
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -11,82 +12,158 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import coil.compose.rememberAsyncImagePainter
 import com.pedronveloso.digitalframe.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.NonCancellable.isActive
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.io.File
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
-data class PhotoResource(@DrawableRes val id: Int = R.drawable.photo1)
+sealed class PhotoResource {
+    data class DrawableResource(@DrawableRes val id: Int) : PhotoResource()
+    data class FileResource(val filePath: String) : PhotoResource()
+}
 
-class PhotosBackgroundViewModel(
-    private val savedState: SavedStateHandle
+@HiltViewModel
+class PhotosBackgroundViewModel @Inject constructor(
+    private val savedState: SavedStateHandle,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
     companion object {
-        private val EFFECT_DURATION = 20.seconds
+        val EFFECT_DURATION = 20.seconds
+        val BACKGROUND_PHOTOS_DIR = "background"
     }
 
-    private var currentPhoto by mutableStateOf(PhotoResource())
+    private val photoFlow = MutableStateFlow(loadInitialPhoto())
 
-    @Composable
-    fun RenderBackground() {
-        // Will render background image with a Ken Burns effect.
-        val infiniteTransition = rememberInfiniteTransition(label = "ken-burns-bg")
-        val scale by infiniteTransition.animateFloat(
-            initialValue = 1f,
-            targetValue = 1.3f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            ), label = "ken-burns-bg-scale"
-        )
-        val offsetX by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 100f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            ), label = "ken-burns-bg-offset-x"
-        )
-        val offsetY by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 50f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(EFFECT_DURATION.inWholeMilliseconds.toInt(), easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            ), label = "ken-burns-bg-offset-y"
-        )
-        LaunchedEffect(key1 = true) {
-            while (true) {
-                // change image at every EFFECT_DURATION interval.
-                delay(EFFECT_DURATION.inWholeMilliseconds)
-                val nextPhotoId = listOf(R.drawable.photo1, R.drawable.photo2, R.drawable.photo3, R.drawable.photo4).random()
-                currentPhoto = PhotoResource(nextPhotoId)
+    val currentPhoto: StateFlow<PhotoResource> = photoFlow
+
+    init {
+        viewModelScope.launch {
+            backgroundRotation(appContext)
+        }
+    }
+
+    private suspend fun backgroundRotation(context: Context) {
+        val photoList = loadPhotosFromInternalStorage(context)
+        while (isActive) {
+            delay(EFFECT_DURATION.inWholeMilliseconds)
+            photoFlow.emit(photoList.random())
+        }
+    }
+
+    private fun loadInitialPhoto(): PhotoResource {
+        // Assuming a context is available here; if not, you need to pass it
+        val context: Context = appContext
+        val photosFromStorage = loadPhotosFromInternalStorage(context)
+        return if (photosFromStorage.isNotEmpty()) {
+            photosFromStorage.random()
+        } else {
+            PhotoResource.DrawableResource(R.drawable.photo1)
+        }
+    }
+
+    private fun loadPhotosFromInternalStorage(context: Context): List<PhotoResource> {
+        val backgroundDir = File(context.filesDir, BACKGROUND_PHOTOS_DIR)
+        val images = mutableListOf<PhotoResource>()
+
+        if (backgroundDir.exists() && backgroundDir.isDirectory) {
+            backgroundDir.listFiles { file -> file.isFile && file.canRead() }?.forEach { file ->
+                images.add(PhotoResource.FileResource(file.absolutePath))
             }
         }
-        Box(
-            modifier = Modifier.fillMaxSize()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offsetX,
-                    translationY = offsetY
-                )
-        ) {
-            val imageId = currentPhoto.id
-            Image(painter = painterResource(id = imageId),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize())
-        }
+
+        return if (images.isNotEmpty()) images else loadDefaultPhotos()
+    }
+
+    private fun loadDefaultPhotos(): List<PhotoResource> {
+        return listOf(
+            PhotoResource.DrawableResource(R.drawable.photo1),
+            PhotoResource.DrawableResource(R.drawable.photo2),
+            PhotoResource.DrawableResource(R.drawable.photo3),
+            PhotoResource.DrawableResource(R.drawable.photo1),
+            PhotoResource.DrawableResource(R.drawable.photo4),
+        )
     }
 }
+
+@Composable
+fun RenderBackground(viewModel: PhotosBackgroundViewModel) {
+    val imageResource by viewModel.currentPhoto.collectAsState()
+
+    val painter: Painter = when (imageResource) {
+        is PhotoResource.DrawableResource -> rememberAsyncImagePainter(model = (imageResource as PhotoResource.DrawableResource).id)
+        is PhotoResource.FileResource -> rememberAsyncImagePainter(model = File((imageResource as PhotoResource.FileResource).filePath))
+    }
+
+    // Will render background image with a Ken Burns effect.
+    val infiniteTransition = rememberInfiniteTransition(label = "ken-burns-bg")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = "ken-burns-bg-scale"
+    )
+    val offsetX by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 100f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = "ken-burns-bg-offset-x"
+    )
+    val offsetY by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 50f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = "ken-burns-bg-offset-y"
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX,
+                translationY = offsetY
+            )
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+

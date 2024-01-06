@@ -49,8 +49,6 @@ class WeatherViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
-    private var newXDrift by mutableIntStateOf(0)
-    private var newYDrift by mutableIntStateOf(0)
 
 
     init {
@@ -89,8 +87,7 @@ class WeatherViewModel @Inject constructor(
                 Modifier
                     .padding(32.dp)
                     .fillMaxWidth()
-                    .fillMaxHeight()
-                    .offset(x = newXDrift.dp, y = newYDrift.dp),
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.End
             ) {

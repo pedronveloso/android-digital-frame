@@ -42,8 +42,6 @@ class CountdownViewModel(
 ) : ViewModel() {
 
     private var daysUntilEvent by mutableLongStateOf(0)
-    private var newXDrift by mutableIntStateOf(0)
-    private var newYDrift by mutableIntStateOf(0)
 
     init {
         repeatedExecution()
@@ -67,8 +65,7 @@ class CountdownViewModel(
                 Modifier
                     .padding(32.dp)
                     .fillMaxWidth()
-                    .fillMaxHeight()
-                    .offset(x = newXDrift.dp, y = newYDrift.dp),
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -83,7 +80,6 @@ class CountdownViewModel(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .offset(x = newXDrift.dp, y = newYDrift.dp)
             ) {
                 Text(
                     text = "$daysUntil Days",

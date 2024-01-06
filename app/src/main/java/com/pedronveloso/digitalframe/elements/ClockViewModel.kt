@@ -47,8 +47,6 @@ class ClockViewModel(
 ) : ViewModel() {
 
     private var currentTime by mutableStateOf(LocalDateTime.now())
-    private var newXDrift by mutableIntStateOf(0)
-    private var newYDrift by mutableIntStateOf(0)
 
     init {
         repeatedExecution()
@@ -71,7 +69,6 @@ class ClockViewModel(
                 Modifier
                     .padding(32.dp)
                     .fillMaxWidth()
-                    .offset(x = newXDrift.dp, y = newYDrift.dp)
             ) {
                 val formatter: DateTimeFormatter =
                     if (use24HClock) {

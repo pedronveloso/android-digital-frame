@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -25,12 +26,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pedronveloso.digitalframe.activities.PreferencesActivity
 import com.pedronveloso.digitalframe.elements.ClockViewModel
 import com.pedronveloso.digitalframe.elements.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
@@ -72,7 +75,8 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, view).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 }
@@ -86,6 +90,7 @@ fun MainScreen(
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -111,8 +116,11 @@ fun MainScreen(
             exit = fadeOut(animationSpec = tween(durationMillis = 300))
         ) {
             Button(
-                onClick = { /* handle button click */ },
-                modifier = Modifier.align(Alignment.Center)
+                onClick = {
+                    context.startActivity(Intent(context, PreferencesActivity::class.java))
+                },
+                modifier = Modifier
+                    .align(Alignment.Center)
                     .padding(16.dp)
             ) {
                 Text("Settings")

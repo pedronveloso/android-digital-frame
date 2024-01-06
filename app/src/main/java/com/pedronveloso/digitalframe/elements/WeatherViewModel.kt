@@ -70,14 +70,13 @@ class WeatherViewModel @Inject constructor(
         weatherState = UiResult.Loading()
 
         viewModelScope.launch {
-            when (val result = apiService.fetchCurrentWeatherConditions()) {
+            weatherState = when (val result = apiService.fetchCurrentWeatherConditions()) {
                 is NetworkResult.Failure -> {
-                    weatherState =
-                        UiResult.failure(NetworkException())
+                    UiResult.failure(NetworkException())
                 }
 
                 is NetworkResult.Success -> {
-                    weatherState = UiResult.success(result.data)
+                    UiResult.success(result.data)
                 }
             }
         }

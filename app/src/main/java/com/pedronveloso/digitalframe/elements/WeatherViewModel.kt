@@ -59,7 +59,7 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             fetchWeatherConditions()
             // How often to refresh the API. TODO: Make configurable.
-            delay(6.hours)
+            delay(3.hours)
             repeatedExecution()
         }
     }

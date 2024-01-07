@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.IntOffset
 import com.pedronveloso.digitalframe.ui.Effects.FADING_CADENCE
 import com.pedronveloso.digitalframe.ui.Effects.FADING_DURATION
+import com.pedronveloso.digitalframe.utils.isDayTime
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -51,6 +52,14 @@ fun FadingComposable(content: @Composable () -> Unit) {
             delay(FADING_CADENCE.inWholeMilliseconds)
             alpha.value = 0f
             delay(FADING_DURATION.toLong()) // wait for fade out
+
+            // Wait a bit while faded out, to act as a screen saver for AMOLED screens.
+            if(isDayTime()){
+                delay(1500)
+            } else {
+                delay(4000)
+            }
+
 
             // generate a random position within 20 pixels in either direction
             offsetX.value = Random.nextFloat() * 40 - 20

@@ -1,6 +1,8 @@
 package com.pedronveloso.digitalframe.elements
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -18,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.palette.graphics.Palette
 import coil.compose.rememberAsyncImagePainter
 import com.pedronveloso.digitalframe.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,13 +50,16 @@ class PhotosBackgroundViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        val EFFECT_DURATION = 20.seconds
-        val BACKGROUND_PHOTOS_DIR = "background"
+        val EFFECT_DURATION = 5.seconds
+        const val BACKGROUND_PHOTOS_DIR = "background"
     }
 
     private val photoFlow = MutableStateFlow(loadInitialPhoto())
 
     val currentPhoto: StateFlow<PhotoResource> = photoFlow
+
+    private val backgroundHSL = MutableStateFlow(FloatArray(3).apply { this[2] = 0.5f })
+    val hsl: StateFlow<FloatArray> = backgroundHSL
 
     init {
         viewModelScope.launch {
@@ -64,7 +71,35 @@ class PhotosBackgroundViewModel @Inject constructor(
         val photoList = loadPhotosFromInternalStorage(context)
         while (isActive) {
             delay(EFFECT_DURATION.inWholeMilliseconds)
-            photoFlow.emit(photoList.random())
+            val newPhoto = photoList.random()
+            photoFlow.emit(newPhoto)
+
+            // Calculate and emit new brightness value.
+            calculateBrightness(newPhoto, context)
+        }
+    }
+
+    private fun calculateBrightness(photoResource: PhotoResource, context: Context) {
+        viewModelScope.launch {
+            val bitmap = when (photoResource) {
+                is PhotoResource.DrawableResource -> context.getDrawable(photoResource.id)
+                    ?.toBitmap()
+
+                is PhotoResource.FileResource -> BitmapFactory.decodeFile(photoResource.filePath)
+                else -> null
+            }
+            if (bitmap != null) {
+                try {
+                    val palette = Palette.from(bitmap).generate()
+                    val dominantSwatch = palette.dominantSwatch
+                    val hslValues = dominantSwatch?.hsl ?: FloatArray(3).apply { this[2] = 0f }
+                    backgroundHSL.emit(hslValues)
+                    Log.v("PhotosBackgroundViewModel", "HSL: ${hslValues.contentToString()}")
+                } catch (e: Exception) {
+                    // Handle any errors during brightness calculation
+                    Log.e("PhotosBackgroundViewModel", "Error calculating HSL", e)
+                }
+            }
         }
     }
 
@@ -89,7 +124,7 @@ class PhotosBackgroundViewModel @Inject constructor(
             }
         }
 
-        return if (images.isNotEmpty()) images else loadDefaultPhotos()
+        return images.ifEmpty { loadDefaultPhotos() }
     }
 
     private fun loadDefaultPhotos(): List<PhotoResource> {

@@ -81,10 +81,14 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.google.code.gson:gson:$retrofit_gson_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    // Image handling.
     implementation "io.coil-kt:coil-compose:$coil_version"
+    implementation 'androidx.palette:palette-ktx:1.0.0'
 
     // Dependency Injection.
     implementation "com.google.dagger:hilt-android:$hilt_version"
+
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Java 8 Desugaring. 🍬

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -32,14 +32,14 @@ object Effects{
 @Composable
 fun FadingComposable(content: @Composable () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
-    val alpha = remember { mutableStateOf(1f) }
-    val offsetX = remember { mutableStateOf(0f) }
-    val offsetY = remember { mutableStateOf(0f) }
+    val alpha = remember { mutableFloatStateOf(1f) }
+    val offsetX = remember { mutableFloatStateOf(0f) }
+    val offsetY = remember { mutableFloatStateOf(0f) }
 
-    val transition = updateTransition(targetState = alpha.value, label = "transition")
+    val transition = updateTransition(targetState = alpha.floatValue, label = "transition")
     val animatedAlpha = transition.animateFloat(
         transitionSpec = {
-            if (alpha.value == 1f) {
+            if (alpha.floatValue == 1f) {
                 tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)
             } else {
                 tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)

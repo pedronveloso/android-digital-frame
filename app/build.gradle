@@ -20,8 +20,8 @@ android {
         applicationId "com.pedronveloso.digitalframe"
         minSdk 26
         targetSdk 34
-        versionCode 2
-        versionName "0.0.3-Alpha"
+        versionCode 3
+        versionName "0.0.4-Alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

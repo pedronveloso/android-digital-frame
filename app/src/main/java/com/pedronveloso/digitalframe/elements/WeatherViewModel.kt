@@ -17,15 +17,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.data.exceptions.NetworkException
+import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.network.NetworkResult
-import com.pedronveloso.digitalframe.network.openweather.OpenWeatherResponse
+import com.pedronveloso.digitalframe.network.openweather.FakeWeatherService
 import com.pedronveloso.digitalframe.network.openweather.OpenWeatherService
+import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +44,6 @@ class WeatherViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
-
 
     init {
         repeatedExecution()
@@ -73,7 +75,7 @@ class WeatherViewModel @Inject constructor(
     }
 
     @Composable
-    fun RenderWeather(use24HClock: Boolean = false, backgroundHsl: FloatArray) {
+    fun RenderWeather(backgroundHsl: FloatArray) {
         FadingComposable {
             Column(
                 Modifier
@@ -117,7 +119,6 @@ class WeatherViewModel @Inject constructor(
                             // Noon.
                             Spacer(modifier = Modifier.size(16.dp))
                             DrawWeatherElementWithIcon(
-                                use24HClock = use24HClock,
                                 temperature = weatherDay.temperatures.day,
                                 iconMain = weatherDay.weather.first().main,
                                 backgroundHsl
@@ -131,7 +132,6 @@ class WeatherViewModel @Inject constructor(
 
     @Composable
     fun DrawWeatherElementWithIcon(
-        use24HClock: Boolean,
         temperature: Double,
         iconMain: String,
         backgroundHsl: FloatArray
@@ -157,5 +157,16 @@ class WeatherViewModel @Inject constructor(
             }
             Image(painter = painterResource(id = iconId), contentDescription = null)
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRenderWeather() {
+    val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)
+
+    DigitalFrameTheme {
+        WeatherViewModel(FakeWeatherService()).RenderWeather(backgroundHsl = backgroundHsl)
     }
 }

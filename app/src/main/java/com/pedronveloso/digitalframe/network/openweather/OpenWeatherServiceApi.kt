@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe.network.openweather
 
+import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

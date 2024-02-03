@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.network.openweather
+package com.pedronveloso.digitalframe.data.openweather
 
 data class Weather(
     val description: String,

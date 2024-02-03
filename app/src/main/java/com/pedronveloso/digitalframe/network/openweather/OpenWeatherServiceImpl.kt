@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe.network.openweather
 
+import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.network.NetworkResult
 import javax.inject.Inject
 

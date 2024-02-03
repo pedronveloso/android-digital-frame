@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.network.openweather
+package com.pedronveloso.digitalframe.data.openweather
 
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime

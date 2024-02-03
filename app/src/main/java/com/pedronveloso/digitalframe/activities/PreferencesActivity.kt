@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.PreferenceSection
@@ -99,17 +101,36 @@ fun PreferenceSectionsScreen(
     sections: List<PreferenceSection>,
     navigateToSection: (PreferenceSection) -> Unit
 ) {
-    LazyColumn {
-        itemsIndexed(sections) { index, section ->
-            PreferenceSectionItem(
-                section = section,
-                navigateToSection = { navigateToSection(section) })
-            if (index < sections.size - 1) {
-                Divider()
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            itemsIndexed(sections) { index, section ->
+                PreferenceSectionItem(
+                    section = section,
+                    navigateToSection = { navigateToSection(section) })
+                if (index < sections.size - 1) {
+                    Divider()
+                }
             }
         }
+        AppVersionFooter()
     }
 }
+
+@Composable
+fun AppVersionFooter() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = BuildConfig.VERSION_NAME,
+            style = MyTypography.bodyMedium
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

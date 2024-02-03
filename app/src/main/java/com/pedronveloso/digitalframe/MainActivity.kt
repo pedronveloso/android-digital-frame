@@ -125,6 +125,7 @@ fun MainScreen(
         ) {
             Button(
                 onClick = {
+                    throw RuntimeException("Test Crash") // Force a crash
                     context.startActivity(Intent(context, PreferencesActivity::class.java))
                 },
                 modifier = Modifier

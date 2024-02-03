@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778352857025",
+    "project_id": "android-digital-frame",
+    "storage_bucket": "android-digital-frame.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778352857025:android:8f23fe251b6eb61d4de940",
+        "android_client_info": {
+          "package_name": "com.pedronveloso.digitalframe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo1eHhQ5rxevMKr6wSBWHSu1upxgf4AYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

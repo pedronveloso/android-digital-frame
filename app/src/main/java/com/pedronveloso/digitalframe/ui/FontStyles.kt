@@ -34,6 +34,15 @@ object FontStyles {
         )
     )
 
+    fun textStyleBodyMedium(backgroundHsl: FloatArray) = MyTypography.bodyMedium.copy(
+        color = deriveTextColor(backgroundHsl),
+        shadow = Shadow(
+            color = Color.Black,
+            offset = Offset(0f, 2f),
+            blurRadius = 1f
+        )
+    )
+
 
     fun textStyleDisplayLarge(backgroundHsl: FloatArray): TextStyle {
         val textColor: Color = deriveTextColor(backgroundHsl)

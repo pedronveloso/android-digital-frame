@@ -120,6 +120,7 @@ class WeatherViewModel @Inject constructor(
                             Spacer(modifier = Modifier.size(16.dp))
                             DrawWeatherElementWithIcon(
                                 temperature = weatherDay.temperatures.day,
+                                windSpeed = weatherDay.speed,
                                 iconMain = weatherDay.weather.first().main,
                                 backgroundHsl
                             )
@@ -133,6 +134,7 @@ class WeatherViewModel @Inject constructor(
     @Composable
     fun DrawWeatherElementWithIcon(
         temperature: Double,
+        windSpeed: Double,
         iconMain: String,
         backgroundHsl: FloatArray
     ) {
@@ -146,6 +148,14 @@ class WeatherViewModel @Inject constructor(
             Text(
                 text = dayTemp,
                 style = FontStyles.textStyleDisplayMedium(backgroundHsl)
+            )
+
+            // Wind Speed.
+            val windSpeedValue = windSpeed.roundToInt()
+            val windSpeedLabel = "💨 $windSpeedValue m/s"
+            Text(
+                text = windSpeedLabel,
+                style = FontStyles.textStyleBodyLarge(backgroundHsl)
             )
 
             // Icon.

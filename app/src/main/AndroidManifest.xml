@@ -33,6 +33,7 @@
         </activity>
 
         <activity android:name=".activities.PreferencesActivity" />
+        <activity android:name=".activities.BackgroundPickerActivity" />
     </application>
 
 </manifest>

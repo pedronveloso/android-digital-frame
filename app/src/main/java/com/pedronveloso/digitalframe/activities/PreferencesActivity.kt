@@ -51,7 +51,6 @@ class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         val preferences = Preferences {
             section("photo_picker", getString(R.string.pref_bg_title)) {
                 button(label = getString(R.string.pref_bg_photo_picker)) {

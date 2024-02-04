@@ -2,13 +2,22 @@ package com.pedronveloso.digitalframe.preferences
 
 class PreferenceSectionBuilder {
     private val preferences = mutableListOf<PreferenceItem>()
+    private val preferenceIds = mutableSetOf<String>()
 
-    fun inputField(title: String, hint: String? = null, type: InputType) {
-        preferences.add(PreferenceItem.InputFieldPreference(title, hint, type))
+    private fun checkIdUniqueness(id: String) {
+        if (!preferenceIds.add(id)) {
+            throw IllegalArgumentException("Preference ID '$id' is already used within the section.")
+        }
     }
 
-    fun switch(title: String, description: String? = null, default: Boolean) {
-        preferences.add(PreferenceItem.Switch(title, description, default))
+    fun inputField(id: String, title: String, hint: String? = null, type: InputType) {
+        checkIdUniqueness(id)
+        preferences.add(PreferenceItem.InputFieldPreference(id, title, hint, type))
+    }
+
+    fun switch(id: String, title: String, description: String? = null, default: Boolean) {
+        checkIdUniqueness(id)
+        preferences.add(PreferenceItem.Switch(id, title, description, default))
     }
 
     fun button(label: String, action: () -> Unit) {
@@ -20,11 +29,19 @@ class PreferenceSectionBuilder {
 
 class PreferencesBuilder {
     private val sections = mutableListOf<PreferenceSection>()
+    private val sectionIds = mutableSetOf<String>()
 
-    fun section(title: String, init: PreferenceSectionBuilder.() -> Unit) {
+    private fun checkSectionIdUniqueness(id: String) {
+        if (!sectionIds.add(id)) {
+            throw IllegalArgumentException("Section ID '$id' is already used within the preferences.")
+        }
+    }
+
+    fun section(id: String, title: String, init: PreferenceSectionBuilder.() -> Unit) {
+        checkSectionIdUniqueness(id)
         val builder = PreferenceSectionBuilder()
         builder.init()
-        sections.add(PreferenceSection(title, builder.build()))
+        sections.add(PreferenceSection(id, title, builder.build()))
     }
 
     fun build(): List<PreferenceSection> = sections

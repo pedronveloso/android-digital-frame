@@ -53,7 +53,7 @@ class PreferencesActivity : ComponentActivity() {
 
 
         val preferences = Preferences {
-            section(getString(R.string.pref_bg_title)) {
+            section("photo_picker", getString(R.string.pref_bg_title)) {
                 button(label = getString(R.string.pref_bg_photo_picker)) {
                     startActivity(
                         Intent(
@@ -65,13 +65,15 @@ class PreferencesActivity : ComponentActivity() {
             }
 
             // The following section is just for testing purposes.
-            section("Notifications") {
+            section("notifications", "Notifications") {
                 switch(
+                    id = "enable_notifications",
                     title = "Enable Notifications",
                     description = "Receive notifications for new messages",
                     default = true
                 )
                 switch(
+                    id = "sound_notifications",
                     title = "Sound",
                     description = "Play sound on notifications",
                     default = false

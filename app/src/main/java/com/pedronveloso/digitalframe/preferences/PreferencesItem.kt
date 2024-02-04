@@ -11,14 +11,16 @@ sealed class PreferenceItem {
         val id: String,
         val title: String,
         val hint: String? = null,
-        val type: InputType
+        val type: InputType,
+        val onChangeCallback: ((String) -> Unit)? = null
     ) : PreferenceItem()
 
     data class Switch(
         val id: String,
         val title: String,
         val description: String? = null,
-        val default: Boolean
+        val default: Boolean,
+        val onChangeCallback: ((Boolean) -> Unit)? = null
     ) :
         PreferenceItem()
 

@@ -10,14 +10,34 @@ class PreferenceSectionBuilder {
         }
     }
 
-    fun inputField(id: String, title: String, hint: String? = null, type: InputType) {
+    fun inputField(
+        id: String,
+        title: String,
+        hint: String? = null,
+        type: InputType,
+        onChangeCallback: ((String) -> Unit)? = null
+    ) {
         checkIdUniqueness(id)
-        preferences.add(PreferenceItem.InputFieldPreference(id, title, hint, type))
+        preferences.add(
+            PreferenceItem.InputFieldPreference(
+                id,
+                title,
+                hint,
+                type,
+                onChangeCallback
+            )
+        )
     }
 
-    fun switch(id: String, title: String, description: String? = null, default: Boolean) {
+    fun switch(
+        id: String,
+        title: String,
+        description: String? = null,
+        default: Boolean,
+        onChangeCallback: ((Boolean) -> Unit)? = null
+    ) {
         checkIdUniqueness(id)
-        preferences.add(PreferenceItem.Switch(id, title, description, default))
+        preferences.add(PreferenceItem.Switch(id, title, description, default, onChangeCallback))
     }
 
     fun button(label: String, action: () -> Unit) {

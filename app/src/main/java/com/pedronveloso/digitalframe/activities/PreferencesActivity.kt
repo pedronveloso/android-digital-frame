@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -69,7 +72,14 @@ class PreferencesActivity : ComponentActivity() {
                     id = "enable_notifications",
                     title = "Enable Notifications",
                     description = "Receive notifications for new messages",
-                    default = true
+                    default = true,
+                    onChangeCallback = { enabled ->
+                        Toast.makeText(
+                            this@PreferencesActivity,
+                            "Notifications are now ${if (enabled) "enabled" else "disabled"}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
                 switch(
                     id = "sound_notifications",
@@ -206,6 +216,12 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPreferen
             value = text,
             onValueChange = { text = it },
             placeholder = { Text(preference.hint ?: "") },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    preference.onChangeCallback?.invoke(text)
+                }
+            ),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -230,7 +246,10 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.Switch) {
         }
         Switch(
             checked = isChecked,
-            onCheckedChange = { isChecked = it }
+            onCheckedChange = {
+                isChecked = it
+                preference.onChangeCallback?.invoke(it)
+            }
         )
     }
 }

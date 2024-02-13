@@ -8,8 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -44,10 +46,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
+import com.pedronveloso.digitalframe.elements.general.RealGeneralData
 import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.InputType
@@ -71,6 +75,7 @@ class PreferencesActivity : ComponentActivity() {
         val dataPersistence = SharedPreferencesPersistence(this)
 
         val topLevelPrefs = PreferencesRoot.Builder()
+        addGeneralMenuSection(topLevelPrefs, dataPersistence)
         addBackgroundMenuSection(topLevelPrefs)
         addClockMenuSection(topLevelPrefs, dataPersistence)
         addCountdownMenuSection(topLevelPrefs, dataPersistence)
@@ -196,6 +201,30 @@ class PreferencesActivity : ComponentActivity() {
         weatherSection.addPreference(useCelsiusPreference)
         weatherSection.addPreference(showWindSpeedPreference)
         topLevelPrefs.addSection(weatherSection.build())
+    }
+
+    private fun addGeneralMenuSection(
+        topLevelPrefs: PreferencesRoot.Builder,
+        dataPersistence: SharedPreferencesPersistence
+    ) {
+        val generalSection =
+            PreferencesSection.Builder("general", getString(R.string.pref_general_title))
+        val generalData = RealGeneralData(dataPersistence)
+
+        val allowCrashCollection = PreferenceItem.SwitchPref(
+            id = "allow_crash_collection",
+            title = getString(R.string.pref_general_crash_reports),
+            description = getString(R.string.pref_general_crash_reports_description),
+            initialValueProvider = { !generalData.explicitlyDisabledCrashCollection() }
+        ).apply {
+            onChangeCallback = { enabled ->
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
+                generalData.setExplicitlyDisabledCrashCollection(!enabled)
+            }
+        }
+
+        generalSection.addPreference(allowCrashCollection)
+        topLevelPrefs.addSection(generalSection.build())
     }
 
 }
@@ -361,6 +390,7 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = preference.title, style = MyTypography.titleMedium)
             preference.description?.let {
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(text = it, style = MyTypography.bodyLarge)
             }
         }

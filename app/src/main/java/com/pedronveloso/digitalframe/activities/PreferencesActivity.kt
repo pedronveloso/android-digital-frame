@@ -18,8 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -48,6 +48,7 @@ import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
+import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
@@ -70,9 +71,10 @@ class PreferencesActivity : ComponentActivity() {
         val dataPersistence = SharedPreferencesPersistence(this)
 
         val topLevelPrefs = PreferencesRoot.Builder()
-        backgroundMenuSection(topLevelPrefs)
-        clockMenuSection(dataPersistence, topLevelPrefs)
-        countdownMenuSection(dataPersistence, topLevelPrefs)
+        addBackgroundMenuSection(topLevelPrefs)
+        addClockMenuSection(topLevelPrefs, dataPersistence)
+        addCountdownMenuSection(topLevelPrefs, dataPersistence)
+        addWeatherMenuSection(topLevelPrefs, dataPersistence)
 
         setContent {
             DigitalFrameTheme {
@@ -81,9 +83,9 @@ class PreferencesActivity : ComponentActivity() {
         }
     }
 
-    private fun clockMenuSection(
-        dataPersistence: SharedPreferencesPersistence,
-        topLevelPrefs: PreferencesRoot.Builder
+    private fun addClockMenuSection(
+        topLevelPrefs: PreferencesRoot.Builder,
+        dataPersistence: SharedPreferencesPersistence
     ) {
         val clockData = RealClockData(dataPersistence)
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
@@ -102,7 +104,7 @@ class PreferencesActivity : ComponentActivity() {
         topLevelPrefs.addSection(clockSection.build())
     }
 
-    private fun backgroundMenuSection(
+    private fun addBackgroundMenuSection(
         topLevelPrefs: PreferencesRoot.Builder
     ) {
         val backgroundSection =
@@ -124,9 +126,9 @@ class PreferencesActivity : ComponentActivity() {
         topLevelPrefs.addSection(backgroundSection.build())
     }
 
-    private fun countdownMenuSection(
-        dataPersistence: SharedPreferencesPersistence,
-        topLevelPrefs: PreferencesRoot.Builder
+    private fun addCountdownMenuSection(
+        topLevelPrefs: PreferencesRoot.Builder,
+        dataPersistence: SharedPreferencesPersistence
     ) {
         val countdownData = RealCountdownData(dataPersistence)
         val countdownSection =
@@ -161,6 +163,41 @@ class PreferencesActivity : ComponentActivity() {
         countdownSection.addPreference(countdownMessageInput)
         topLevelPrefs.addSection(countdownSection.build())
     }
+
+    private fun addWeatherMenuSection(
+        topLevelPrefs: PreferencesRoot.Builder,
+        dataPersistence: SharedPreferencesPersistence
+    ) {
+        val weatherSection =
+            PreferencesSection.Builder("weather", getString(R.string.pref_weather_title))
+        val weatherData = RealWeatherData(dataPersistence)
+
+        val useCelsiusPreference = PreferenceItem.SwitchPref(
+            id = "use_celsius",
+            title = getString(R.string.pref_weather_use_celcius),
+            description = getString(R.string.pref_weather_use_celcius_description),
+            initialValueProvider = { weatherData.useCelsius() }
+        ).apply {
+            onChangeCallback = { enabled ->
+                weatherData.setUseCelsius(enabled)
+            }
+        }
+
+        val showWindSpeedPreference = PreferenceItem.SwitchPref(
+            id = "show_wind_speed",
+            title = getString(R.string.pref_weather_show_wind_speed),
+            initialValueProvider = { weatherData.showWind() }
+        ).apply {
+            onChangeCallback = { enabled ->
+                weatherData.setShowWind(enabled)
+            }
+        }
+
+        weatherSection.addPreference(useCelsiusPreference)
+        weatherSection.addPreference(showWindSpeedPreference)
+        topLevelPrefs.addSection(weatherSection.build())
+    }
+
 }
 
 @Composable
@@ -175,7 +212,7 @@ fun PreferenceSectionsScreen(
                     section = section,
                     navigateToSection = { navigateToSection(section) })
                 if (index < sections.size - 1) {
-                    Divider()
+                    HorizontalDivider()
                 }
             }
         }

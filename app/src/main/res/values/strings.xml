@@ -20,6 +20,13 @@
     <string name="pref_countdown_message">Countdown message</string>
     <string name="countdown_days_remaining">%s days</string>
 
+    <!-- Weather -->
+    <string name="pref_weather_title">Weather</string>
+    <string name="pref_weather_use_celcius">Use Celsius</string>
+    <string name="pref_weather_use_celcius_description">Use Celsius instead of Fahrenheit</string>
+    <string name="pref_weather_show_wind_speed">Show Wind Speed</string>
+
+
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.elements
+package com.pedronveloso.digitalframe.elements.weather
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -75,7 +75,7 @@ class WeatherViewModel @Inject constructor(
     }
 
     @Composable
-    fun RenderWeather(backgroundHsl: FloatArray) {
+    fun RenderWeather(weatherData: WeatherData, backgroundHsl: FloatArray) {
         FadingComposable {
             Column(
                 Modifier
@@ -119,6 +119,7 @@ class WeatherViewModel @Inject constructor(
                             // Noon.
                             Spacer(modifier = Modifier.size(16.dp))
                             DrawWeatherElementWithIcon(
+                                weatherData,
                                 temperature = weatherDay.temperatures.day,
                                 windSpeed = weatherDay.speed,
                                 iconMain = weatherDay.weather.first().main,
@@ -133,6 +134,7 @@ class WeatherViewModel @Inject constructor(
 
     @Composable
     fun DrawWeatherElementWithIcon(
+        weatherData: WeatherData,
         temperature: Double,
         windSpeed: Double,
         iconMain: String,
@@ -143,20 +145,30 @@ class WeatherViewModel @Inject constructor(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Temperature.
-            val dayTempValue = temperature.roundToInt()
-            val dayTemp = "$dayTempValue °C"
+            val dayTemp: String
+            if (weatherData.useCelsius()) {
+                val dayTempValue = temperature.roundToInt()
+                dayTemp = "$dayTempValue °C"
+            } else {
+                val dayTempValue = (temperature * 9 / 5 + 32).roundToInt()
+                dayTemp = "$dayTempValue °F"
+            }
+
+
             Text(
                 text = dayTemp,
                 style = FontStyles.textStyleDisplayMedium(backgroundHsl)
             )
 
             // Wind Speed.
-            val windSpeedValue = windSpeed.roundToInt()
-            val windSpeedLabel = "💨 $windSpeedValue m/s"
-            Text(
-                text = windSpeedLabel,
-                style = FontStyles.textStyleBodyLarge(backgroundHsl)
-            )
+            if (weatherData.showWind()) {
+                val windSpeedValue = windSpeed.roundToInt()
+                val windSpeedLabel = "💨 $windSpeedValue m/s"
+                Text(
+                    text = windSpeedLabel,
+                    style = FontStyles.textStyleBodyLarge(backgroundHsl)
+                )
+            }
 
             // Icon.
             val iconId = when (iconMain) {
@@ -175,8 +187,9 @@ class WeatherViewModel @Inject constructor(
 @Composable
 fun PreviewRenderWeather() {
     val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)
+    val weatherData = FakeWeatherData()
 
     DigitalFrameTheme {
-        WeatherViewModel(FakeWeatherService()).RenderWeather(backgroundHsl = backgroundHsl)
+        WeatherViewModel(FakeWeatherService()).RenderWeather(weatherData, backgroundHsl)
     }
 }

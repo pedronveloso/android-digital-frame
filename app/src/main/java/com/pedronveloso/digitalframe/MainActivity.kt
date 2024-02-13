@@ -45,6 +45,7 @@ import com.pedronveloso.digitalframe.elements.WeatherViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
+import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -101,6 +102,7 @@ fun MainScreen(
     val context = LocalContext.current
     val persistence = SharedPreferencesPersistence(context)
     val clockData = RealClockData(persistence)
+    val countdownData = RealCountdownData(persistence)
 
     val backgroundHsl by photosBackgroundViewModel.hsl.collectAsState()
 
@@ -117,9 +119,9 @@ fun MainScreen(
             }
     ) {
         RenderBackground(viewModel = photosBackgroundViewModel)
-        clockViewModel.RenderClock(backgroundHsl = backgroundHsl, clockData = clockData)
+        clockViewModel.RenderClock(clockData = clockData, backgroundHsl = backgroundHsl)
         weatherViewModel.RenderWeather(backgroundHsl = backgroundHsl)
-        countdownViewModel.CountdownDisplay(backgroundHsl)
+        countdownViewModel.CountdownDisplay(countdownData, backgroundHsl)
 
         // Fading Button
         AnimatedVisibility(

@@ -44,7 +44,7 @@ import androidx.navigation.navArgument
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
-import com.pedronveloso.digitalframe.elements.countdown.CountdownData
+import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
@@ -119,6 +119,7 @@ class PreferencesActivity : ComponentActivity() {
         dataPersistence: SharedPreferencesPersistence,
         topLevelPrefs: PreferencesRoot.Builder
     ) {
+        val countdownData = RealCountdownData(dataPersistence)
         val countdownSection =
             PreferencesSection.Builder("countdown", getString(R.string.pref_countdown_title))
         val daysRemainingInput = PreferenceItem.InputFieldPref(
@@ -126,10 +127,10 @@ class PreferencesActivity : ComponentActivity() {
             sectionId = "countdown",
             title = getString(R.string.pref_countdown_days_remaining),
             type = InputType.INT,
-            initialValueProvider = { CountdownData.getDaysRemaining(dataPersistence).toString() },
+            initialValueProvider = { countdownData.getDaysRemaining().toString() },
             onChangeCallback = { value ->
                 val intValue = value.toIntOrNull() ?: 0
-                CountdownData.setDaysRemaining(dataPersistence, intValue)
+                countdownData.setDaysRemaining(intValue)
             }
         )
 
@@ -138,9 +139,9 @@ class PreferencesActivity : ComponentActivity() {
             sectionId = "countdown",
             title = getString(R.string.pref_countdown_message),
             type = InputType.TEXT,
-            initialValueProvider = { CountdownData.getMessage(dataPersistence) },
+            initialValueProvider = { countdownData.getMessage() },
             onChangeCallback = { value ->
-                CountdownData.setMessage(dataPersistence, value)
+                countdownData.setMessage(value)
             }
         )
 

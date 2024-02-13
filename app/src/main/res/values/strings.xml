@@ -10,6 +10,7 @@
     <string name="pref_countdown_title">Countdown</string>
     <string name="pref_countdown_days_remaining">Days remaining</string>
     <string name="pref_countdown_message">Countdown message</string>
+    <string name="countdown_days_remaining">%s days</string>
 
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

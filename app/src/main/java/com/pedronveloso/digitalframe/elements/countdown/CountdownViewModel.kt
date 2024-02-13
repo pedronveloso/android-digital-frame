@@ -12,10 +12,12 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
 import kotlinx.coroutines.delay
@@ -46,7 +48,7 @@ class CountdownViewModel(
 
 
     @Composable
-    fun CountdownDisplay(backgroundHsl: FloatArray) {
+    fun CountdownDisplay(countdownData: CountdownData, backgroundHsl: FloatArray) {
         FadingComposable {
             Column(
                 Modifier
@@ -56,24 +58,28 @@ class CountdownViewModel(
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
-                CountdownText(daysUntil = daysUntilEvent, backgroundHsl = backgroundHsl)
+                CountdownText(
+                    daysUntil = daysUntilEvent,
+                    countdownData,
+                    backgroundHsl = backgroundHsl
+                )
             }
         }
     }
 
     @Composable
-    fun CountdownText(daysUntil: Long, backgroundHsl: FloatArray) {
+    fun CountdownText(daysUntil: Long, countdownData: CountdownData, backgroundHsl: FloatArray) {
         if (daysUntil >= 0) {
             Column(
                 Modifier
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "$daysUntil Days",
+                    text = stringResource(id = R.string.countdown_days_remaining, daysUntil),
                     style = FontStyles.textStyleDisplayMedium(backgroundHsl)
                 )
                 Text(
-                    text = "UNTIL 2ND TRIMESTER",
+                    text = countdownData.getMessage().uppercase(),
                     style = FontStyles.textStyleBodyLarge(backgroundHsl)
                 )
             }

@@ -2,6 +2,9 @@ package com.pedronveloso.digitalframe.persistence
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class SharedPreferencesPersistence(
     private val context: Context,
@@ -11,6 +14,8 @@ class SharedPreferencesPersistence(
     private val sharedPreferences: SharedPreferences by lazy {
         context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     }
+
+    private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
     private fun buildKey(sectionId: String, propertyId: String): String {
         return "$sectionId:$propertyId"
@@ -71,5 +76,26 @@ class SharedPreferencesPersistence(
         val editor = sharedPreferences.edit()
         val key = buildKey(sectionId, propertyId)
         editor.putBoolean(key, value)?.apply()
+    }
+
+    override fun getPreferenceValue(
+        sectionId: String,
+        propertyId: String,
+        defaultValue: LocalDate
+    ): LocalDate {
+        val key = buildKey(sectionId, propertyId)
+        val dateString = sharedPreferences.getString(key, "")
+        return try {
+            LocalDate.parse(dateString, dateFormatter) ?: defaultValue
+        } catch (e: DateTimeParseException) {
+            defaultValue
+        }
+    }
+
+    override fun setPreferenceValue(sectionId: String, propertyId: String, value: LocalDate) {
+        val editor = sharedPreferences.edit()
+        val key = buildKey(sectionId, propertyId)
+        val dateString = value.format(dateFormatter)
+        editor.putString(key, dateString).apply()
     }
 }

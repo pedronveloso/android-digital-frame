@@ -3,22 +3,23 @@ package com.pedronveloso.digitalframe.elements.countdown
 import com.pedronveloso.digitalframe.persistence.PluginData
 import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_ENABLED
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
+import java.time.LocalDate
 
 
 interface CountdownData : PluginData {
-    fun setDaysRemaining(value: Int)
-    fun getDaysRemaining(): Int
+    fun setTargetDate(value: LocalDate)
+    fun getTargetDate(): LocalDate
     fun setMessage(value: String)
     fun getMessage(): String
 }
 
 class RealCountdownData(private val persistence: PreferencesPersistence) : CountdownData {
-    override fun setDaysRemaining(value: Int) {
-        persistence.setPreferenceValue(SECTION_ID, DAYS_REMAINING, value)
+    override fun setTargetDate(value: LocalDate) {
+        persistence.setPreferenceValue(SECTION_ID, TARGET_DATE, value)
     }
 
-    override fun getDaysRemaining(): Int {
-        return persistence.getPreferenceValue(SECTION_ID, DAYS_REMAINING, 0)
+    override fun getTargetDate(): LocalDate {
+        return persistence.getPreferenceValue(SECTION_ID, TARGET_DATE, LocalDate.now())
     }
 
     override fun setMessage(value: String) {
@@ -39,7 +40,7 @@ class RealCountdownData(private val persistence: PreferencesPersistence) : Count
 
     companion object {
         private const val SECTION_ID = "countdown"
-        private const val DAYS_REMAINING = "days-remaining"
+        private const val TARGET_DATE = "target-date"
         private const val MESSAGE = "message"
     }
 }

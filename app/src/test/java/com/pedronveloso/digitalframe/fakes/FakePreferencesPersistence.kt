@@ -1,6 +1,7 @@
 package com.pedronveloso.digitalframe.fakes
 
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
+import java.time.LocalDate
 
 class FakePreferencesPersistence : PreferencesPersistence {
     private val storage = mutableMapOf<String, Any>()
@@ -31,6 +32,19 @@ class FakePreferencesPersistence : PreferencesPersistence {
     ): Boolean =
         storage[getKey(sectionId, propertyId)] as? Boolean ?: defaultValue
 
+    override fun getPreferenceValue(
+        sectionId: String,
+        propertyId: String,
+        defaultValue: LocalDate
+    ): LocalDate {
+        val value = storage[getKey(sectionId, propertyId)] as? String
+        return try {
+            LocalDate.parse(value)
+        } catch (e: Exception) {
+            defaultValue
+        }
+    }
+
     override fun setPreferenceValue(sectionId: String, propertyId: String, value: Int) {
         storage[getKey(sectionId, propertyId)] = value
     }
@@ -44,6 +58,10 @@ class FakePreferencesPersistence : PreferencesPersistence {
     }
 
     override fun setPreferenceValue(sectionId: String, propertyId: String, value: Boolean) {
+        storage[getKey(sectionId, propertyId)] = value
+    }
+
+    override fun setPreferenceValue(sectionId: String, propertyId: String, value: LocalDate) {
         storage[getKey(sectionId, propertyId)] = value
     }
 }

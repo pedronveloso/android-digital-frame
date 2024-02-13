@@ -9,22 +9,25 @@ import org.junit.Test
 class ClockDataTest {
 
     private lateinit var fakePersistence: FakePreferencesPersistence
+    private lateinit var clockData: ClockData
 
     @Before
     fun setUp() {
         fakePersistence = FakePreferencesPersistence()
+        clockData = RealClockData(fakePersistence)
+
     }
 
     @Test
     fun `use24HClock returns false as default value when not set`() {
-        val result = ClockData.use24HClock(fakePersistence)
+        val result = clockData.use24HClock()
         assertThat(result).isFalse()
     }
 
     @Test
     fun `use24HClock returns true after being set`() {
-        ClockData.setUse24HClock(fakePersistence, true)
-        val result = ClockData.use24HClock(fakePersistence)
+        clockData.setUse24HClock(true)
+        val result = clockData.use24HClock()
         assertThat(result).isTrue()
     }
 }

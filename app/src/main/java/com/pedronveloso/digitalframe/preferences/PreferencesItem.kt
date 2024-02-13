@@ -33,5 +33,5 @@ sealed class PreferenceItem(open val id: String) {
 }
 
 enum class InputType {
-    TEXT, INT, DOUBLE
+    TEXT, INT, DOUBLE, DATE
 }

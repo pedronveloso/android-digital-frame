@@ -32,23 +32,20 @@ class CountdownViewModel(
 
     private var daysUntilEvent by mutableLongStateOf(0)
 
-    init {
-        repeatedExecution()
-    }
-
-    private fun repeatedExecution() {
+    private fun repeatedExecution(countdownData: CountdownData) {
         viewModelScope.launch {
             val today = LocalDate.now()
-            val targetDate = LocalDate.of(today.year, 2, 13)
+            val targetDate = countdownData.getTargetDate()
             daysUntilEvent = ChronoUnit.DAYS.between(today, targetDate)
             delay(1.minutes)
-            repeatedExecution()
+            repeatedExecution(countdownData)
         }
     }
 
 
     @Composable
     fun CountdownDisplay(countdownData: CountdownData, backgroundHsl: FloatArray) {
+        repeatedExecution(countdownData)
         FadingComposable {
             Column(
                 Modifier

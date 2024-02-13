@@ -8,8 +8,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import java.time.LocalDate
 
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Config.OLDEST_SDK])
 class SharedPreferencesPersistenceTest {
 
     private lateinit var sharedPreferencesPersistence: SharedPreferencesPersistence
@@ -110,6 +113,29 @@ class SharedPreferencesPersistenceTest {
         sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
 
         val result = sharedPreferencesPersistence.getPreferenceValue(section_id, key, false)
+        assertThat(result).isEqualTo(value)
+    }
+
+    @Test
+    fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forDate() {
+        val defaultValue = LocalDate.of(2024, 2, 12)
+        val result = sharedPreferencesPersistence.getPreferenceValue(
+            "section",
+            "missing_date_key",
+            defaultValue
+        )
+        assertThat(result).isEqualTo(defaultValue)
+    }
+
+    @Test
+    fun setPreferenceValue_savesDateValue() {
+        val sectionId = "section"
+        val propertyKey = "date_key"
+        val value = LocalDate.of(2024, 2, 12)
+        sharedPreferencesPersistence.setPreferenceValue(sectionId, propertyKey, value)
+
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(sectionId, propertyKey, LocalDate.MIN)
         assertThat(result).isEqualTo(value)
     }
 }

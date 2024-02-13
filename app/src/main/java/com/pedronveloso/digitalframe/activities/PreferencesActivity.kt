@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe.activities
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -52,6 +55,12 @@ import com.pedronveloso.digitalframe.preferences.PreferencesRoot
 import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
+import java.text.SimpleDateFormat
+import java.time.MonthDay
+import java.time.Year
+import java.time.ZoneId
+import java.util.Calendar
+import java.util.Locale
 
 class PreferencesActivity : ComponentActivity() {
 
@@ -126,11 +135,13 @@ class PreferencesActivity : ComponentActivity() {
             id = "days_remaining",
             sectionId = "countdown",
             title = getString(R.string.pref_countdown_days_remaining),
-            type = InputType.INT,
-            initialValueProvider = { countdownData.getDaysRemaining().toString() },
+            type = InputType.DATE,
+            initialValueProvider = { countdownData.getTargetDate().toString() },
             onChangeCallback = { value ->
-                val intValue = value.toIntOrNull() ?: 0
-                countdownData.setDaysRemaining(intValue)
+                val dateValue = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(value)
+                countdownData.setTargetDate(
+                    dateValue.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                )
             }
         )
 
@@ -254,28 +265,49 @@ fun RenderPreferences(items: List<PreferenceItem>) {
 @Composable
 fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
     var text by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
+    val context = LocalContext.current
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = preference.title, style = MyTypography.bodyLarge)
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            placeholder = { Text(preference.hint ?: "") },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
+
+        if (preference.type != InputType.DATE) {
+            // Existing TextField for types other than DATE.
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                placeholder = { Text(preference.hint ?: "") },
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
                     preference.onChangeCallback?.invoke(text)
-                }
-            ),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        preference.onChangeCallback?.invoke(text)
+                }),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            preference.onChangeCallback?.invoke(text)
+                        }
                     }
-                }
-        )
+            )
+        } else {
+            // Button that triggers a DatePicker dialog for DATE type.
+            val datePickerDialog = remember {
+                DatePickerDialog(context, { _, year, month, dayOfMonth ->
+                    val calendar = Calendar.getInstance().apply {
+                        set(year, month, dayOfMonth)
+                    }
+                    text =
+                        SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(calendar.time)
+                    preference.onChangeCallback?.invoke(text)
+                }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)
+            }
+
+            OutlinedButton(onClick = {
+                datePickerDialog.show()
+            }) {
+                Text(text = if (text.isBlank()) stringResource(id = R.string.pick_date_title) else text)
+            }
+        }
     }
 }
 

@@ -43,7 +43,7 @@ class ClockViewModel(
     }
 
     @Composable
-    fun RenderClock(use24HClock: Boolean = false, backgroundHsl: FloatArray) {
+    fun RenderClock(clockData: ClockData, backgroundHsl: FloatArray) {
         FadingComposable {
 
             Column(
@@ -52,7 +52,7 @@ class ClockViewModel(
                     .fillMaxWidth()
             ) {
                 val formatter: DateTimeFormatter =
-                    if (use24HClock) {
+                    if (clockData.use24HClock()) {
                         DateTimeFormatter.ofPattern("HH:mm:ss")
                     } else {
                         DateTimeFormatter.ofPattern("hh:mm a")

@@ -43,7 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
-import com.pedronveloso.digitalframe.elements.clock.ClockData
+import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.InputType
@@ -76,15 +76,16 @@ class PreferencesActivity : ComponentActivity() {
         dataPersistence: SharedPreferencesPersistence,
         topLevelPrefs: PreferencesRoot.Builder
     ) {
+        val clockData = RealClockData(dataPersistence)
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
         val use24HClock = PreferenceItem.SwitchPref(
             id = "use_24h_format",
             title = getString(R.string.pref_clock_24h_title),
             description = getString(R.string.pref_clock_24h_description),
-            initialValueProvider = { ClockData.use24HClock(dataPersistence) }
+            initialValueProvider = { clockData.use24HClock() }
         ).apply {
             onChangeCallback = { enabled ->
-                ClockData.setUse24HClock(dataPersistence, enabled)
+                clockData.setUse24HClock(enabled)
             }
         }
 

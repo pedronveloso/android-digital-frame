@@ -43,7 +43,9 @@ import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
 import com.pedronveloso.digitalframe.elements.RenderBackground
 import com.pedronveloso.digitalframe.elements.WeatherViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
+import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
+import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -97,6 +99,8 @@ fun MainScreen(
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val persistence = SharedPreferencesPersistence(context)
+    val clockData = RealClockData(persistence)
 
     val backgroundHsl by photosBackgroundViewModel.hsl.collectAsState()
 
@@ -113,7 +117,7 @@ fun MainScreen(
             }
     ) {
         RenderBackground(viewModel = photosBackgroundViewModel)
-        clockViewModel.RenderClock(backgroundHsl = backgroundHsl)
+        clockViewModel.RenderClock(backgroundHsl = backgroundHsl, clockData = clockData)
         weatherViewModel.RenderWeather(backgroundHsl = backgroundHsl)
         countdownViewModel.CountdownDisplay(backgroundHsl)
 

@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.elements
+package com.pedronveloso.digitalframe.elements.clock
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.elements
+package com.pedronveloso.digitalframe.elements.countdown
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

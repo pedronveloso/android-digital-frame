@@ -1,11 +1,14 @@
 package com.pedronveloso.digitalframe.persistence
 
 interface PreferencesPersistence {
-    suspend fun getPreferenceValue(key: String, defaultValue: Int): Int
-    suspend fun getPreferenceValue(key: String, defaultValue: Double): Double
-    suspend fun getPreferenceValue(key: String, defaultValue: String): String
+    fun getPreferenceValue(sectionId: String, propertyId: String, defaultValue: Int): Int
+    fun getPreferenceValue(sectionId: String, propertyId: String, defaultValue: Double): Double
+    fun getPreferenceValue(sectionId: String, propertyId: String, defaultValue: String): String
+    fun getPreferenceValue(sectionId: String, propertyId: String, defaultValue: Boolean): Boolean
 
-    suspend fun setPreferenceValue(key: String, value: Int)
-    suspend fun setPreferenceValue(key: String, value: Double)
-    suspend fun setPreferenceValue(key: String, value: String)
+    // Set preference values using section and property IDs
+    fun setPreferenceValue(sectionId: String, propertyId: String, value: Int)
+    fun setPreferenceValue(sectionId: String, propertyId: String, value: Double)
+    fun setPreferenceValue(sectionId: String, propertyId: String, value: String)
+    fun setPreferenceValue(sectionId: String, propertyId: String, value: Boolean)
 }

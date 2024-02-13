@@ -1,8 +1,6 @@
 package com.pedronveloso.digitalframe.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -43,9 +41,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
+import com.pedronveloso.digitalframe.elements.clock.ClockData
+import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
-import com.pedronveloso.digitalframe.preferences.PreferenceSection
-import com.pedronveloso.digitalframe.preferences.Preferences
+import com.pedronveloso.digitalframe.preferences.PreferencesRoot
+import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
 
@@ -54,53 +54,28 @@ class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val preferences = Preferences {
-            section("photo_picker", getString(R.string.pref_bg_title)) {
-                button(label = getString(R.string.pref_bg_photo_picker)) {
-                    startActivity(
-                        Intent(
-                            this@PreferencesActivity,
-                            BackgroundPickerActivity::class.java
-                        )
-                    )
-                }
-            }
+        val dataPersistence = SharedPreferencesPersistence(this)
 
-            // The following section is just for testing purposes.
-            section("notifications", "Notifications") {
-                switch(
-                    id = "enable_notifications",
-                    title = "Enable Notifications",
-                    description = "Receive notifications for new messages",
-                    default = true,
-                    onChangeCallback = { enabled ->
-                        Toast.makeText(
-                            this@PreferencesActivity,
-                            "Notifications are now ${if (enabled) "enabled" else "disabled"}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                )
-                switch(
-                    id = "sound_notifications",
-                    title = "Sound",
-                    description = "Play sound on notifications",
-                    default = false
-                )
-                button(label = "Save Notification Settings") {
-                    // Handle save action
-                    Toast.makeText(
-                        this@PreferencesActivity,
-                        "Notification settings saved",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+
+        val topLevelPrefs = PreferencesRoot.Builder()
+        val clockSection = PreferencesSection.Builder("clock", "Clock")
+        val user24HClock = PreferenceItem.SwitchPref(
+            id = "use_24h_format",
+            title = "Use 24h format",
+            description = "Use 24h format instead of AM/PM",
+            defaultValueProvider = { ClockData.use24HClock(dataPersistence) }
+        ).apply {
+            onChangeCallback = { enabled ->
+                ClockData.setUse24HClock(dataPersistence, enabled)
             }
         }
 
+        clockSection.addPreference(user24HClock)
+        topLevelPrefs.addSection(clockSection.build())
+
         setContent {
             DigitalFrameTheme {
-                PreferencesNavigation(preferences)
+                PreferencesNavigation(topLevelPrefs.build())
             }
         }
     }
@@ -109,8 +84,8 @@ class PreferencesActivity : ComponentActivity() {
 
 @Composable
 fun PreferenceSectionsScreen(
-    sections: List<PreferenceSection>,
-    navigateToSection: (PreferenceSection) -> Unit
+    sections: List<PreferencesSection>,
+    navigateToSection: (PreferencesSection) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.weight(1f)) {
@@ -145,7 +120,7 @@ fun AppVersionFooter() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreferencesNavigation(preferences: List<PreferenceSection>) {
+fun PreferencesNavigation(preferences: PreferencesRoot) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -161,7 +136,7 @@ fun PreferencesNavigation(preferences: List<PreferenceSection>) {
             Modifier.padding(padding)
         ) {
             composable("sectionsList") {
-                PreferenceSectionsScreen(sections = preferences) { section ->
+                PreferenceSectionsScreen(sections = preferences.sections) { section: PreferencesSection ->
                     navController.navigate("sectionDetails/${section.title}")
                 }
             }
@@ -170,9 +145,9 @@ fun PreferencesNavigation(preferences: List<PreferenceSection>) {
                 arguments = listOf(navArgument("sectionTitle") { type = NavType.StringType })
             ) { backStackEntry ->
                 val sectionTitle = backStackEntry.arguments?.getString("sectionTitle")
-                val section = preferences.find { it.title == sectionTitle }
+                val section = preferences.sections.find { it.title == sectionTitle }
                 section?.let {
-                    RenderPreferences(it.preferences)
+                    RenderPreferences(it.preferenceItems)
                 }
             }
         }
@@ -180,7 +155,7 @@ fun PreferencesNavigation(preferences: List<PreferenceSection>) {
 }
 
 @Composable
-fun PreferenceSectionItem(section: PreferenceSection, navigateToSection: () -> Unit) {
+fun PreferenceSectionItem(section: PreferencesSection, navigateToSection: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,8 +173,8 @@ fun RenderPreferences(items: List<PreferenceItem>) {
     LazyColumn {
         items(items.size) { item ->
             when (val preference = items[item]) {
-                is PreferenceItem.InputFieldPreference -> InputFieldPreferenceComposable(preference)
-                is PreferenceItem.Switch -> SwitchPreferenceComposable(preference)
+                is PreferenceItem.InputFieldPref -> InputFieldPreferenceComposable(preference)
+                is PreferenceItem.SwitchPref -> SwitchPreferenceComposable(preference)
                 is PreferenceItem.Button -> ButtonPreferenceComposable(preference)
             }
         }
@@ -207,7 +182,7 @@ fun RenderPreferences(items: List<PreferenceItem>) {
 }
 
 @Composable
-fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPreference) {
+fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
     var text by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -229,8 +204,8 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPreferen
 }
 
 @Composable
-fun SwitchPreferenceComposable(preference: PreferenceItem.Switch) {
-    var isChecked by remember { mutableStateOf(preference.default) }
+fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
+    var isChecked by remember { mutableStateOf(preference.defaultValueProvider.invoke()) }
 
     Row(
         modifier = Modifier

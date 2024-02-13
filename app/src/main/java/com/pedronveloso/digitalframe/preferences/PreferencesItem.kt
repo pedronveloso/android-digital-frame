@@ -1,30 +1,34 @@
 package com.pedronveloso.digitalframe.preferences
 
-data class PreferenceSection(
-    val id: String,
-    val title: String,
-    val preferences: List<PreferenceItem>
-)
-
-sealed class PreferenceItem {
-    data class InputFieldPreference(
-        val id: String,
+sealed class PreferenceItem(open val id: String) {
+    data class InputFieldPref(
+        override val id: String,
+        val sectionId: String,
         val title: String,
         val hint: String? = null,
         val type: InputType,
         val onChangeCallback: ((String) -> Unit)? = null
-    ) : PreferenceItem()
+    ) : PreferenceItem(id)
 
-    data class Switch(
-        val id: String,
+
+    class SwitchPref(
+        override val id: String,
         val title: String,
         val description: String? = null,
-        val default: Boolean,
-        val onChangeCallback: ((Boolean) -> Unit)? = null
-    ) :
-        PreferenceItem()
+        val defaultValueProvider: () -> Boolean
+    ) : PreferenceItem(id) {
 
-    data class Button(val label: String, val action: () -> Unit) : PreferenceItem()
+        var defaultValue: Boolean = defaultValueProvider()
+        var onChangeCallback: ((Boolean) -> Unit)? = null
+            set(value) {
+                field = { booleanValue ->
+                    value?.invoke(booleanValue)
+                }
+            }
+    }
+
+    data class Button(override val id: String, val label: String, val action: () -> Unit) :
+        PreferenceItem(id)
 }
 
 enum class InputType {

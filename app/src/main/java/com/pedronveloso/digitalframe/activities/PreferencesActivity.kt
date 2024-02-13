@@ -94,6 +94,7 @@ class PreferencesActivity : ComponentActivity() {
     ) {
         val clockData = RealClockData(dataPersistence)
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
+
         val use24HClock = PreferenceItem.SwitchPref(
             id = "use_24h_format",
             title = getString(R.string.pref_clock_24h_title),
@@ -105,7 +106,18 @@ class PreferencesActivity : ComponentActivity() {
             }
         }
 
+        val showYearPreference = PreferenceItem.SwitchPref(
+            id = "show_year",
+            title = getString(R.string.pref_clock_show_year),
+            initialValueProvider = { clockData.showYear() }
+        ).apply {
+            onChangeCallback = { enabled ->
+                clockData.setShowYear(enabled)
+            }
+        }
+
         clockSection.addPreference(use24HClock)
+        clockSection.addPreference(showYearPreference)
         topLevelPrefs.addSection(clockSection.build())
     }
 

@@ -10,6 +10,8 @@ interface ClockData : PluginData {
     fun use24HClock(): Boolean
     fun setUse24HClock(value: Boolean)
 
+    fun showYear(): Boolean
+    fun setShowYear(value: Boolean)
 }
 
 
@@ -26,6 +28,17 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_24H_CLOCK, value)
     }
 
+    override fun showYear(): Boolean {
+        return persistence.getPreferenceValue(
+            SECTION_ID,
+            PROPERTY_SHOW_YEAR, true
+        )
+    }
+
+    override fun setShowYear(value: Boolean) {
+        persistence.setPreferenceValue(SECTION_ID, PROPERTY_SHOW_YEAR, value)
+    }
+
     override fun isEnabled(): Boolean {
         return persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
     }
@@ -37,6 +50,7 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
     companion object {
         private const val SECTION_ID = "clock"
         private const val PROPERTY_24H_CLOCK = "24h-clock"
+        private const val PROPERTY_SHOW_YEAR = "show-year"
     }
 
 }

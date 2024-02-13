@@ -61,13 +61,24 @@ class ClockViewModel(
                     text = formatter.format(currentTime),
                     style = textStyleDisplayLarge(backgroundHsl)
                 )
-                Text(
-                    text = currentTime.format(
-                        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                            .withLocale(Locale.getDefault())
-                    ),
-                    style = textStyleTitleLarge(backgroundHsl)
-                )
+
+                if (clockData.showYear()) {
+                    Text(
+                        text = currentTime.format(
+                            DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                                .withLocale(Locale.getDefault())
+                        ),
+                        style = textStyleTitleLarge(backgroundHsl)
+                    )
+                } else {
+                    // A formatter that excludes the year.
+                    val formatterWithoutYear =
+                        DateTimeFormatter.ofPattern("MMM d").withLocale(Locale.getDefault())
+                    Text(
+                        text = currentTime.format(formatterWithoutYear),
+                        style = textStyleTitleLarge(backgroundHsl)
+                    )
+                }
             }
         }
     }

@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,9 @@ import androidx.navigation.navArgument
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.clock.ClockData
+import com.pedronveloso.digitalframe.elements.countdown.CountdownData
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
+import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.PreferencesRoot
 import com.pedronveloso.digitalframe.preferences.PreferencesSection
@@ -60,6 +63,7 @@ class PreferencesActivity : ComponentActivity() {
         val topLevelPrefs = PreferencesRoot.Builder()
         backgroundMenuSection(topLevelPrefs)
         clockMenuSection(dataPersistence, topLevelPrefs)
+        countdownMenuSection(dataPersistence, topLevelPrefs)
 
         setContent {
             DigitalFrameTheme {
@@ -77,7 +81,7 @@ class PreferencesActivity : ComponentActivity() {
             id = "use_24h_format",
             title = getString(R.string.pref_clock_24h_title),
             description = getString(R.string.pref_clock_24h_description),
-            defaultValueProvider = { ClockData.use24HClock(dataPersistence) }
+            initialValueProvider = { ClockData.use24HClock(dataPersistence) }
         ).apply {
             onChangeCallback = { enabled ->
                 ClockData.setUse24HClock(dataPersistence, enabled)
@@ -110,7 +114,40 @@ class PreferencesActivity : ComponentActivity() {
         topLevelPrefs.addSection(backgroundSection.build())
     }
 
+    private fun countdownMenuSection(
+        dataPersistence: SharedPreferencesPersistence,
+        topLevelPrefs: PreferencesRoot.Builder
+    ) {
+        val countdownSection =
+            PreferencesSection.Builder("countdown", getString(R.string.pref_countdown_title))
+        val daysRemainingInput = PreferenceItem.InputFieldPref(
+            id = "days_remaining",
+            sectionId = "countdown",
+            title = getString(R.string.pref_countdown_days_remaining),
+            type = InputType.INT,
+            initialValueProvider = { CountdownData.getDaysRemaining(dataPersistence).toString() },
+            onChangeCallback = { value ->
+                val intValue = value.toIntOrNull() ?: 0
+                CountdownData.setDaysRemaining(dataPersistence, intValue)
+            }
+        )
 
+        val countdownMessageInput = PreferenceItem.InputFieldPref(
+            id = "countdown_message",
+            sectionId = "countdown",
+            title = getString(R.string.pref_countdown_message),
+            type = InputType.TEXT,
+            initialValueProvider = { CountdownData.getMessage(dataPersistence) },
+            onChangeCallback = { value ->
+                CountdownData.setMessage(dataPersistence, value)
+            }
+        )
+
+
+        countdownSection.addPreference(daysRemainingInput)
+        countdownSection.addPreference(countdownMessageInput)
+        topLevelPrefs.addSection(countdownSection.build())
+    }
 }
 
 @Composable
@@ -214,7 +251,7 @@ fun RenderPreferences(items: List<PreferenceItem>) {
 
 @Composable
 fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = preference.title, style = MyTypography.bodyLarge)
@@ -229,14 +266,20 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                 }
             ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    if (!focusState.isFocused) {
+                        preference.onChangeCallback?.invoke(text)
+                    }
+                }
         )
     }
 }
 
 @Composable
 fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
-    var isChecked by remember { mutableStateOf(preference.defaultValueProvider.invoke()) }
+    var isChecked by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
 
     Row(
         modifier = Modifier

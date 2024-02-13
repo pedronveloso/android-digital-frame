@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name" translatable="false">Digital Frame</string>
+
     <string name="preferences_title">Preferences</string>
     <string name="pref_bg_title">Background</string>
     <string name="pref_bg_photo_picker">Pick photos</string>
     <string name="pref_clock_title">Clock</string>
     <string name="pref_clock_24h_title">Use 24h format</string>
     <string name="pref_clock_24h_description">Use 24h format instead of AM/PM</string>
+    <string name="pref_countdown_title">Countdown</string>
+    <string name="pref_countdown_days_remaining">Days remaining</string>
+    <string name="pref_countdown_message">Countdown message</string>
 
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

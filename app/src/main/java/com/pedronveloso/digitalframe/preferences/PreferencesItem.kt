@@ -7,6 +7,7 @@ sealed class PreferenceItem(open val id: String) {
         val title: String,
         val hint: String? = null,
         val type: InputType,
+        val initialValueProvider: () -> String,
         val onChangeCallback: ((String) -> Unit)? = null
     ) : PreferenceItem(id)
 
@@ -15,10 +16,10 @@ sealed class PreferenceItem(open val id: String) {
         override val id: String,
         val title: String,
         val description: String? = null,
-        val defaultValueProvider: () -> Boolean
+        val initialValueProvider: () -> Boolean
     ) : PreferenceItem(id) {
 
-        var defaultValue: Boolean = defaultValueProvider()
+        var defaultValue: Boolean = initialValueProvider()
         var onChangeCallback: ((Boolean) -> Unit)? = null
             set(value) {
                 field = { booleanValue ->

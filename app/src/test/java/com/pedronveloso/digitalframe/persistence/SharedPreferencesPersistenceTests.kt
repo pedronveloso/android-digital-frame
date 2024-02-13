@@ -43,7 +43,7 @@ class SharedPreferencesPersistenceTest {
         val value = 42
         sharedPreferencesPersistence.setPreferenceValue(section_id, property_key, value)
 
-        val result = sharedPreferences.getInt("$section_id:$property_key", 0)
+        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, property_key, 0)
         assertThat(result).isEqualTo(value)
     }
 
@@ -65,8 +65,8 @@ class SharedPreferencesPersistenceTest {
         val value = 42.42
         sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
 
-        val storedValue = sharedPreferences.getString("$section_id:$key", null)
-        assertThat(storedValue?.toDouble()).isEqualTo(value)
+        val storedValue = sharedPreferencesPersistence.getPreferenceValue(section_id, key, 0.0)
+        assertThat(storedValue).isEqualTo(value)
     }
 
     @Test
@@ -87,7 +87,7 @@ class SharedPreferencesPersistenceTest {
         val value = "testValue"
         sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
 
-        val result = sharedPreferences.getString("$section_id:$key", null)
+        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, key, "")
         assertThat(result).isEqualTo(value)
     }
 
@@ -109,7 +109,7 @@ class SharedPreferencesPersistenceTest {
         val value = true
         sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
 
-        val result = sharedPreferences.getBoolean("$section_id:$key", false)
+        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, key, false)
         assertThat(result).isEqualTo(value)
     }
 }

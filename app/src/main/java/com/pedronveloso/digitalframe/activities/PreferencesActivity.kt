@@ -1,5 +1,6 @@
 package com.pedronveloso.digitalframe.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -56,22 +57,9 @@ class PreferencesActivity : ComponentActivity() {
 
         val dataPersistence = SharedPreferencesPersistence(this)
 
-
         val topLevelPrefs = PreferencesRoot.Builder()
-        val clockSection = PreferencesSection.Builder("clock", "Clock")
-        val user24HClock = PreferenceItem.SwitchPref(
-            id = "use_24h_format",
-            title = "Use 24h format",
-            description = "Use 24h format instead of AM/PM",
-            defaultValueProvider = { ClockData.use24HClock(dataPersistence) }
-        ).apply {
-            onChangeCallback = { enabled ->
-                ClockData.setUse24HClock(dataPersistence, enabled)
-            }
-        }
-
-        clockSection.addPreference(user24HClock)
-        topLevelPrefs.addSection(clockSection.build())
+        backgroundMenuSection(topLevelPrefs)
+        clockMenuSection(dataPersistence, topLevelPrefs)
 
         setContent {
             DigitalFrameTheme {
@@ -79,6 +67,49 @@ class PreferencesActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun clockMenuSection(
+        dataPersistence: SharedPreferencesPersistence,
+        topLevelPrefs: PreferencesRoot.Builder
+    ) {
+        val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
+        val use24HClock = PreferenceItem.SwitchPref(
+            id = "use_24h_format",
+            title = getString(R.string.pref_clock_24h_title),
+            description = getString(R.string.pref_clock_24h_description),
+            defaultValueProvider = { ClockData.use24HClock(dataPersistence) }
+        ).apply {
+            onChangeCallback = { enabled ->
+                ClockData.setUse24HClock(dataPersistence, enabled)
+            }
+        }
+
+        clockSection.addPreference(use24HClock)
+        topLevelPrefs.addSection(clockSection.build())
+    }
+
+    private fun backgroundMenuSection(
+        topLevelPrefs: PreferencesRoot.Builder
+    ) {
+        val backgroundSection =
+            PreferencesSection.Builder("background", getString(R.string.pref_bg_title))
+        val pickBackgroundImagesBtn = PreferenceItem.Button(
+            id = "pick_background_images",
+            label = getString(R.string.pref_bg_photo_picker),
+            action = {
+                startActivity(
+                    Intent(
+                        this@PreferencesActivity,
+                        BackgroundPickerActivity::class.java
+                    )
+                )
+            }
+        )
+
+        backgroundSection.addPreference(pickBackgroundImagesBtn)
+        topLevelPrefs.addSection(backgroundSection.build())
+    }
+
 
 }
 

@@ -20,7 +20,6 @@ import java.io.InputStream
 import kotlin.math.max
 
 class BackgroundPickerActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -29,25 +28,25 @@ class BackgroundPickerActivity : ComponentActivity() {
 
                 ImagePickerLauncher { uris ->
                     copyImagesToInternalStorage(
-                        context, uris,
-                        PhotosBackgroundViewModel.BACKGROUND_PHOTOS_DIR
+                        context,
+                        uris,
+                        PhotosBackgroundViewModel.BACKGROUND_PHOTOS_DIR,
                     )
 
                     finish()
                 }
-
-
             }
         }
     }
 
     @Composable
     fun ImagePickerLauncher(onImagesPicked: (List<Uri>) -> Unit) {
-        val launcher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetMultipleContents()
-        ) { uris: List<Uri> ->
-            onImagesPicked(uris)
-        }
+        val launcher =
+            rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.GetMultipleContents(),
+            ) { uris: List<Uri> ->
+                onImagesPicked(uris)
+            }
 
         LaunchedEffect(Unit) {
             launcher.launch("image/*")
@@ -55,7 +54,11 @@ class BackgroundPickerActivity : ComponentActivity() {
     }
 }
 
-fun copyImagesToInternalStorage(context: Context, imageUris: List<Uri>, directoryName: String) {
+fun copyImagesToInternalStorage(
+    context: Context,
+    imageUris: List<Uri>,
+    directoryName: String,
+) {
     val directory = File(context.filesDir, directoryName)
     if (!directory.exists()) {
         directory.mkdir()
@@ -83,16 +86,19 @@ fun copyImagesToInternalStorage(context: Context, imageUris: List<Uri>, director
     }
 }
 
-
 fun getLargestScreenDimension(context: Context): Int {
     val displayMetrics = context.resources.displayMetrics
     return max(displayMetrics.widthPixels, displayMetrics.heightPixels)
 }
 
-fun resizeImage(file: File, targetSize: Int): Bitmap {
-    val options = BitmapFactory.Options().apply {
-        inJustDecodeBounds = true
-    }
+fun resizeImage(
+    file: File,
+    targetSize: Int,
+): Bitmap {
+    val options =
+        BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
     BitmapFactory.decodeFile(file.absolutePath, options)
     val (width, height) = options.run { outWidth to outHeight }
     val scaleFactor = max(width, height).toFloat() / targetSize

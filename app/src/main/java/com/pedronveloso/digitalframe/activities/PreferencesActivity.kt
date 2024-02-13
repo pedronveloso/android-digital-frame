@@ -68,7 +68,6 @@ import java.util.Calendar
 import java.util.Locale
 
 class PreferencesActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,54 +89,55 @@ class PreferencesActivity : ComponentActivity() {
 
     private fun addClockMenuSection(
         topLevelPrefs: PreferencesRoot.Builder,
-        dataPersistence: SharedPreferencesPersistence
+        dataPersistence: SharedPreferencesPersistence,
     ) {
         val clockData = RealClockData(dataPersistence)
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
 
-        val use24HClock = PreferenceItem.SwitchPref(
-            id = "use_24h_format",
-            title = getString(R.string.pref_clock_24h_title),
-            description = getString(R.string.pref_clock_24h_description),
-            initialValueProvider = { clockData.use24HClock() }
-        ).apply {
-            onChangeCallback = { enabled ->
-                clockData.setUse24HClock(enabled)
+        val use24HClock =
+            PreferenceItem.SwitchPref(
+                id = "use_24h_format",
+                title = getString(R.string.pref_clock_24h_title),
+                description = getString(R.string.pref_clock_24h_description),
+                initialValueProvider = { clockData.use24HClock() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    clockData.setUse24HClock(enabled)
+                }
             }
-        }
 
-        val showYearPreference = PreferenceItem.SwitchPref(
-            id = "show_year",
-            title = getString(R.string.pref_clock_show_year),
-            initialValueProvider = { clockData.showYear() }
-        ).apply {
-            onChangeCallback = { enabled ->
-                clockData.setShowYear(enabled)
+        val showYearPreference =
+            PreferenceItem.SwitchPref(
+                id = "show_year",
+                title = getString(R.string.pref_clock_show_year),
+                initialValueProvider = { clockData.showYear() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    clockData.setShowYear(enabled)
+                }
             }
-        }
 
         clockSection.addPreference(use24HClock)
         clockSection.addPreference(showYearPreference)
         topLevelPrefs.addSection(clockSection.build())
     }
 
-    private fun addBackgroundMenuSection(
-        topLevelPrefs: PreferencesRoot.Builder
-    ) {
+    private fun addBackgroundMenuSection(topLevelPrefs: PreferencesRoot.Builder) {
         val backgroundSection =
             PreferencesSection.Builder("background", getString(R.string.pref_bg_title))
-        val pickBackgroundImagesBtn = PreferenceItem.Button(
-            id = "pick_background_images",
-            label = getString(R.string.pref_bg_photo_picker),
-            action = {
-                startActivity(
-                    Intent(
-                        this@PreferencesActivity,
-                        BackgroundPickerActivity::class.java
+        val pickBackgroundImagesBtn =
+            PreferenceItem.Button(
+                id = "pick_background_images",
+                label = getString(R.string.pref_bg_photo_picker),
+                action = {
+                    startActivity(
+                        Intent(
+                            this@PreferencesActivity,
+                            BackgroundPickerActivity::class.java,
+                        ),
                     )
-                )
-            }
-        )
+                },
+            )
 
         backgroundSection.addPreference(pickBackgroundImagesBtn)
         topLevelPrefs.addSection(backgroundSection.build())
@@ -145,36 +145,37 @@ class PreferencesActivity : ComponentActivity() {
 
     private fun addCountdownMenuSection(
         topLevelPrefs: PreferencesRoot.Builder,
-        dataPersistence: SharedPreferencesPersistence
+        dataPersistence: SharedPreferencesPersistence,
     ) {
         val countdownData = RealCountdownData(dataPersistence)
         val countdownSection =
             PreferencesSection.Builder("countdown", getString(R.string.pref_countdown_title))
-        val daysRemainingInput = PreferenceItem.InputFieldPref(
-            id = "days_remaining",
-            sectionId = "countdown",
-            title = getString(R.string.pref_countdown_days_remaining),
-            type = InputType.DATE,
-            initialValueProvider = { countdownData.getTargetDate().toString() },
-            onChangeCallback = { value ->
-                val dateValue = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(value)
-                countdownData.setTargetDate(
-                    dateValue.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                )
-            }
-        )
+        val daysRemainingInput =
+            PreferenceItem.InputFieldPref(
+                id = "days_remaining",
+                sectionId = "countdown",
+                title = getString(R.string.pref_countdown_days_remaining),
+                type = InputType.DATE,
+                initialValueProvider = { countdownData.getTargetDate().toString() },
+                onChangeCallback = { value ->
+                    val dateValue = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(value)
+                    countdownData.setTargetDate(
+                        dateValue.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    )
+                },
+            )
 
-        val countdownMessageInput = PreferenceItem.InputFieldPref(
-            id = "countdown_message",
-            sectionId = "countdown",
-            title = getString(R.string.pref_countdown_message),
-            type = InputType.TEXT,
-            initialValueProvider = { countdownData.getMessage() },
-            onChangeCallback = { value ->
-                countdownData.setMessage(value)
-            }
-        )
-
+        val countdownMessageInput =
+            PreferenceItem.InputFieldPref(
+                id = "countdown_message",
+                sectionId = "countdown",
+                title = getString(R.string.pref_countdown_message),
+                type = InputType.TEXT,
+                initialValueProvider = { countdownData.getMessage() },
+                onChangeCallback = { value ->
+                    countdownData.setMessage(value)
+                },
+            )
 
         countdownSection.addPreference(daysRemainingInput)
         countdownSection.addPreference(countdownMessageInput)
@@ -183,32 +184,34 @@ class PreferencesActivity : ComponentActivity() {
 
     private fun addWeatherMenuSection(
         topLevelPrefs: PreferencesRoot.Builder,
-        dataPersistence: SharedPreferencesPersistence
+        dataPersistence: SharedPreferencesPersistence,
     ) {
         val weatherSection =
             PreferencesSection.Builder("weather", getString(R.string.pref_weather_title))
         val weatherData = RealWeatherData(dataPersistence)
 
-        val useCelsiusPreference = PreferenceItem.SwitchPref(
-            id = "use_celsius",
-            title = getString(R.string.pref_weather_use_celcius),
-            description = getString(R.string.pref_weather_use_celcius_description),
-            initialValueProvider = { weatherData.useCelsius() }
-        ).apply {
-            onChangeCallback = { enabled ->
-                weatherData.setUseCelsius(enabled)
+        val useCelsiusPreference =
+            PreferenceItem.SwitchPref(
+                id = "use_celsius",
+                title = getString(R.string.pref_weather_use_celcius),
+                description = getString(R.string.pref_weather_use_celcius_description),
+                initialValueProvider = { weatherData.useCelsius() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    weatherData.setUseCelsius(enabled)
+                }
             }
-        }
 
-        val showWindSpeedPreference = PreferenceItem.SwitchPref(
-            id = "show_wind_speed",
-            title = getString(R.string.pref_weather_show_wind_speed),
-            initialValueProvider = { weatherData.showWind() }
-        ).apply {
-            onChangeCallback = { enabled ->
-                weatherData.setShowWind(enabled)
+        val showWindSpeedPreference =
+            PreferenceItem.SwitchPref(
+                id = "show_wind_speed",
+                title = getString(R.string.pref_weather_show_wind_speed),
+                initialValueProvider = { weatherData.showWind() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    weatherData.setShowWind(enabled)
+                }
             }
-        }
 
         weatherSection.addPreference(useCelsiusPreference)
         weatherSection.addPreference(showWindSpeedPreference)
@@ -217,41 +220,42 @@ class PreferencesActivity : ComponentActivity() {
 
     private fun addGeneralMenuSection(
         topLevelPrefs: PreferencesRoot.Builder,
-        dataPersistence: SharedPreferencesPersistence
+        dataPersistence: SharedPreferencesPersistence,
     ) {
         val generalSection =
             PreferencesSection.Builder("general", getString(R.string.pref_general_title))
         val generalData = RealGeneralData(dataPersistence)
 
-        val allowCrashCollection = PreferenceItem.SwitchPref(
-            id = "allow_crash_collection",
-            title = getString(R.string.pref_general_crash_reports),
-            description = getString(R.string.pref_general_crash_reports_description),
-            initialValueProvider = { !generalData.explicitlyDisabledCrashCollection() }
-        ).apply {
-            onChangeCallback = { enabled ->
-                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
-                generalData.setExplicitlyDisabledCrashCollection(!enabled)
+        val allowCrashCollection =
+            PreferenceItem.SwitchPref(
+                id = "allow_crash_collection",
+                title = getString(R.string.pref_general_crash_reports),
+                description = getString(R.string.pref_general_crash_reports_description),
+                initialValueProvider = { !generalData.explicitlyDisabledCrashCollection() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
+                    generalData.setExplicitlyDisabledCrashCollection(!enabled)
+                }
             }
-        }
 
         generalSection.addPreference(allowCrashCollection)
         topLevelPrefs.addSection(generalSection.build())
     }
-
 }
 
 @Composable
 fun PreferenceSectionsScreen(
     sections: List<PreferencesSection>,
-    navigateToSection: (PreferencesSection) -> Unit
+    navigateToSection: (PreferencesSection) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.weight(1f)) {
             itemsIndexed(sections) { index, section ->
                 PreferenceSectionItem(
                     section = section,
-                    navigateToSection = { navigateToSection(section) })
+                    navigateToSection = { navigateToSection(section) },
+                )
                 if (index < sections.size - 1) {
                     HorizontalDivider()
                 }
@@ -264,18 +268,18 @@ fun PreferenceSectionsScreen(
 @Composable
 fun AppVersionFooter() {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = BuildConfig.VERSION_NAME,
-            style = MyTypography.bodyMedium
+            style = MyTypography.bodyMedium,
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -287,12 +291,12 @@ fun PreferencesNavigation(preferences: PreferencesRoot) {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.preferences_title)) },
             )
-        }
+        },
     ) { padding ->
         NavHost(
             navController = navController,
             startDestination = "sectionsList",
-            Modifier.padding(padding)
+            Modifier.padding(padding),
         ) {
             composable("sectionsList") {
                 PreferenceSectionsScreen(sections = preferences.sections) { section: PreferencesSection ->
@@ -301,7 +305,7 @@ fun PreferencesNavigation(preferences: PreferencesRoot) {
             }
             composable(
                 route = "sectionDetails/{sectionTitle}",
-                arguments = listOf(navArgument("sectionTitle") { type = NavType.StringType })
+                arguments = listOf(navArgument("sectionTitle") { type = NavType.StringType }),
             ) { backStackEntry ->
                 val sectionTitle = backStackEntry.arguments?.getString("sectionTitle")
                 val section = preferences.sections.find { it.title == sectionTitle }
@@ -314,13 +318,17 @@ fun PreferencesNavigation(preferences: PreferencesRoot) {
 }
 
 @Composable
-fun PreferenceSectionItem(section: PreferencesSection, navigateToSection: () -> Unit) {
+fun PreferenceSectionItem(
+    section: PreferencesSection,
+    navigateToSection: () -> Unit,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = navigateToSection)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = navigateToSection)
+                .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = section.title, modifier = Modifier.weight(1f), style = MyTypography.bodyLarge)
         Icon(Icons.Default.ArrowForward, contentDescription = "Go to section")
@@ -355,30 +363,34 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                 onValueChange = { text = it },
                 placeholder = { Text(preference.hint ?: "") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    preference.onChangeCallback?.invoke(text)
-                }),
+                keyboardActions =
+                    KeyboardActions(onDone = {
+                        preference.onChangeCallback?.invoke(text)
+                    }),
                 singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (!focusState.isFocused) {
-                            preference.onChangeCallback?.invoke(text)
-                        }
-                    }
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { focusState ->
+                            if (!focusState.isFocused) {
+                                preference.onChangeCallback?.invoke(text)
+                            }
+                        },
             )
         } else {
             // Button that triggers a DatePicker dialog for DATE type.
-            val datePickerDialog = remember {
-                DatePickerDialog(context, { _, year, month, dayOfMonth ->
-                    val calendar = Calendar.getInstance().apply {
-                        set(year, month, dayOfMonth)
-                    }
-                    text =
-                        SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(calendar.time)
-                    preference.onChangeCallback?.invoke(text)
-                }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)
-            }
+            val datePickerDialog =
+                remember {
+                    DatePickerDialog(context, { _, year, month, dayOfMonth ->
+                        val calendar =
+                            Calendar.getInstance().apply {
+                                set(year, month, dayOfMonth)
+                            }
+                        text =
+                            SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(calendar.time)
+                        preference.onChangeCallback?.invoke(text)
+                    }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)
+                }
 
             OutlinedButton(onClick = {
                 datePickerDialog.show()
@@ -394,10 +406,11 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
     var isChecked by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
 
     Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = preference.title, style = MyTypography.titleMedium)
@@ -411,7 +424,7 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
             onCheckedChange = {
                 isChecked = it
                 preference.onChangeCallback?.invoke(it)
-            }
+            },
         )
     }
 }
@@ -420,9 +433,10 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
 fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
     Button(
         onClick = preference.action,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
     ) {
         Text(preference.label)
     }

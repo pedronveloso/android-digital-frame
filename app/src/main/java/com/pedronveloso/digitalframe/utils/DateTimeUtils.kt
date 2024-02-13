@@ -2,7 +2,6 @@ package com.pedronveloso.digitalframe.utils
 
 import java.time.LocalTime
 
-
 fun isDayTime(): Boolean {
     val currentTime = LocalTime.now()
     val startDay = LocalTime.of(6, 0) // 6 AM

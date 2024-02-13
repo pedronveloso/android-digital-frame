@@ -13,8 +13,7 @@ import java.time.LocalDate
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Config.OLDEST_SDK])
-class SharedPreferencesPersistenceTest {
-
+class SharedPreferencesPersistenceTests {
     private lateinit var sharedPreferencesPersistence: SharedPreferencesPersistence
     private lateinit var sharedPreferences: SharedPreferences
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -31,99 +30,104 @@ class SharedPreferencesPersistenceTest {
     @Test
     fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forInt() {
         val defaultValue = 0
-        val result = sharedPreferencesPersistence.getPreferenceValue(
-            "section",
-            "missing_int_key",
-            defaultValue
-        )
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(
+                "section",
+                "missing_int_key",
+                defaultValue,
+            )
         assertThat(result).isEqualTo(defaultValue)
     }
 
     @Test
     fun setPreferenceValue_savesIntValue() {
-        val section_id = "section"
-        val property_key = "int_key"
+        val sectionId = "section"
+        val propertyKey = "int_key"
         val value = 42
-        sharedPreferencesPersistence.setPreferenceValue(section_id, property_key, value)
+        sharedPreferencesPersistence.setPreferenceValue(sectionId, propertyKey, value)
 
-        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, property_key, 0)
+        val result = sharedPreferencesPersistence.getPreferenceValue(sectionId, propertyKey, 0)
         assertThat(result).isEqualTo(value)
     }
 
     @Test
     fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forDouble() {
         val defaultValue = 0.0
-        val result = sharedPreferencesPersistence.getPreferenceValue(
-            "section",
-            "missing_double_key",
-            defaultValue
-        )
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(
+                "section",
+                "missing_double_key",
+                defaultValue,
+            )
         assertThat(result).isEqualTo(defaultValue)
     }
 
     @Test
     fun setPreferenceValue_savesDoubleValue() {
-        val section_id = "section"
+        val sectionId = "section"
         val key = "double_key"
         val value = 42.42
-        sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
+        sharedPreferencesPersistence.setPreferenceValue(sectionId, key, value)
 
-        val storedValue = sharedPreferencesPersistence.getPreferenceValue(section_id, key, 0.0)
+        val storedValue = sharedPreferencesPersistence.getPreferenceValue(sectionId, key, 0.0)
         assertThat(storedValue).isEqualTo(value)
     }
 
     @Test
     fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forString() {
         val defaultValue = "default"
-        val result = sharedPreferencesPersistence.getPreferenceValue(
-            "section",
-            "missing_string_key",
-            defaultValue
-        )
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(
+                "section",
+                "missing_string_key",
+                defaultValue,
+            )
         assertThat(result).isEqualTo(defaultValue)
     }
 
     @Test
     fun setPreferenceValue_savesStringValue() {
-        val section_id = "section"
+        val sectionId = "section"
         val key = "string_key"
         val value = "testValue"
-        sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
+        sharedPreferencesPersistence.setPreferenceValue(sectionId, key, value)
 
-        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, key, "")
+        val result = sharedPreferencesPersistence.getPreferenceValue(sectionId, key, "")
         assertThat(result).isEqualTo(value)
     }
 
     @Test
     fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forBoolean() {
         val defaultValue = false
-        val result = sharedPreferencesPersistence.getPreferenceValue(
-            "section",
-            "missing_boolean_key",
-            defaultValue
-        )
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(
+                "section",
+                "missing_boolean_key",
+                defaultValue,
+            )
         assertThat(result).isEqualTo(defaultValue)
     }
 
     @Test
     fun setPreferenceValue_savesBooleanValue() {
-        val section_id = "section"
+        val sectionId = "section"
         val key = "boolean_key"
         val value = true
-        sharedPreferencesPersistence.setPreferenceValue(section_id, key, value)
+        sharedPreferencesPersistence.setPreferenceValue(sectionId, key, value)
 
-        val result = sharedPreferencesPersistence.getPreferenceValue(section_id, key, false)
+        val result = sharedPreferencesPersistence.getPreferenceValue(sectionId, key, false)
         assertThat(result).isEqualTo(value)
     }
 
     @Test
     fun getPreferenceValue_returnsDefaultValue_whenKeyNotFound_forDate() {
         val defaultValue = LocalDate.of(2024, 2, 12)
-        val result = sharedPreferencesPersistence.getPreferenceValue(
-            "section",
-            "missing_date_key",
-            defaultValue
-        )
+        val result =
+            sharedPreferencesPersistence.getPreferenceValue(
+                "section",
+                "missing_date_key",
+                defaultValue,
+            )
         assertThat(result).isEqualTo(defaultValue)
     }
 

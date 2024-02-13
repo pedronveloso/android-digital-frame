@@ -8,17 +8,15 @@ sealed class PreferenceItem(open val id: String) {
         val hint: String? = null,
         val type: InputType,
         val initialValueProvider: () -> String,
-        val onChangeCallback: ((String) -> Unit)? = null
+        val onChangeCallback: ((String) -> Unit)? = null,
     ) : PreferenceItem(id)
-
 
     class SwitchPref(
         override val id: String,
         val title: String,
         val description: String? = null,
-        val initialValueProvider: () -> Boolean
+        val initialValueProvider: () -> Boolean,
     ) : PreferenceItem(id) {
-
         var defaultValue: Boolean = initialValueProvider()
         var onChangeCallback: ((Boolean) -> Unit)? = null
             set(value) {
@@ -33,5 +31,8 @@ sealed class PreferenceItem(open val id: String) {
 }
 
 enum class InputType {
-    TEXT, INT, DOUBLE, DATE
+    TEXT,
+    INT,
+    DOUBLE,
+    DATE,
 }

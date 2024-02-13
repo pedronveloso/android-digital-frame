@@ -55,7 +55,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -67,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     hideSystemUI(LocalView.current)
                     MainScreen(
@@ -96,7 +95,7 @@ fun MainScreen(
     photosBackgroundViewModel: PhotosBackgroundViewModel,
     clockViewModel: ClockViewModel,
     weatherViewModel: WeatherViewModel,
-    countdownViewModel: CountdownViewModel
+    countdownViewModel: CountdownViewModel,
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -109,16 +108,17 @@ fun MainScreen(
     val backgroundHsl by photosBackgroundViewModel.hsl.collectAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        showButton = true
-                    }
-                )
-            }
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = {
+                            showButton = true
+                        },
+                    )
+                },
     ) {
         RenderBackground(viewModel = photosBackgroundViewModel)
         clockViewModel.RenderClock(clockData = clockData, backgroundHsl = backgroundHsl)
@@ -129,15 +129,16 @@ fun MainScreen(
         AnimatedVisibility(
             visible = showButton,
             enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 300))
+            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
         ) {
             Button(
                 onClick = {
                     context.startActivity(Intent(context, PreferencesActivity::class.java))
                 },
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(16.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp),
             ) {
                 Text("Settings")
             }

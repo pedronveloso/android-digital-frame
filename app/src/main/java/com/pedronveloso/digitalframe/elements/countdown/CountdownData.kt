@@ -5,11 +5,13 @@ import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_E
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 import java.time.LocalDate
 
-
 interface CountdownData : PluginData {
     fun setTargetDate(value: LocalDate)
+
     fun getTargetDate(): LocalDate
+
     fun setMessage(value: String)
+
     fun getMessage(): String
 }
 
@@ -44,4 +46,3 @@ class RealCountdownData(private val persistence: PreferencesPersistence) : Count
         private const val MESSAGE = "message"
     }
 }
-

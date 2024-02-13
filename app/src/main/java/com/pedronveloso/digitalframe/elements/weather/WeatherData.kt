@@ -6,9 +6,11 @@ import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 
 interface WeatherData : PluginData {
     fun setUseCelsius(value: Boolean)
+
     fun useCelsius(): Boolean
 
     fun showWind(): Boolean
+
     fun setShowWind(value: Boolean)
 }
 
@@ -35,7 +37,6 @@ class RealWeatherData(private val persistence: PreferencesPersistence) : Weather
 
     override fun setEnabled(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_ENABLED, value)
-
     }
 
     companion object {

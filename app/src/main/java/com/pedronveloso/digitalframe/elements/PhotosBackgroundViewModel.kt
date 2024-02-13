@@ -39,166 +39,184 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 sealed class PhotoResource {
-    data class DrawableResource(@DrawableRes val id: Int) : PhotoResource()
+    data class DrawableResource(
+        @DrawableRes val id: Int,
+    ) : PhotoResource()
+
     data class FileResource(val filePath: String) : PhotoResource()
 }
 
 @HiltViewModel
-class PhotosBackgroundViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
-    @ApplicationContext private val appContext: Context
-) : ViewModel() {
-
-    companion object {
-        val EFFECT_DURATION = 20.seconds
-        const val BACKGROUND_PHOTOS_DIR = "background"
-    }
-
-    private val photoFlow = MutableStateFlow(loadInitialPhoto())
-
-    val currentPhoto: StateFlow<PhotoResource> = photoFlow
-
-    private val backgroundHSL = MutableStateFlow(FloatArray(3).apply { this[2] = 0.5f })
-    val hsl: StateFlow<FloatArray> = backgroundHSL
-
-    init {
-        viewModelScope.launch {
-            backgroundRotation(appContext)
+class PhotosBackgroundViewModel
+    @Inject
+    constructor(
+        private val savedState: SavedStateHandle,
+        @ApplicationContext private val appContext: Context,
+    ) : ViewModel() {
+        companion object {
+            val EFFECT_DURATION = 20.seconds
+            const val BACKGROUND_PHOTOS_DIR = "background"
         }
-    }
 
-    private suspend fun backgroundRotation(context: Context) {
-        val photoList = loadPhotosFromInternalStorage(context)
-        while (isActive) {
-            delay(EFFECT_DURATION.inWholeMilliseconds)
-            val newPhoto = photoList.random()
-            photoFlow.emit(newPhoto)
+        private val photoFlow = MutableStateFlow(loadInitialPhoto())
 
-            // Calculate and emit new brightness value.
-            calculateBrightness(newPhoto, context)
-        }
-    }
+        val currentPhoto: StateFlow<PhotoResource> = photoFlow
 
-    private fun calculateBrightness(photoResource: PhotoResource, context: Context) {
-        viewModelScope.launch {
-            val bitmap = when (photoResource) {
-                is PhotoResource.DrawableResource -> context.getDrawable(photoResource.id)
-                    ?.toBitmap()
+        private val backgroundHSL = MutableStateFlow(FloatArray(3).apply { this[2] = 0.5f })
+        val hsl: StateFlow<FloatArray> = backgroundHSL
 
-                is PhotoResource.FileResource -> BitmapFactory.decodeFile(photoResource.filePath)
-                else -> null
+        init {
+            viewModelScope.launch {
+                backgroundRotation(appContext)
             }
-            if (bitmap != null) {
-                try {
-                    val palette = Palette.from(bitmap).generate()
-                    val dominantSwatch = palette.dominantSwatch
-                    val hslValues = dominantSwatch?.hsl ?: FloatArray(3).apply { this[2] = 0f }
-                    backgroundHSL.emit(hslValues)
-                    Log.v("PhotosBackgroundViewModel", "HSL: ${hslValues.contentToString()}")
-                } catch (e: Exception) {
-                    // Handle any errors during brightness calculation
-                    Log.e("PhotosBackgroundViewModel", "Error calculating HSL", e)
+        }
+
+        private suspend fun backgroundRotation(context: Context) {
+            val photoList = loadPhotosFromInternalStorage(context)
+            while (isActive) {
+                delay(EFFECT_DURATION.inWholeMilliseconds)
+                val newPhoto = photoList.random()
+                photoFlow.emit(newPhoto)
+
+                // Calculate and emit new brightness value.
+                calculateBrightness(newPhoto, context)
+            }
+        }
+
+        private fun calculateBrightness(
+            photoResource: PhotoResource,
+            context: Context,
+        ) {
+            viewModelScope.launch {
+                val bitmap =
+                    when (photoResource) {
+                        is PhotoResource.DrawableResource ->
+                            context.getDrawable(photoResource.id)
+                                ?.toBitmap()
+
+                        is PhotoResource.FileResource -> BitmapFactory.decodeFile(photoResource.filePath)
+                        else -> null
+                    }
+                if (bitmap != null) {
+                    try {
+                        val palette = Palette.from(bitmap).generate()
+                        val dominantSwatch = palette.dominantSwatch
+                        val hslValues = dominantSwatch?.hsl ?: FloatArray(3).apply { this[2] = 0f }
+                        backgroundHSL.emit(hslValues)
+                        Log.v("PhotosBackgroundViewModel", "HSL: ${hslValues.contentToString()}")
+                    } catch (e: Exception) {
+                        // Handle any errors during brightness calculation
+                        Log.e("PhotosBackgroundViewModel", "Error calculating HSL", e)
+                    }
                 }
             }
         }
-    }
 
-    private fun loadInitialPhoto(): PhotoResource {
-        // Assuming a context is available here; if not, you need to pass it
-        val context: Context = appContext
-        val photosFromStorage = loadPhotosFromInternalStorage(context)
-        return if (photosFromStorage.isNotEmpty()) {
-            photosFromStorage.random()
-        } else {
-            PhotoResource.DrawableResource(R.drawable.photo1)
-        }
-    }
-
-    private fun loadPhotosFromInternalStorage(context: Context): List<PhotoResource> {
-        val backgroundDir = File(context.filesDir, BACKGROUND_PHOTOS_DIR)
-        val images = mutableListOf<PhotoResource>()
-
-        if (backgroundDir.exists() && backgroundDir.isDirectory) {
-            backgroundDir.listFiles { file -> file.isFile && file.canRead() }?.forEach { file ->
-                images.add(PhotoResource.FileResource(file.absolutePath))
+        private fun loadInitialPhoto(): PhotoResource {
+            // Assuming a context is available here; if not, you need to pass it
+            val context: Context = appContext
+            val photosFromStorage = loadPhotosFromInternalStorage(context)
+            return if (photosFromStorage.isNotEmpty()) {
+                photosFromStorage.random()
+            } else {
+                PhotoResource.DrawableResource(R.drawable.photo1)
             }
         }
 
-        return images.ifEmpty { loadDefaultPhotos() }
-    }
+        private fun loadPhotosFromInternalStorage(context: Context): List<PhotoResource> {
+            val backgroundDir = File(context.filesDir, BACKGROUND_PHOTOS_DIR)
+            val images = mutableListOf<PhotoResource>()
 
-    private fun loadDefaultPhotos(): List<PhotoResource> {
-        return listOf(
-            PhotoResource.DrawableResource(R.drawable.photo1),
-            PhotoResource.DrawableResource(R.drawable.photo2),
-            PhotoResource.DrawableResource(R.drawable.photo3),
-            PhotoResource.DrawableResource(R.drawable.photo1),
-            PhotoResource.DrawableResource(R.drawable.photo4),
-        )
+            if (backgroundDir.exists() && backgroundDir.isDirectory) {
+                backgroundDir.listFiles { file -> file.isFile && file.canRead() }?.forEach { file ->
+                    images.add(PhotoResource.FileResource(file.absolutePath))
+                }
+            }
+
+            return images.ifEmpty { loadDefaultPhotos() }
+        }
+
+        private fun loadDefaultPhotos(): List<PhotoResource> {
+            return listOf(
+                PhotoResource.DrawableResource(R.drawable.photo1),
+                PhotoResource.DrawableResource(R.drawable.photo2),
+                PhotoResource.DrawableResource(R.drawable.photo3),
+                PhotoResource.DrawableResource(R.drawable.photo1),
+                PhotoResource.DrawableResource(R.drawable.photo4),
+            )
+        }
     }
-}
 
 @Composable
 fun RenderBackground(viewModel: PhotosBackgroundViewModel) {
     val imageResource by viewModel.currentPhoto.collectAsState()
 
-    val painter: Painter = when (imageResource) {
-        is PhotoResource.DrawableResource -> rememberAsyncImagePainter(model = (imageResource as PhotoResource.DrawableResource).id)
-        is PhotoResource.FileResource -> rememberAsyncImagePainter(model = File((imageResource as PhotoResource.FileResource).filePath))
-    }
+    val painter: Painter =
+        when (imageResource) {
+            is PhotoResource.DrawableResource -> rememberAsyncImagePainter(model = (imageResource as PhotoResource.DrawableResource).id)
+            is PhotoResource.FileResource -> rememberAsyncImagePainter(model = File((imageResource as PhotoResource.FileResource).filePath))
+        }
 
     // Will render background image with a Ken Burns effect.
     val infiniteTransition = rememberInfiniteTransition(label = "ken-burns-bg")
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1.3f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ), label = "ken-burns-bg-scale"
+        label = "ken-burns-bg-scale",
     )
     val offsetX by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 100f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ), label = "ken-burns-bg-offset-x"
+        label = "ken-burns-bg-offset-x",
     )
     val offsetY by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 50f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        PhotosBackgroundViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ), label = "ken-burns-bg-offset-y"
+        label = "ken-burns-bg-offset-y",
     )
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offsetX,
-                translationY = offsetY
-            )
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offsetX,
+                    translationY = offsetY,
+                ),
     ) {
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
-
-

@@ -3,9 +3,8 @@ package com.pedronveloso.digitalframe.preferences
 data class PreferencesSection(
     val id: String,
     val title: String,
-    val preferenceItems: List<PreferenceItem>
+    val preferenceItems: List<PreferenceItem>,
 ) {
-
     class Builder(private val sectionId: String, private val title: String) {
         private val preferences = mutableListOf<PreferenceItem>()
         private val preferenceIds = mutableSetOf<String>()

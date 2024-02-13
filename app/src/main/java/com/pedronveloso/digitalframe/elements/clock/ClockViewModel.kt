@@ -25,9 +25,8 @@ import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
 
 class ClockViewModel(
-    private val savedState: SavedStateHandle
+    private val savedState: SavedStateHandle,
 ) : ViewModel() {
-
     private var currentTime by mutableStateOf(LocalDateTime.now())
 
     init {
@@ -43,13 +42,15 @@ class ClockViewModel(
     }
 
     @Composable
-    fun RenderClock(clockData: ClockData, backgroundHsl: FloatArray) {
+    fun RenderClock(
+        clockData: ClockData,
+        backgroundHsl: FloatArray,
+    ) {
         FadingComposable {
-
             Column(
                 Modifier
                     .padding(32.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 val formatter: DateTimeFormatter =
                     if (clockData.use24HClock()) {
@@ -59,16 +60,17 @@ class ClockViewModel(
                     }
                 Text(
                     text = formatter.format(currentTime),
-                    style = textStyleDisplayLarge(backgroundHsl)
+                    style = textStyleDisplayLarge(backgroundHsl),
                 )
 
                 if (clockData.showYear()) {
                     Text(
-                        text = currentTime.format(
-                            DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                                .withLocale(Locale.getDefault())
-                        ),
-                        style = textStyleTitleLarge(backgroundHsl)
+                        text =
+                            currentTime.format(
+                                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                                    .withLocale(Locale.getDefault()),
+                            ),
+                        style = textStyleTitleLarge(backgroundHsl),
                     )
                 } else {
                     // A formatter that excludes the year.
@@ -76,12 +78,10 @@ class ClockViewModel(
                         DateTimeFormatter.ofPattern("MMM d").withLocale(Locale.getDefault())
                     Text(
                         text = currentTime.format(formatterWithoutYear),
-                        style = textStyleTitleLarge(backgroundHsl)
+                        style = textStyleTitleLarge(backgroundHsl),
                     )
                 }
             }
         }
     }
-
-
 }

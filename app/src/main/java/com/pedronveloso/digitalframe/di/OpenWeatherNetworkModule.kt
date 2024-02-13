@@ -18,14 +18,14 @@ import java.time.LocalDateTime
 @Module
 @InstallIn(SingletonComponent::class)
 object OpenWeatherNetworkModule {
-
     private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
     @Provides
     fun profileRetrofit(): Retrofit {
-        val gson: Gson = GsonBuilder()
-            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
-            .create()
+        val gson: Gson =
+            GsonBuilder()
+                .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+                .create()
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -42,9 +42,6 @@ object OpenWeatherNetworkModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NetworkBinds {
-
     @Binds
-    abstract fun bindApiService(
-        apiServiceImpl: OpenWeatherServiceImpl
-    ): OpenWeatherService
+    abstract fun bindApiService(apiServiceImpl: OpenWeatherServiceImpl): OpenWeatherService
 }

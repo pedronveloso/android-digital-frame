@@ -27,9 +27,8 @@ import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.minutes
 
 class CountdownViewModel(
-    private val savedState: SavedStateHandle
+    private val savedState: SavedStateHandle,
 ) : ViewModel() {
-
     private var daysUntilEvent by mutableLongStateOf(0)
 
     private fun repeatedExecution(countdownData: CountdownData) {
@@ -42,9 +41,11 @@ class CountdownViewModel(
         }
     }
 
-
     @Composable
-    fun CountdownDisplay(countdownData: CountdownData, backgroundHsl: FloatArray) {
+    fun CountdownDisplay(
+        countdownData: CountdownData,
+        backgroundHsl: FloatArray,
+    ) {
         repeatedExecution(countdownData)
         FadingComposable {
             Column(
@@ -53,34 +54,37 @@ class CountdownViewModel(
                     .fillMaxWidth()
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
                 CountdownText(
                     daysUntil = daysUntilEvent,
                     countdownData,
-                    backgroundHsl = backgroundHsl
+                    backgroundHsl = backgroundHsl,
                 )
             }
         }
     }
 
     @Composable
-    fun CountdownText(daysUntil: Long, countdownData: CountdownData, backgroundHsl: FloatArray) {
+    fun CountdownText(
+        daysUntil: Long,
+        countdownData: CountdownData,
+        backgroundHsl: FloatArray,
+    ) {
         if (daysUntil >= 0) {
             Column(
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Text(
                     text = stringResource(id = R.string.countdown_days_remaining, daysUntil),
-                    style = FontStyles.textStyleDisplayMedium(backgroundHsl)
+                    style = FontStyles.textStyleDisplayMedium(backgroundHsl),
                 )
                 Text(
                     text = countdownData.getMessage().uppercase(),
-                    style = FontStyles.textStyleBodyLarge(backgroundHsl)
+                    style = FontStyles.textStyleBodyLarge(backgroundHsl),
                 )
             }
         }
     }
-
 }

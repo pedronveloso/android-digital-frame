@@ -4,6 +4,7 @@ import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 
 interface GeneralData {
     fun explicitlyDisabledCrashCollection(): Boolean
+
     fun setExplicitlyDisabledCrashCollection(value: Boolean)
 }
 
@@ -12,7 +13,7 @@ class RealGeneralData(private val persistence: PreferencesPersistence) : General
         return persistence.getPreferenceValue(
             SECTION_ID,
             EXPLICITLY_DISABLED_CRASH_COLLECTION,
-            false
+            false,
         )
     }
 

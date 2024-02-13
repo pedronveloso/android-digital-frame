@@ -6,7 +6,6 @@ package com.pedronveloso.digitalframe.data.vo
  * Blank state, as the name suggests, typically represents that the initial state (pre-request) should be displayed.
  */
 sealed class UiResult<in T> {
-
     class Blank<T> : UiResult<T>()
 
     class Loading<T> : UiResult<T>()
@@ -17,6 +16,7 @@ sealed class UiResult<in T> {
 
     companion object {
         fun <T> success(data: T): UiResult<T> = Success(data)
+
         fun <T> failure(exception: Exception): UiResult<T> = Failure(exception)
     }
 }

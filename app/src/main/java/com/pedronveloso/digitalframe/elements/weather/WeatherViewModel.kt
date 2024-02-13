@@ -39,149 +39,152 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(
-    private val apiService: OpenWeatherService
-) : ViewModel() {
+class WeatherViewModel
+    @Inject
+    constructor(
+        private val apiService: OpenWeatherService,
+    ) : ViewModel() {
+        private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
 
-    private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
-
-    init {
-        repeatedExecution()
-    }
-
-    private fun repeatedExecution() {
-        viewModelScope.launch {
-            fetchWeatherConditions()
-            // How often to refresh the API. TODO: Make configurable.
-            delay(3.hours)
+        init {
             repeatedExecution()
         }
-    }
 
-    private fun fetchWeatherConditions() {
-        weatherState = UiResult.Loading()
-
-        viewModelScope.launch {
-            weatherState = when (val result = apiService.fetchCurrentWeatherConditions()) {
-                is NetworkResult.Failure -> {
-                    UiResult.failure(NetworkException())
-                }
-
-                is NetworkResult.Success -> {
-                    UiResult.success(result.data)
-                }
+        private fun repeatedExecution() {
+            viewModelScope.launch {
+                fetchWeatherConditions()
+                // How often to refresh the API. TODO: Make configurable.
+                delay(3.hours)
+                repeatedExecution()
             }
         }
-    }
 
-    @Composable
-    fun RenderWeather(weatherData: WeatherData, backgroundHsl: FloatArray) {
-        FadingComposable {
-            Column(
-                Modifier
-                    .padding(32.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.End
-            ) {
-                when (weatherState) {
-                    is UiResult.Blank -> {
-                        Text(
-                            text = "No weather data",
-                            style = FontStyles.textStyleTitleMedium(backgroundHsl)
-                        )
+        private fun fetchWeatherConditions() {
+            weatherState = UiResult.Loading()
+
+            viewModelScope.launch {
+                weatherState =
+                    when (val result = apiService.fetchCurrentWeatherConditions()) {
+                        is NetworkResult.Failure -> {
+                            UiResult.failure(NetworkException())
+                        }
+
+                        is NetworkResult.Success -> {
+                            UiResult.success(result.data)
+                        }
                     }
-                    // TODO: If failed to get new weather data, use latest known data.
-                    is UiResult.Failure -> {
-                        Text(
-                            text = "Failed to get weather data",
-                            style = FontStyles.textStyleTitleMedium(backgroundHsl)
-                        )
-                    }
+            }
+        }
 
-                    is UiResult.Loading -> {
-                        Text(
-                            text = "loading...",
-                            style = FontStyles.textStyleTitleMedium(backgroundHsl)
-                        )
-                    }
-
-                    is UiResult.Success -> {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val weatherDay =
-                                (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
-
-
-                            // Noon.
-                            Spacer(modifier = Modifier.size(16.dp))
-                            DrawWeatherElementWithIcon(
-                                weatherData,
-                                temperature = weatherDay.temperatures.day,
-                                windSpeed = weatherDay.speed,
-                                iconMain = weatherDay.weather.first().main,
-                                backgroundHsl
+        @Composable
+        fun RenderWeather(
+            weatherData: WeatherData,
+            backgroundHsl: FloatArray,
+        ) {
+            FadingComposable {
+                Column(
+                    Modifier
+                        .padding(32.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    when (weatherState) {
+                        is UiResult.Blank -> {
+                            Text(
+                                text = "No weather data",
+                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
                             )
+                        }
+                        // TODO: If failed to get new weather data, use latest known data.
+                        is UiResult.Failure -> {
+                            Text(
+                                text = "Failed to get weather data",
+                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
+                            )
+                        }
+
+                        is UiResult.Loading -> {
+                            Text(
+                                text = "loading...",
+                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
+                            )
+                        }
+
+                        is UiResult.Success -> {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                val weatherDay =
+                                    (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
+
+                                // Noon.
+                                Spacer(modifier = Modifier.size(16.dp))
+                                DrawWeatherElementWithIcon(
+                                    weatherData,
+                                    temperature = weatherDay.temperatures.day,
+                                    windSpeed = weatherDay.speed,
+                                    iconMain = weatherDay.weather.first().main,
+                                    backgroundHsl,
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    @Composable
-    fun DrawWeatherElementWithIcon(
-        weatherData: WeatherData,
-        temperature: Double,
-        windSpeed: Double,
-        iconMain: String,
-        backgroundHsl: FloatArray
-    ) {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
+        @Composable
+        fun DrawWeatherElementWithIcon(
+            weatherData: WeatherData,
+            temperature: Double,
+            windSpeed: Double,
+            iconMain: String,
+            backgroundHsl: FloatArray,
         ) {
-            // Temperature.
-            val dayTemp: String
-            if (weatherData.useCelsius()) {
-                val dayTempValue = temperature.roundToInt()
-                dayTemp = "$dayTempValue °C"
-            } else {
-                val dayTempValue = (temperature * 9 / 5 + 32).roundToInt()
-                dayTemp = "$dayTempValue °F"
-            }
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // Temperature.
+                val dayTemp: String
+                if (weatherData.useCelsius()) {
+                    val dayTempValue = temperature.roundToInt()
+                    dayTemp = "$dayTempValue °C"
+                } else {
+                    val dayTempValue = (temperature * 9 / 5 + 32).roundToInt()
+                    dayTemp = "$dayTempValue °F"
+                }
 
-
-            Text(
-                text = dayTemp,
-                style = FontStyles.textStyleDisplayMedium(backgroundHsl)
-            )
-
-            // Wind Speed.
-            if (weatherData.showWind()) {
-                val windSpeedValue = windSpeed.roundToInt()
-                val windSpeedLabel = "💨 $windSpeedValue m/s"
                 Text(
-                    text = windSpeedLabel,
-                    style = FontStyles.textStyleBodyLarge(backgroundHsl)
+                    text = dayTemp,
+                    style = FontStyles.textStyleDisplayMedium(backgroundHsl),
                 )
-            }
 
-            // Icon.
-            val iconId = when (iconMain) {
-                "Clouds" -> R.drawable.cloudy_day
-                "Clear" -> R.drawable.sun
-                "Rain" -> R.drawable.cloud_rain
-                else -> R.drawable.ic_launcher_foreground
+                // Wind Speed.
+                if (weatherData.showWind()) {
+                    val windSpeedValue = windSpeed.roundToInt()
+                    val windSpeedLabel = "💨 $windSpeedValue m/s"
+                    Text(
+                        text = windSpeedLabel,
+                        style = FontStyles.textStyleBodyLarge(backgroundHsl),
+                    )
+                }
+
+                // Icon.
+                val iconId =
+                    when (iconMain) {
+                        "Clouds" -> R.drawable.cloudy_day
+                        "Clear" -> R.drawable.sun
+                        "Rain" -> R.drawable.cloud_rain
+                        else -> R.drawable.ic_launcher_foreground
+                    }
+                Image(painter = painterResource(id = iconId), contentDescription = null)
             }
-            Image(painter = painterResource(id = iconId), contentDescription = null)
         }
     }
-}
-
 
 @Preview(showBackground = true)
 @Composable

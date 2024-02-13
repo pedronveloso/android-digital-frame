@@ -23,8 +23,7 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
-
-object Effects{
+object Effects {
     const val FADING_DURATION = 800
     val FADING_CADENCE = 30.seconds
 }
@@ -37,15 +36,17 @@ fun FadingComposable(content: @Composable () -> Unit) {
     val offsetY = remember { mutableFloatStateOf(0f) }
 
     val transition = updateTransition(targetState = alpha.floatValue, label = "transition")
-    val animatedAlpha = transition.animateFloat(
-        transitionSpec = {
-            if (alpha.floatValue == 1f) {
-                tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)
-            } else {
-                tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)
-            }
-        }, label = ""
-    ) { state -> state }
+    val animatedAlpha =
+        transition.animateFloat(
+            transitionSpec = {
+                if (alpha.floatValue == 1f) {
+                    tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)
+                } else {
+                    tween(durationMillis = FADING_DURATION, easing = FastOutSlowInEasing)
+                }
+            },
+            label = "",
+        ) { state -> state }
 
     LaunchedEffect(coroutineScope) {
         while (true) {
@@ -54,12 +55,11 @@ fun FadingComposable(content: @Composable () -> Unit) {
             delay(FADING_DURATION.toLong()) // wait for fade out
 
             // Wait a bit while faded out, to act as a screen saver for AMOLED screens.
-            if(isDayTime()){
+            if (isDayTime()) {
                 delay(1500)
             } else {
                 delay(4000)
             }
-
 
             // generate a random position within 20 pixels in either direction
             offsetX.value = Random.nextFloat() * 40 - 20
@@ -71,7 +71,7 @@ fun FadingComposable(content: @Composable () -> Unit) {
     Box(
         Modifier
             .fillMaxSize()
-            .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
+            .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) },
     ) {
         Box(modifier = Modifier.alpha(animatedAlpha.value)) {
             content()

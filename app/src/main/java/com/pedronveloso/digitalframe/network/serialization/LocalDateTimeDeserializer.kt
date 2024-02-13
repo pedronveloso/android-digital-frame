@@ -9,15 +9,14 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
-
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
-        context: JsonDeserializationContext?
+        context: JsonDeserializationContext?,
     ): LocalDateTime {
         return LocalDateTime.ofInstant(
             Instant.ofEpochSecond(json?.asLong ?: 0),
-            ZoneId.systemDefault()
+            ZoneId.systemDefault(),
         )
     }
 }

@@ -4,23 +4,22 @@ import com.pedronveloso.digitalframe.persistence.PluginData
 import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_ENABLED
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 
-
 interface ClockData : PluginData {
-
     fun use24HClock(): Boolean
+
     fun setUse24HClock(value: Boolean)
 
     fun showYear(): Boolean
+
     fun setShowYear(value: Boolean)
 }
 
-
 class RealClockData(private val persistence: PreferencesPersistence) : ClockData {
-
     override fun use24HClock(): Boolean {
         return persistence.getPreferenceValue(
             SECTION_ID,
-            PROPERTY_24H_CLOCK, false
+            PROPERTY_24H_CLOCK,
+            false,
         )
     }
 
@@ -31,7 +30,8 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
     override fun showYear(): Boolean {
         return persistence.getPreferenceValue(
             SECTION_ID,
-            PROPERTY_SHOW_YEAR, true
+            PROPERTY_SHOW_YEAR,
+            true,
         )
     }
 
@@ -52,5 +52,4 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
         private const val PROPERTY_24H_CLOCK = "24h-clock"
         private const val PROPERTY_SHOW_YEAR = "show-year"
     }
-
 }

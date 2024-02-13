@@ -5,9 +5,7 @@ import com.pedronveloso.digitalframe.fakes.FakePreferencesPersistence
 import org.junit.Before
 import org.junit.Test
 
-
-class ClockDataTest {
-
+class ClockDataTests {
     private lateinit var fakePersistence: FakePreferencesPersistence
     private lateinit var clockData: ClockData
 
@@ -15,7 +13,6 @@ class ClockDataTest {
     fun setUp() {
         fakePersistence = FakePreferencesPersistence()
         clockData = RealClockData(fakePersistence)
-
     }
 
     @Test

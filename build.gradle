@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        compose_version = '1.6.0'
+        compose_version = '1.6.1'
         lifecycle_version = '2.7.0'
         retrofit_version = '2.9.0'
         retrofit_gson_version = '2.10.1'

@@ -1,4 +1,4 @@
-<img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width=50%>
+<img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width="96">
 
 # Welcome to Android Digital Frame! 🎉
 

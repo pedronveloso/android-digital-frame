@@ -20,10 +20,6 @@ jobs:
       - run: ./gradlew testDebugUnitTest
         continue-on-error: false
 
-      # Check ktlint formatting
-      - run: ./gradlew ktlintCheck
-        continue-on-error: false
-
       # Check Android Linting.
       - run: ./gradlew lintDebug
       - uses: yutailang0119/action-android-lint@v3

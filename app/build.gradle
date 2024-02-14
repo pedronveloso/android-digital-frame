@@ -3,15 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id "org.jlleitschuh.gradle.ktlint" version "12.1.0"
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
-}
-
-
-ktlint {
-    version.set("1.1.1")
-    baseline = file("ktlint-baseline.xml")
 }
 
 android {

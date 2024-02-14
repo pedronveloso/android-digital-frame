@@ -28,6 +28,8 @@ sealed class PreferenceItem(open val id: String) {
 
     data class Button(override val id: String, val label: String, val action: () -> Unit) :
         PreferenceItem(id)
+
+    data class Label(override val id: String, val text: String) : PreferenceItem(id)
 }
 
 enum class InputType {

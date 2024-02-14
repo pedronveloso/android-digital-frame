@@ -140,9 +140,9 @@ class PhotosBackgroundViewModel
             return listOf(
                 PhotoResource.DrawableResource(R.drawable.photo1),
                 PhotoResource.DrawableResource(R.drawable.photo2),
-                PhotoResource.DrawableResource(R.drawable.photo3),
+                PhotoResource.DrawableResource(R.drawable.photo2),
                 PhotoResource.DrawableResource(R.drawable.photo1),
-                PhotoResource.DrawableResource(R.drawable.photo4),
+                PhotoResource.DrawableResource(R.drawable.photo3),
             )
         }
     }

@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.data.exceptions.NetworkException
 import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
+import com.pedronveloso.digitalframe.data.openweather.WeatherType
 import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.elements.general.FakeGeneralData
 import com.pedronveloso.digitalframe.elements.general.GeneralData
@@ -132,7 +133,7 @@ class WeatherViewModel
                                     weatherData,
                                     temperature = weatherResponse.main.temp,
                                     windSpeed = weatherResponse.wind.speed,
-                                    iconMain = weatherResponse.weather.first().main,
+                                    weatherType = weatherResponse.weather.first().weatherType,
                                     backgroundHsl,
                                 )
                             }
@@ -147,7 +148,7 @@ class WeatherViewModel
             weatherData: WeatherData,
             temperature: Double,
             windSpeed: Double,
-            iconMain: String,
+            weatherType: WeatherType,
             backgroundHsl: FloatArray,
         ) {
             Column(
@@ -179,14 +180,22 @@ class WeatherViewModel
                     )
                 }
 
-                // Icon.
+                // TODO: Consider day and night.
                 val iconId =
-                    when (iconMain) {
-                        "Clouds" -> R.drawable.cloudy_day
-                        "Clear" -> R.drawable.sun
-                        "Rain" -> R.drawable.cloud_rain
-                        else -> R.drawable.ic_launcher_foreground
+                    when (weatherType) {
+                        WeatherType.Clear -> R.drawable.day_clear
+                        WeatherType.LightClouds -> R.drawable.day_partial_cloud
+                        WeatherType.HeavyClouds -> R.drawable.cloudy
+                        WeatherType.Rain -> R.drawable.rain
+                        WeatherType.Snow -> R.drawable.snow
+                        WeatherType.Thunderstorm -> R.drawable.thunder
+                        WeatherType.Drizzle -> R.drawable.day_rain
+                        WeatherType.Atmosphere -> R.drawable.mist
+                        WeatherType.Fog -> R.drawable.fog
+                        WeatherType.Tornado -> R.drawable.tornado
+                        else -> R.drawable.day_clear
                     }
+
                 Image(painter = painterResource(id = iconId), contentDescription = null)
             }
         }

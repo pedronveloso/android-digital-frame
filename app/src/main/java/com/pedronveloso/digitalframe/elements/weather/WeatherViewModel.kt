@@ -25,6 +25,8 @@ import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.data.exceptions.NetworkException
 import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.data.vo.UiResult
+import com.pedronveloso.digitalframe.elements.general.FakeGeneralData
+import com.pedronveloso.digitalframe.elements.general.GeneralData
 import com.pedronveloso.digitalframe.network.NetworkResult
 import com.pedronveloso.digitalframe.network.openweather.FakeWeatherService
 import com.pedronveloso.digitalframe.network.openweather.OpenWeatherService
@@ -32,6 +34,7 @@ import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,25 +49,25 @@ class WeatherViewModel
     ) : ViewModel() {
         private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
 
-        init {
-            repeatedExecution()
-        }
+    private var executionJob: Job? = null
 
-        private fun repeatedExecution() {
-            viewModelScope.launch {
-                fetchWeatherConditions()
+    private fun repeatedExecution(weatherData: WeatherData, generalData: GeneralData) {
+        executionJob?.cancel()
+        executionJob = viewModelScope.launch {
+            fetchWeatherConditions(generalData.lat(), generalData.lon())
                 // How often to refresh the API. TODO: Make configurable.
-                delay(3.hours)
-                repeatedExecution()
+            delay(1.hours)
+            repeatedExecution(weatherData, generalData)
             }
         }
 
-        private fun fetchWeatherConditions() {
+    private fun fetchWeatherConditions(latitude: String, longitude: String) {
             weatherState = UiResult.Loading()
 
             viewModelScope.launch {
                 weatherState =
-                    when (val result = apiService.fetchCurrentWeatherConditions()) {
+                    when (val result =
+                        apiService.fetchCurrentWeatherConditions(latitude, longitude)) {
                         is NetworkResult.Failure -> {
                             UiResult.failure(NetworkException())
                         }
@@ -79,8 +82,11 @@ class WeatherViewModel
         @Composable
         fun RenderWeather(
             weatherData: WeatherData,
+            generalData: GeneralData,
             backgroundHsl: FloatArray,
         ) {
+            repeatedExecution(weatherData, generalData)
+
             FadingComposable {
                 Column(
                     Modifier
@@ -117,16 +123,16 @@ class WeatherViewModel
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                val weatherDay =
-                                    (weatherState as UiResult.Success<OpenWeatherResponse>).data.weatherDays.first()
+                                val weatherResponse =
+                                    (weatherState as UiResult.Success<OpenWeatherResponse>).data
 
                                 // Noon.
                                 Spacer(modifier = Modifier.size(16.dp))
                                 DrawWeatherElementWithIcon(
                                     weatherData,
-                                    temperature = weatherDay.temperatures.day,
-                                    windSpeed = weatherDay.speed,
-                                    iconMain = weatherDay.weather.first().main,
+                                    temperature = weatherResponse.main.temp,
+                                    windSpeed = weatherResponse.wind.speed,
+                                    iconMain = weatherResponse.weather.first().main,
                                     backgroundHsl,
                                 )
                             }
@@ -191,8 +197,13 @@ class WeatherViewModel
 fun PreviewRenderWeather() {
     val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)
     val weatherData = FakeWeatherData()
+    val generalData = FakeGeneralData()
 
     DigitalFrameTheme {
-        WeatherViewModel(FakeWeatherService()).RenderWeather(weatherData, backgroundHsl)
+        WeatherViewModel(FakeWeatherService()).RenderWeather(
+            weatherData,
+            generalData,
+            backgroundHsl
+        )
     }
 }

@@ -5,9 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface OpenWeatherServiceApi {
-    @GET("forecast/daily")
+    @GET("weather")
     suspend fun fetchCurrentWeatherConditions(
-        @Query(value = "zip") zip: String = "94102,US",
+        @Query(value = "lat") latitude: String = "37.808332",
+        @Query(value = "lon") longitude: String = "-122.415715",
         @Query(value = "appid") apiKey: String = API_KEY,
         @Query(value = "units") units: String = "metric",
     ): OpenWeatherResponse

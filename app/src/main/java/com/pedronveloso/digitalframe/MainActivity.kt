@@ -45,6 +45,7 @@ import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
+import com.pedronveloso.digitalframe.elements.general.RealGeneralData
 import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
@@ -100,7 +101,10 @@ fun MainScreen(
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    // Plugin data sources.
     val persistence = SharedPreferencesPersistence(context)
+    val generalData = RealGeneralData(persistence)
     val clockData = RealClockData(persistence)
     val countdownData = RealCountdownData(persistence)
     val weatherData = RealWeatherData(persistence)
@@ -122,7 +126,7 @@ fun MainScreen(
     ) {
         RenderBackground(viewModel = photosBackgroundViewModel)
         clockViewModel.RenderClock(clockData = clockData, backgroundHsl = backgroundHsl)
-        weatherViewModel.RenderWeather(weatherData, backgroundHsl)
+        weatherViewModel.RenderWeather(weatherData, generalData, backgroundHsl)
         countdownViewModel.CountdownDisplay(countdownData, backgroundHsl)
 
         // Fading Button

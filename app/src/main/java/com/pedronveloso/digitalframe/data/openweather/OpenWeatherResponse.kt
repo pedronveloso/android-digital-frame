@@ -1,11 +1,25 @@
 package com.pedronveloso.digitalframe.data.openweather
 
-import com.google.gson.annotations.SerializedName
 
 data class OpenWeatherResponse(
-    val city: City,
-    @SerializedName("cod")
-    val networkCode: String,
-    @SerializedName(value = "list")
-    val weatherDays: List<WeatherDay>,
+    val weather: List<Weather>,
+    val main: TemperatureDetails,
+    val wind: Wind
+)
+
+data class Weather(
+    val id: Int,
+    val main: String,
+    val description: String,
+    val icon: String
+)
+
+data class TemperatureDetails(
+    val temp: Double,
+    val temp_min: Double,
+    val temp_max: Double
+)
+
+data class Wind(
+    val speed: Double
 )

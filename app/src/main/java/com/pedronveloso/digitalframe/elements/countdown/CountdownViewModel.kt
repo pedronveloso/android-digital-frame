@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -31,8 +32,11 @@ class CountdownViewModel(
 ) : ViewModel() {
     private var daysUntilEvent by mutableLongStateOf(0)
 
+    private var executionJob: Job? = null
+
     private fun repeatedExecution(countdownData: CountdownData) {
-        viewModelScope.launch {
+        executionJob?.cancel()
+        executionJob = viewModelScope.launch {
             val today = LocalDate.now()
             val targetDate = countdownData.getTargetDate()
             daysUntilEvent = ChronoUnit.DAYS.between(today, targetDate)

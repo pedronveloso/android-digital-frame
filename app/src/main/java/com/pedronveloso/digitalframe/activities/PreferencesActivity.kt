@@ -243,6 +243,39 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
 
+        val locationDescriptionLabel =
+            PreferenceItem.Label(
+                id = "location_description",
+                text = getString(R.string.pref_general_location),
+            )
+
+        val latitudeInput =
+            PreferenceItem.InputFieldPref(
+                id = "latitude",
+                sectionId = "general",
+                title = getString(R.string.pref_general_lat),
+                type = InputType.TEXT,
+                initialValueProvider = { generalData.lat() },
+                onChangeCallback = { value ->
+                    generalData.setLat(value)
+                },
+            )
+
+        val longitudeInput =
+            PreferenceItem.InputFieldPref(
+                id = "longitude",
+                sectionId = "general",
+                title = getString(R.string.pref_general_lon),
+                type = InputType.TEXT,
+                initialValueProvider = { generalData.lon() },
+                onChangeCallback = { value ->
+                    generalData.setLon(value)
+                },
+            )
+
+        generalSection.addPreference(locationDescriptionLabel)
+        generalSection.addPreference(latitudeInput)
+        generalSection.addPreference(longitudeInput)
         generalSection.addPreference(allowCrashCollection)
         topLevelPrefs.addSection(generalSection.build())
     }
@@ -453,9 +486,9 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
 
     Row(
         modifier =
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -480,9 +513,9 @@ fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
     Button(
         onClick = preference.action,
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
     ) {
         Text(preference.label)
     }

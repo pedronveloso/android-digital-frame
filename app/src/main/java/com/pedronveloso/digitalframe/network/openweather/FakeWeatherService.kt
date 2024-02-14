@@ -5,7 +5,10 @@ import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.network.NetworkResult
 
 class FakeWeatherService : OpenWeatherService {
-    override suspend fun fetchCurrentWeatherConditions(): NetworkResult<OpenWeatherResponse> {
+    override suspend fun fetchCurrentWeatherConditions(
+        lat: String,
+        lon: String
+    ): NetworkResult<OpenWeatherResponse> {
         return NetworkResult.success(MockWeatherProvider.mockWeatherResponse)
     }
 }

@@ -10,7 +10,8 @@ I've started this project out of a personal need for a privacy-respecting digita
 ## Screenshots 📸
 
 ![Screenshot 1](screens/horizontal-1.jpg)
-![Screenshot 2](screens/vertical-1.jpg)
+
+<img src="https://github.com/pedronveloso/android-digital-frame/raw/main/screens/vertical-1.jpg" width=50%>
 
 ## Getting Started 🚀
 

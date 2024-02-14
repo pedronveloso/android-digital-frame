@@ -15,9 +15,8 @@ I've started this project out of a personal need for a privacy-respecting digita
 
 ## Getting Started 🚀
 
-To get started, you can download the app from the [Google Play Store](https://play.google.com/store/apps/details?id=com.pedronveloso.androiddigitalframe) or build it yourself from the source code.
-
-Alternatively, you can download the APK directly from the [Releases](https://github.com/pedronveloso/android-digital-frame/releases) page.
+To get started, you can build it yourself from the source code, or you can download the APK directly
+from the [Releases](https://github.com/pedronveloso/android-digital-frame/releases) page.
 
 ### Building the app
 

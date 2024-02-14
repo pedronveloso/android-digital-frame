@@ -2,10 +2,12 @@ package com.pedronveloso.digitalframe.activities
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +42,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -79,6 +82,7 @@ class PreferencesActivity : ComponentActivity() {
         addClockMenuSection(topLevelPrefs, dataPersistence)
         addCountdownMenuSection(topLevelPrefs, dataPersistence)
         addWeatherMenuSection(topLevelPrefs, dataPersistence)
+        addAboutSection(topLevelPrefs)
 
         setContent {
             DigitalFrameTheme {
@@ -242,6 +246,31 @@ class PreferencesActivity : ComponentActivity() {
         generalSection.addPreference(allowCrashCollection)
         topLevelPrefs.addSection(generalSection.build())
     }
+
+    private fun addAboutSection(topLevelPrefs: PreferencesRoot.Builder) {
+        val aboutSection = PreferencesSection.Builder("about", getString(R.string.pref_about_title))
+        val aboutPreference =
+            PreferenceItem.Label(
+                id = "about",
+                text = getString(R.string.pref_about_intro),
+            )
+
+        val aboutPageButton =
+            PreferenceItem.Button(
+                id = "about_page",
+                label = getString(R.string.pref_about_button),
+                action = {
+                    val url = "https://github.com/pedronveloso/android-digital-frame"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+
+                },
+            )
+        aboutSection.addPreference(aboutPreference)
+        aboutSection.addPreference(aboutPageButton)
+        topLevelPrefs.addSection(aboutSection.build())
+    }
 }
 
 @Composable
@@ -269,9 +298,9 @@ fun PreferenceSectionsScreen(
 fun AppVersionFooter() {
     Column(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -324,10 +353,10 @@ fun PreferenceSectionItem(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClick = navigateToSection)
-                .padding(16.dp),
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = navigateToSection)
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = section.title, modifier = Modifier.weight(1f), style = MyTypography.bodyLarge)
@@ -340,11 +369,28 @@ fun RenderPreferences(items: List<PreferenceItem>) {
     LazyColumn {
         items(items.size) { item ->
             when (val preference = items[item]) {
+                is PreferenceItem.Label -> LabelPreferenceComposable(preference)
                 is PreferenceItem.InputFieldPref -> InputFieldPreferenceComposable(preference)
                 is PreferenceItem.SwitchPref -> SwitchPreferenceComposable(preference)
                 is PreferenceItem.Button -> ButtonPreferenceComposable(preference)
             }
         }
+    }
+}
+
+@Composable
+fun LabelPreferenceComposable(label: PreferenceItem.Label) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label.text,
+            textAlign = TextAlign.Center,
+            style = MyTypography.bodyLarge
+        )
     }
 }
 
@@ -369,13 +415,13 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                     }),
                 singleLine = true,
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                preference.onChangeCallback?.invoke(text)
-                            }
-                        },
+                Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            preference.onChangeCallback?.invoke(text)
+                        }
+                    },
             )
         } else {
             // Button that triggers a DatePicker dialog for DATE type.

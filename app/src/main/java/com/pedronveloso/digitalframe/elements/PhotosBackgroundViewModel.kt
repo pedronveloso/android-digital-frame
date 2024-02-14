@@ -54,7 +54,7 @@ class PhotosBackgroundViewModel
         @ApplicationContext private val appContext: Context,
     ) : ViewModel() {
         companion object {
-            val EFFECT_DURATION = 20.seconds
+            val EFFECT_DURATION = 5.seconds
             const val BACKGROUND_PHOTOS_DIR = "background"
         }
 
@@ -203,14 +203,14 @@ fun RenderBackground(viewModel: PhotosBackgroundViewModel) {
     )
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offsetX,
-                    translationY = offsetY,
-                ),
+        Modifier
+            .fillMaxSize()
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX,
+                translationY = offsetY,
+            ),
     ) {
         Image(
             painter = painter,

@@ -32,6 +32,11 @@
     <string name="pref_weather_use_celcius_description">Use Celsius instead of Fahrenheit</string>
     <string name="pref_weather_show_wind_speed">Show Wind Speed</string>
 
+    <!-- About -->
+    <string name="pref_about_title">About</string>
+    <string name="pref_about_intro">Thank you using Android Digital Frame. To learn more visit the project\'s page by pressing the button below:</string>
+    <string name="pref_about_button">Visit project page</string>
+
 
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

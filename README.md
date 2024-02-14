@@ -48,7 +48,8 @@ The project doesn't require any special setup, so you should be able to build an
 
 Your contributions can help keep Android Digital Frame thriving. Whether through code, feedback, or sponsorship, your support is invaluable.
 
- - You can find a link to my [Ko-fi](https://ko-fi.com/pedronveloso) page here on the GitHub page.
+- You can find a link to my Ko-fi page here on the GitHub page. This is a great way to support the
+  project by doing a one-time or recurring donation.
  - If you'd like to contribute with code or language support, just open a PR. Feel free to message me by opening a new issue if you have any questions.
 
 Let's keep this project free and accessible for all!

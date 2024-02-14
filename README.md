@@ -2,8 +2,8 @@
 
 # Welcome to Android Digital Frame! 🎉
 
-I'm thrilled you're exploring our Open Source app designed to breathe new life into your old Android devices by transforming them into digital frames. 
-Our commitment to Open Source means you get a product built on transparency, community-driven enhancements, and trust.
+I'm thrilled you're exploring this Open Source app designed to **breathe new life into your old Android devices** by transforming them into digital frames. 
+This project's commitment to Open Source means you get a product built on transparency, community-driven enhancements, and trust.
 
 I've started this project out of a personal need for a privacy-respecting digital frame app. It's built with zero tracking and no unnecessary sales pitches  - just a straightforward, useful app.
 
@@ -27,13 +27,19 @@ The project doesn't require any special setup, so you should be able to build an
 ## Features 🍰
 
  - **Privacy-focused**: No tracking, no ads, no unnecessary permissions.
+ - **Made for AMOLED screens**: The uses animations, text relocation and HUD transparency to reduce the risk of screen burn-in. This happens by default, and is especially important for preserving AMOLED screens.
+ - **Always on display**: The app can be used as an always-on display.
+ - **Fully native**: The app is built using Kotlin and the Android SDK. That means it's lightweight and fast.
+ - **Minimal network usage**: The app only uses the network when it needs to update the weather. It doesn't use the network for tracking or analytics. You can even use it without an internet connection at all if you want (obviously weather status won't display if so).
+
+### Existing "plugins" 🧩
+
  - **Background photos**: You can pick the photos you want to display on your digital frame. The photos will be displayed in a random order using transition animations.
  - **Orientation support**: You can use the app in portrait or landscape mode.
  - **Date & Time**: You can display the current date and time on the screen.
  - **Weather**: You can display the current weather on the screen.
  - **Countdown message**: You can display an optional countdown message on the screen for events that are meaningful to you.
- - **Made for AMOLED screens**: The uses animations, text relocation and HUD transparency to reduce the risk of screen burn-in. This happens by default, and is especially important for preserving AMOLED screens.
- - **Always on display**: The app can be used as an always-on display.
+
 
 ➡️ With time, I plan to add more features to the app. If you have any suggestions, feel free to open an issue or a pull request.
 

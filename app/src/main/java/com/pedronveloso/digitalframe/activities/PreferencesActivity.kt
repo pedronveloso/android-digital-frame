@@ -157,7 +157,6 @@ class PreferencesActivity : ComponentActivity() {
         val daysRemainingInput =
             PreferenceItem.InputFieldPref(
                 id = "days_remaining",
-                sectionId = "countdown",
                 title = getString(R.string.pref_countdown_days_remaining),
                 type = InputType.DATE,
                 initialValueProvider = { countdownData.getTargetDate().toString() },
@@ -172,7 +171,6 @@ class PreferencesActivity : ComponentActivity() {
         val countdownMessageInput =
             PreferenceItem.InputFieldPref(
                 id = "countdown_message",
-                sectionId = "countdown",
                 title = getString(R.string.pref_countdown_message),
                 type = InputType.TEXT,
                 initialValueProvider = { countdownData.getMessage() },
@@ -252,7 +250,6 @@ class PreferencesActivity : ComponentActivity() {
         val latitudeInput =
             PreferenceItem.InputFieldPref(
                 id = "latitude",
-                sectionId = "general",
                 title = getString(R.string.pref_general_lat),
                 type = InputType.TEXT,
                 initialValueProvider = { generalData.lat() },
@@ -264,7 +261,6 @@ class PreferencesActivity : ComponentActivity() {
         val longitudeInput =
             PreferenceItem.InputFieldPref(
                 id = "longitude",
-                sectionId = "general",
                 title = getString(R.string.pref_general_lon),
                 type = InputType.TEXT,
                 initialValueProvider = { generalData.lon() },

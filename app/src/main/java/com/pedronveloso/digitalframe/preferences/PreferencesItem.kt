@@ -3,7 +3,6 @@ package com.pedronveloso.digitalframe.preferences
 sealed class PreferenceItem(open val id: String) {
     data class InputFieldPref(
         override val id: String,
-        val sectionId: String,
         val title: String,
         val hint: String? = null,
         val type: InputType,

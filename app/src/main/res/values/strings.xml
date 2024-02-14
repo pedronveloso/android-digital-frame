@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Digital Frame</string>
+    <string name="app_name" translatable="false">Digital Photo Album</string>
 
     <!-- Main -->
     <string name="pick_date_title">Select Date</string>

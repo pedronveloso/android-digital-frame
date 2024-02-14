@@ -1,11 +1,13 @@
 <img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width="96">
 
-# Welcome to Android Digital Frame! 🎉
+# Welcome to Android Digital Photo Album! 🎉
 
-I'm thrilled you're exploring this Open Source app designed to **breathe new life into your old Android devices** by transforming them into digital frames. 
+I'm thrilled you're exploring this Open Source app designed to **breathe new life into your old
+Android devices** by transforming them into digital photo album, with a few extra features.
 This project's commitment to Open Source means you get a product built on transparency, community-driven enhancements, and trust.
 
-I've started this project out of a personal need for a privacy-respecting digital frame app. It's built with zero tracking and no unnecessary sales pitches  - just a straightforward, useful app.
+I've started this project out of a personal need for a privacy-respecting digital photo album app.
+It's built with zero tracking and no unnecessary sales pitches - just a straightforward, useful app.
 
 ## Screenshots 📸
 
@@ -33,7 +35,8 @@ The project doesn't require any special setup, so you should be able to build an
 
 ### Existing "plugins" 🧩
 
- - **Background photos**: You can pick the photos you want to display on your digital frame. The photos will be displayed in a random order using transition animations.
+- **Background photos**: You can pick the photos you want to display on your digital photo album.
+  The photos will be displayed in a random order using transition animations.
  - **Orientation support**: You can use the app in portrait or landscape mode.
  - **Date & Time**: You can display the current date and time on the screen.
  - **Weather**: You can display the current weather on the screen.
@@ -44,8 +47,8 @@ The project doesn't require any special setup, so you should be able to build an
 
 ## Contributing: Join Our Journey! 🌟
 
-
-Your contributions can help keep Android Digital Frame thriving. Whether through code, feedback, or sponsorship, your support is invaluable.
+Your contributions can help keep Android Digital Photo Album thriving. Whether through code,
+feedback, or sponsorship, your support is invaluable.
 
 - You can find a link to my Ko-fi page here on the GitHub page. This is a great way to support the
   project by doing a one-time or recurring donation.

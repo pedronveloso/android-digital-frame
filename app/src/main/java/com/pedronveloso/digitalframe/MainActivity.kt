@@ -39,8 +39,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedronveloso.digitalframe.activities.PreferencesActivity
-import com.pedronveloso.digitalframe.elements.PhotosBackgroundViewModel
-import com.pedronveloso.digitalframe.elements.RenderBackground
+import com.pedronveloso.digitalframe.elements.background.PhotosBackgroundViewModel
+import com.pedronveloso.digitalframe.elements.background.RenderBackground
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
@@ -109,16 +109,16 @@ fun MainScreen(
 
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = {
-                            showButton = true
-                        },
-                    )
-                },
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        showButton = true
+                    },
+                )
+            },
     ) {
         RenderBackground(viewModel = photosBackgroundViewModel)
         clockViewModel.RenderClock(clockData = clockData, backgroundHsl = backgroundHsl)
@@ -136,9 +136,9 @@ fun MainScreen(
                     context.startActivity(Intent(context, PreferencesActivity::class.java))
                 },
                 modifier =
-                    Modifier
-                        .align(Alignment.Center)
-                        .padding(16.dp),
+                Modifier
+                    .align(Alignment.Center)
+                    .padding(16.dp),
             ) {
                 Text("Settings")
             }

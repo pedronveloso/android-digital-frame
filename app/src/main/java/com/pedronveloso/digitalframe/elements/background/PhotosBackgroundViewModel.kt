@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe.elements
+package com.pedronveloso.digitalframe.elements.background
 
 import android.content.Context
 import android.graphics.BitmapFactory

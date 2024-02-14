@@ -53,7 +53,7 @@ Your contributions can help keep Android Digital Frame thriving. Whether through
 
 Let's keep this project free and accessible for all!
 
+## License 📜
 
-# android-digital-frame
-
-An OSS Digital Photo frame to give old Android devices a new life in your home.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file
+for details.

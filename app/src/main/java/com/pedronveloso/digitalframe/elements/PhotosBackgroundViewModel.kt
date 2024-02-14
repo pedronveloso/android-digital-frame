@@ -54,7 +54,7 @@ class PhotosBackgroundViewModel
         @ApplicationContext private val appContext: Context,
     ) : ViewModel() {
         companion object {
-            val EFFECT_DURATION = 5.seconds
+            val EFFECT_DURATION = 20.seconds
             const val BACKGROUND_PHOTOS_DIR = "background"
         }
 

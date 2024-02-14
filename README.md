@@ -1,6 +1,6 @@
-# Welcome to Android Digital Frame! 🎉
+<img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width=50%>
 
-![App Icon](icon-192.png)
+# Welcome to Android Digital Frame! 🎉
 
 I'm thrilled you're exploring our Open Source app designed to breathe new life into your old Android devices by transforming them into digital frames. 
 Our commitment to Open Source means you get a product built on transparency, community-driven enhancements, and trust.

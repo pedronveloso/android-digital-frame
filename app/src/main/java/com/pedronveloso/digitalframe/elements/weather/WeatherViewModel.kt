@@ -51,6 +51,7 @@ class WeatherViewModel
         private var weatherState by mutableStateOf<UiResult<OpenWeatherResponse>>(UiResult.Blank())
 
     private var executionJob: Job? = null
+    private var startedRepeatedExecution = false
 
     private fun repeatedExecution(weatherData: WeatherData, generalData: GeneralData) {
         executionJob?.cancel()
@@ -86,7 +87,10 @@ class WeatherViewModel
             generalData: GeneralData,
             backgroundHsl: FloatArray,
         ) {
-            repeatedExecution(weatherData, generalData)
+            if (!startedRepeatedExecution) {
+                startedRepeatedExecution = true
+                repeatedExecution(weatherData, generalData)
+            }
 
             FadingComposable {
                 Column(

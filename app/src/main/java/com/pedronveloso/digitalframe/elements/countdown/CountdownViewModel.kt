@@ -33,6 +33,7 @@ class CountdownViewModel(
     private var daysUntilEvent by mutableLongStateOf(0)
 
     private var executionJob: Job? = null
+    private var startedRepeatedExecution = false
 
     private fun repeatedExecution(countdownData: CountdownData) {
         executionJob?.cancel()
@@ -50,7 +51,10 @@ class CountdownViewModel(
         countdownData: CountdownData,
         backgroundHsl: FloatArray,
     ) {
-        repeatedExecution(countdownData)
+        if (!startedRepeatedExecution) {
+            startedRepeatedExecution = true
+            repeatedExecution(countdownData)
+        }
         FadingComposable {
             Column(
                 Modifier

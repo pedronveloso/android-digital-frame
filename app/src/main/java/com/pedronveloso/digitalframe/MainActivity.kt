@@ -50,6 +50,7 @@ import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
+import com.pedronveloso.digitalframe.ui.deriveHUDColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -124,10 +125,11 @@ fun MainScreen(
                 )
             },
     ) {
+        val hudColor = deriveHUDColor(backgroundHsl)
         RenderBackground(viewModel = photosBackgroundViewModel)
-        clockViewModel.RenderClock(clockData = clockData, backgroundHsl = backgroundHsl)
-        weatherViewModel.RenderWeather(weatherData, generalData, backgroundHsl)
-        countdownViewModel.CountdownDisplay(countdownData, backgroundHsl)
+        clockViewModel.RenderClock(clockData = clockData, hudColor = hudColor)
+        weatherViewModel.RenderWeather(weatherData, generalData, hudColor)
+        countdownViewModel.CountdownDisplay(countdownData, hudColor)
 
         // Fading Button
         AnimatedVisibility(

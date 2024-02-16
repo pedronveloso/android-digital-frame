@@ -6,9 +6,10 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 
 object FontStyles {
-    fun textStyleTitleLarge(backgroundHsl: FloatArray) =
+
+    fun textStyleTitleLarge(textColor: Color) =
         MyTypography.titleLarge.copy(
-            color = deriveTextColor(backgroundHsl),
+            color = textColor,
             shadow =
                 Shadow(
                     color = Color.Black,
@@ -17,20 +18,20 @@ object FontStyles {
                 ),
         )
 
-    fun textStyleTitleMedium(backgroundHsl: FloatArray) =
+    fun textStyleTitleMedium(textColor: Color) =
         MyTypography.titleMedium.copy(
-            color = deriveTextColor(backgroundHsl),
+            color = textColor,
             shadow =
-                Shadow(
-                    color = Color.Black,
-                    offset = Offset(0f, 2f),
-                    blurRadius = 1f,
-                ),
+            Shadow(
+                color = Color.Black,
+                offset = Offset(0f, 2f),
+                blurRadius = 1f,
+            ),
         )
 
-    fun textStyleBodyLarge(backgroundHsl: FloatArray) =
+    fun textStyleBodyLarge(textColor: Color) =
         MyTypography.bodyLarge.copy(
-            color = deriveTextColor(backgroundHsl),
+            color = textColor,
             shadow =
                 Shadow(
                     color = Color.Black,
@@ -39,9 +40,9 @@ object FontStyles {
                 ),
         )
 
-    fun textStyleBodyMedium(backgroundHsl: FloatArray) =
+    fun textStyleBodyMedium(textColor: Color) =
         MyTypography.bodyMedium.copy(
-            color = deriveTextColor(backgroundHsl),
+            color = textColor,
             shadow =
                 Shadow(
                     color = Color.Black,
@@ -50,9 +51,7 @@ object FontStyles {
                 ),
         )
 
-    fun textStyleDisplayLarge(backgroundHsl: FloatArray): TextStyle {
-        val textColor: Color = deriveTextColor(backgroundHsl)
-
+    fun textStyleDisplayLarge(textColor: Color): TextStyle {
         return MyTypography.displayLarge.copy(
             color = textColor,
             shadow =
@@ -64,9 +63,9 @@ object FontStyles {
         )
     }
 
-    fun textStyleDisplayMedium(backgroundHsl: FloatArray) =
+    fun textStyleDisplayMedium(textColor: Color) =
         MyTypography.displayMedium.copy(
-            color = deriveTextColor(backgroundHsl),
+            color = textColor,
             shadow =
                 Shadow(
                     color = Color.Black,
@@ -75,35 +74,4 @@ object FontStyles {
                 ),
         )
 
-    private fun deriveTextColor(backgroundHsl: FloatArray): Color {
-        var textColor: Color =
-            if (backgroundHsl[2] > 0.5f) {
-                Color.Black
-            } else {
-                Color.White
-            }
-
-        // If Hue or Saturation are medium to high, prefer white text.
-        if (backgroundHsl[0] > 30f || backgroundHsl[1] > 0.2f) {
-            textColor = Color.White
-        }
-
-        // TODO: Support for complementary colors. Didn't like the results so far, but I'll keep it here for now.
-        /* val textColor : Color
-        if (backgroundHsl[2] > 0.8f) {
-            textColor = Color.Black
-        } else if (backgroundHsl[2] < 0.2f) {
-            textColor = Color.White
-        } else {
-            // Calculate complementary color.
-            val complementaryHsl = floatArrayOf(
-                backgroundHsl[0] + 180f,
-                backgroundHsl[1],
-                backgroundHsl[2]
-            )
-            textColor = Color(ColorUtils.HSLToColor(complementaryHsl))
-        } */
-
-        return textColor
-    }
 }

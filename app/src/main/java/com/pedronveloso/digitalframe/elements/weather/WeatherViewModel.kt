@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -87,7 +88,7 @@ class WeatherViewModel
         fun RenderWeather(
             weatherData: WeatherData,
             generalData: GeneralData,
-            backgroundHsl: FloatArray,
+            hudColor: Color,
         ) {
             if (!startedRepeatedExecution) {
                 startedRepeatedExecution = true
@@ -107,21 +108,21 @@ class WeatherViewModel
                         is UiResult.Blank -> {
                             Text(
                                 text = "No weather data",
-                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
+                                style = FontStyles.textStyleTitleMedium(hudColor),
                             )
                         }
                         // TODO: If failed to get new weather data, use latest known data.
                         is UiResult.Failure -> {
                             Text(
                                 text = "Failed to get weather data",
-                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
+                                style = FontStyles.textStyleTitleMedium(hudColor),
                             )
                         }
 
                         is UiResult.Loading -> {
                             Text(
                                 text = "loading...",
-                                style = FontStyles.textStyleTitleMedium(backgroundHsl),
+                                style = FontStyles.textStyleTitleMedium(hudColor),
                             )
                         }
 
@@ -140,7 +141,7 @@ class WeatherViewModel
                                     temperature = weatherResponse.main.temp,
                                     windSpeed = weatherResponse.wind.speed,
                                     weatherType = weatherResponse.weather.first().weatherType,
-                                    backgroundHsl,
+                                    hudColor = hudColor,
                                 )
                             }
                         }
@@ -155,7 +156,7 @@ class WeatherViewModel
             temperature: Double,
             windSpeed: Double,
             weatherType: WeatherType,
-            backgroundHsl: FloatArray,
+            hudColor: Color,
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -173,7 +174,7 @@ class WeatherViewModel
 
                 Text(
                     text = dayTemp,
-                    style = FontStyles.textStyleDisplayMedium(backgroundHsl),
+                    style = FontStyles.textStyleDisplayMedium(hudColor),
                 )
 
                 // Wind Speed.
@@ -183,14 +184,14 @@ class WeatherViewModel
                             painter = painterResource(id = R.drawable.ic_wind),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
-                            colorFilter = ColorFilter.tint(deriveHUDColor(backgroundHsl)),
+                            colorFilter = ColorFilter.tint(hudColor),
                         )
                         Spacer(modifier = Modifier.size(4.dp))
                         val windSpeedValue = windSpeed.roundToInt()
                         val windSpeedLabel = "$windSpeedValue m/s"
                         Text(
                             text = windSpeedLabel,
-                            style = FontStyles.textStyleBodyLarge(backgroundHsl),
+                            style = FontStyles.textStyleBodyLarge(hudColor),
                         )
                     }
                 }
@@ -214,7 +215,7 @@ class WeatherViewModel
                 Image(
                     painter = painterResource(id = iconId),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(deriveHUDColor(backgroundHsl))
+                    colorFilter = ColorFilter.tint(hudColor)
                 )
             }
         }
@@ -224,6 +225,7 @@ class WeatherViewModel
 @Composable
 fun PreviewRenderWeather() {
     val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)
+    val hudColor = deriveHUDColor(backgroundHsl)
     val weatherData = FakeWeatherData()
     val generalData = FakeGeneralData()
 
@@ -231,7 +233,7 @@ fun PreviewRenderWeather() {
         WeatherViewModel(FakeWeatherService()).RenderWeather(
             weatherData,
             generalData,
-            backgroundHsl
+            hudColor
         )
     }
 }

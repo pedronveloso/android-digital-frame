@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -44,7 +45,7 @@ class ClockViewModel(
     @Composable
     fun RenderClock(
         clockData: ClockData,
-        backgroundHsl: FloatArray,
+        hudColor: Color,
     ) {
         FadingComposable {
             Column(
@@ -60,7 +61,7 @@ class ClockViewModel(
                     }
                 Text(
                     text = formatter.format(currentTime),
-                    style = textStyleDisplayLarge(backgroundHsl),
+                    style = textStyleDisplayLarge(hudColor),
                 )
 
                 if (clockData.showYear()) {
@@ -70,7 +71,7 @@ class ClockViewModel(
                                 DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
                                     .withLocale(Locale.getDefault()),
                             ),
-                        style = textStyleTitleLarge(backgroundHsl),
+                        style = textStyleTitleLarge(hudColor),
                     )
                 } else {
                     // A formatter that excludes the year.
@@ -78,7 +79,7 @@ class ClockViewModel(
                         DateTimeFormatter.ofPattern("MMM d").withLocale(Locale.getDefault())
                     Text(
                         text = currentTime.format(formatterWithoutYear),
-                        style = textStyleTitleLarge(backgroundHsl),
+                        style = textStyleTitleLarge(hudColor),
                     )
                 }
             }

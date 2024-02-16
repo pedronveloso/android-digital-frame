@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
@@ -49,7 +50,7 @@ class CountdownViewModel(
     @Composable
     fun CountdownDisplay(
         countdownData: CountdownData,
-        backgroundHsl: FloatArray,
+        hudColor: Color,
     ) {
         if (!startedRepeatedExecution) {
             startedRepeatedExecution = true
@@ -67,7 +68,7 @@ class CountdownViewModel(
                 CountdownText(
                     daysUntil = daysUntilEvent,
                     countdownData,
-                    backgroundHsl = backgroundHsl,
+                    hudColor = hudColor,
                 )
             }
         }
@@ -77,7 +78,7 @@ class CountdownViewModel(
     fun CountdownText(
         daysUntil: Long,
         countdownData: CountdownData,
-        backgroundHsl: FloatArray,
+        hudColor: Color,
     ) {
         if (daysUntil >= 0) {
             Column(
@@ -86,11 +87,11 @@ class CountdownViewModel(
             ) {
                 Text(
                     text = stringResource(id = R.string.countdown_days_remaining, daysUntil),
-                    style = FontStyles.textStyleDisplayMedium(backgroundHsl),
+                    style = FontStyles.textStyleDisplayMedium(hudColor),
                 )
                 Text(
                     text = countdownData.getMessage().uppercase(),
-                    style = FontStyles.textStyleBodyLarge(backgroundHsl),
+                    style = FontStyles.textStyleBodyLarge(hudColor),
                 )
             }
         }

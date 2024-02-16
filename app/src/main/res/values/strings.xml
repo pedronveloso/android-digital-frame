@@ -5,6 +5,7 @@
     <string name="pick_date_title">Select Date</string>
     <string name="preferences_title">Preferences</string>
     <string name="pref_bg_title">Background</string>
+    <string name="settings_btn">Settings</string>
 
     <!-- Background -->
     <string name="pref_bg_photo_picker">Pick photos</string>

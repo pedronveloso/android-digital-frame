@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ import com.pedronveloso.digitalframe.network.openweather.OpenWeatherService
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
+import com.pedronveloso.digitalframe.ui.deriveHUDColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -176,12 +178,21 @@ class WeatherViewModel
 
                 // Wind Speed.
                 if (weatherData.showWind()) {
-                    val windSpeedValue = windSpeed.roundToInt()
-                    val windSpeedLabel = "💨 $windSpeedValue m/s"
-                    Text(
-                        text = windSpeedLabel,
-                        style = FontStyles.textStyleBodyLarge(backgroundHsl),
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_wind),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            colorFilter = ColorFilter.tint(deriveHUDColor(backgroundHsl)),
+                        )
+                        Spacer(modifier = Modifier.size(4.dp))
+                        val windSpeedValue = windSpeed.roundToInt()
+                        val windSpeedLabel = "$windSpeedValue m/s"
+                        Text(
+                            text = windSpeedLabel,
+                            style = FontStyles.textStyleBodyLarge(backgroundHsl),
+                        )
+                    }
                 }
 
                 // TODO: Consider day and night.
@@ -200,7 +211,11 @@ class WeatherViewModel
                         else -> R.drawable.day_clear
                     }
 
-                Image(painter = painterResource(id = iconId), contentDescription = null)
+                Image(
+                    painter = painterResource(id = iconId),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(deriveHUDColor(backgroundHsl))
+                )
             }
         }
     }

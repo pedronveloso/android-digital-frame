@@ -1,0 +1,1 @@
+Wind Icon, `ic_wind` : CC; SVG Repo

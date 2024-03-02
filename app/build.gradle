@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.pedronveloso.digitalframe"
-        minSdk 26
+        minSdk 21
         targetSdk 34
         versionCode 3
         versionName "0.0.5-Alpha"

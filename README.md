@@ -1,8 +1,9 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S8F7GST)
 
-<img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width="96">
 
 # Welcome to Android Digital Photo Album! 🎉
+
+<img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width="96">
 
 I'm thrilled you're exploring this Open Source app designed to **breathe new life into your old
 Android devices** by transforming them into digital photo album, with a few extra features.

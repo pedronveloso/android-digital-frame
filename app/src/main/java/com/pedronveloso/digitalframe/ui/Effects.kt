@@ -51,7 +51,7 @@ fun FadingComposable(content: @Composable () -> Unit) {
     LaunchedEffect(coroutineScope) {
         while (true) {
             delay(FADING_CADENCE.inWholeMilliseconds)
-            alpha.value = 0f
+            alpha.floatValue = 0f
             delay(FADING_DURATION.toLong()) // wait for fade out
 
             // Wait a bit while faded out, to act as a screen saver for AMOLED screens.
@@ -62,16 +62,16 @@ fun FadingComposable(content: @Composable () -> Unit) {
             }
 
             // generate a random position within 20 pixels in either direction
-            offsetX.value = Random.nextFloat() * 40 - 20
-            offsetY.value = Random.nextFloat() * 40 - 20
-            alpha.value = 1f
+            offsetX.floatValue = Random.nextFloat() * 40 - 20
+            offsetY.floatValue = Random.nextFloat() * 40 - 20
+            alpha.floatValue = 1f
         }
     }
 
     Box(
         Modifier
             .fillMaxSize()
-            .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) },
+            .offset { IntOffset(offsetX.floatValue.roundToInt(), offsetY.floatValue.roundToInt()) },
     ) {
         Box(modifier = Modifier.alpha(animatedAlpha.value)) {
             content()

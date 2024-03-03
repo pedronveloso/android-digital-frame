@@ -2,7 +2,6 @@ package com.pedronveloso.digitalframe.elements.background
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -103,10 +102,8 @@ class PhotosBackgroundViewModel
                         val dominantSwatch = palette.dominantSwatch
                         val hslValues = dominantSwatch?.hsl ?: FloatArray(3).apply { this[2] = 0f }
                         backgroundHSL.emit(hslValues)
-                        Log.v("PhotosBackgroundViewModel", "HSL: ${hslValues.contentToString()}")
                     } catch (e: Exception) {
-                        // Handle any errors during brightness calculation
-                        Log.e("PhotosBackgroundViewModel", "Error calculating HSL", e)
+                        // TODO: Handle any errors during brightness calculation
                     }
                 }
             }

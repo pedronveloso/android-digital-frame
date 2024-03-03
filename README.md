@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S8F7GST)
+
 <img src="https://github.com/pedronveloso/android-digital-frame/blob/main/icon-192.png" width="96">
 
 # Welcome to Android Digital Photo Album! 🎉
@@ -50,7 +52,8 @@ The project doesn't require any special setup, so you should be able to build an
 Your contributions can help keep Android Digital Photo Album thriving. Whether through code,
 feedback, or sponsorship, your support is invaluable.
 
-- You can find a link to my Ko-fi page here on the GitHub page. This is a great way to support the
+- You can find a link to my [Ko-fi page](https://ko-fi.com/S6S8F7GST), also available here on the
+  GitHub page. This is a great way to support the
   project by doing a one-time or recurring donation.
  - If you'd like to contribute with code or language support, just open a PR. Feel free to message me by opening a new issue if you have any questions.
 

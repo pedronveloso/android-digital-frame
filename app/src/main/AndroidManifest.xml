@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.DigitalFrame"
+        android:largeHeap="true"
         tools:targetApi="34">
         <activity
             android:name=".MainActivity"

@@ -10,4 +10,10 @@
    <include domain="sharedpref" path="."/>
    <exclude domain="sharedpref" path="device.xml"/>
 -->
+
+    <!-- Exclude the files/photos directory from the automatic backup -->
+    <exclude
+        domain="file"
+        path="background" />
+
 </full-backup-content>

@@ -1,5 +1,7 @@
 package com.pedronveloso.digitalframe.preferences
 
+import com.pedronveloso.digitalframe.preferences.location.LocationData
+
 sealed class PreferenceItem(open val id: String) {
     data class InputFieldPref(
         override val id: String,
@@ -29,6 +31,15 @@ sealed class PreferenceItem(open val id: String) {
         PreferenceItem(id)
 
     data class Label(override val id: String, val text: String) : PreferenceItem(id)
+
+    class LocationPref(
+        override val id: String,
+        val title: String,
+        val description: String? = null,
+        val initialValueProvider: () -> LocationData,
+        val onChangeCallback: ((LocationData) -> Unit)? = null
+    ) : PreferenceItem(id)
+
 }
 
 enum class InputType {

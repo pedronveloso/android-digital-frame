@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -42,6 +43,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -61,6 +63,7 @@ import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.PreferencesRoot
 import com.pedronveloso.digitalframe.preferences.PreferencesSection
+import com.pedronveloso.digitalframe.preferences.location.LocationData
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
 import java.text.SimpleDateFormat
@@ -241,37 +244,19 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
 
-        val locationDescriptionLabel =
-            PreferenceItem.Label(
-                id = "location_description",
-                text = getString(R.string.pref_general_location),
-            )
-
-        val latitudeInput =
-            PreferenceItem.InputFieldPref(
-                id = "latitude",
-                title = getString(R.string.pref_general_lat),
-                type = InputType.TEXT,
-                initialValueProvider = { generalData.lat() },
+        val locationInput =
+            PreferenceItem.LocationPref(
+                id = "location",
+                title = getString(R.string.pref_location_title),
+                description = getString(R.string.pref_location_description),
+                initialValueProvider = { generalData.locationData() },
                 onChangeCallback = { value ->
-                    generalData.setLat(value)
+                    generalData.setLocationData(value)
                 },
             )
 
-        val longitudeInput =
-            PreferenceItem.InputFieldPref(
-                id = "longitude",
-                title = getString(R.string.pref_general_lon),
-                type = InputType.TEXT,
-                initialValueProvider = { generalData.lon() },
-                onChangeCallback = { value ->
-                    generalData.setLon(value)
-                },
-            )
 
-        generalSection.addPreference(locationDescriptionLabel)
-        generalSection.addPreference(latitudeInput)
-        generalSection.addPreference(longitudeInput)
+        generalSection.addPreference(locationInput)
         generalSection.addPreference(allowCrashCollection)
         topLevelPrefs.addSection(generalSection.build())
     }
@@ -402,6 +387,7 @@ fun RenderPreferences(items: List<PreferenceItem>) {
                 is PreferenceItem.InputFieldPref -> InputFieldPreferenceComposable(preference)
                 is PreferenceItem.SwitchPref -> SwitchPreferenceComposable(preference)
                 is PreferenceItem.Button -> ButtonPreferenceComposable(preference)
+                is PreferenceItem.LocationPref -> LocationPreferenceComposable(preference)
             }
         }
     }
@@ -516,3 +502,87 @@ fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
         Text(preference.label)
     }
 }
+
+
+@Composable
+fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
+    val initialLocation = preference.initialValueProvider.invoke()
+    var latitude by remember { mutableStateOf(initialLocation.latitude.toString()) }
+    var longitude by remember { mutableStateOf(initialLocation.longitude.toString()) }
+    var latError by remember { mutableStateOf(false) }
+    var lonError by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = preference.title, style = MyTypography.titleMedium)
+        preference.description?.let {
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(text = it, style = MyTypography.bodyLarge)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = latitude,
+            onValueChange = {
+                latitude = it
+                latError = !isValidLatitude(it)
+            },
+            isError = latError,
+            label = { stringResource(id = R.string.pref_location_lat) },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (latError) {
+            Text(
+                stringResource(id = R.string.pref_location_lat_error),
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = longitude,
+            onValueChange = {
+                longitude = it
+                lonError = !isValidLongitude(it)
+            },
+            isError = lonError,
+            label = { Text(stringResource(id = R.string.pref_location_lon)) },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (lonError) {
+            Text(
+                stringResource(id = R.string.pref_location_lon_error),
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = {
+                if (!latError && !lonError) {
+                    preference.onChangeCallback?.invoke(
+                        LocationData(
+                            latitude.toDouble(),
+                            longitude.toDouble()
+                        )
+                    )
+                }
+            },
+            enabled = !latError && !lonError
+        ) {
+            Text(stringResource(id = R.string.pref_location_save))
+        }
+    }
+}
+
+fun isValidLatitude(value: String): Boolean =
+    value.toDoubleOrNull()?.let { it in -90.0..90.0 } ?: false
+
+fun isValidLongitude(value: String): Boolean =
+    value.toDoubleOrNull()?.let { it in -180.0..180.0 } ?: false

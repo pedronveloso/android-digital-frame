@@ -86,6 +86,7 @@ dependencies {
 
     // Dependency Injection.
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation 'com.google.android.gms:play-services-location:21.2.0'
 
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 

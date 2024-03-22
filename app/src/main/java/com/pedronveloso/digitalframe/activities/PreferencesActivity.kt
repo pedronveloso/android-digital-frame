@@ -1,11 +1,16 @@
 package com.pedronveloso.digitalframe.activities
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +28,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,11 +53,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
@@ -504,13 +514,30 @@ fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
 }
 
 
+@SuppressLint("MissingPermission")
 @Composable
-fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
+fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref,fusedLocationProviderClient: FusedLocationProviderClient) {
     val initialLocation = preference.initialValueProvider.invoke()
     var latitude by remember { mutableStateOf(initialLocation.latitude.toString()) }
     var longitude by remember { mutableStateOf(initialLocation.longitude.toString()) }
     var latError by remember { mutableStateOf(false) }
     var lonError by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // Permission handling
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                getCurrentLocation(fusedLocationProviderClient) { lat, lon ->
+                    latitude = lat.toString()
+                    longitude = lon.toString()
+                    isLoading = false
+                }
+            }
+        }
+    )
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = preference.title, style = MyTypography.titleMedium)
@@ -563,20 +590,46 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                if (!latError && !lonError) {
-                    preference.onChangeCallback?.invoke(
-                        LocationData(
-                            latitude.toDouble(),
-                            longitude.toDouble()
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(
+                onClick = {
+                    if (!latError && !lonError) {
+                        preference.onChangeCallback?.invoke(
+                            LocationData(
+                                latitude.toDouble(),
+                                longitude.toDouble()
+                            )
                         )
-                    )
+                    }
+                },
+                enabled = !latError && !lonError
+            ) {
+                Text(stringResource(id = R.string.pref_location_save))
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(onClick = {
+
+                when (PackageManager.PERMISSION_GRANTED) {
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                        isLoading = true
+                        getCurrentLocation(fusedLocationProviderClient) { lat, lon ->
+                            latitude = lat.toString()
+                            longitude = lon.toString()
+                            isLoading = false
+                        }
+                    }
+                    else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-            },
-            enabled = !latError && !lonError
-        ) {
-            Text(stringResource(id = R.string.pref_location_save))
+            }) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                } else {
+                    Text("Get current")
+                }
+            }
         }
     }
 }

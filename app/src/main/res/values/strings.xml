@@ -6,6 +6,7 @@
     <string name="preferences_title">Preferences</string>
     <string name="pref_bg_title">Background</string>
     <string name="settings_btn">Settings</string>
+    <string name="save_btn">Save</string>
 
     <!-- Background -->
     <string name="pref_bg_photo_picker">Pick photos</string>
@@ -50,7 +51,11 @@
     <!-- Logs -->
     <string name="pref_logs_title">App Logs</string>
     <string name="pref_logs_copy_clipboard">Copy to Clipboard</string>
-    <string name="pref_logs_privacy_notice">These logs are collected to help with development. They will never be sent without user consent and explicit action.</string>
+    <string name="pref_logs_privacy_notice">These logs are collected to help with development. They will never be sent without user consent and explicit user approval.</string>
+
+    <!-- Data Collection onboarding -->
+    <string name="crash_data_collection_title">Crash Data reporting</string>
+    <string name="crash_data_collection_description">We value your privacy and strive to provide a stable and reliable app experience. To help us identify and fix issues that may cause the app to crash, we use Firebase Crashlytics, a Google owned service that collects anonymous crash reports.\n\nCrash reporting collects data only when the app unexpectedly crashes or encounters a critical error. No personally identifiable information is collected, and data is not shared with any third parties.\n\nYou have full control over this feature and can easily disable it at any time from the app\'s Settings.</string>
 
 
     <string name="lorem_ipsum" translatable="false">

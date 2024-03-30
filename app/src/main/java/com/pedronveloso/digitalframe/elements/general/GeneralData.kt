@@ -8,6 +8,10 @@ interface GeneralData {
 
     fun setExplicitlyDisabledCrashCollection(value: Boolean)
 
+    fun userPromptedForCrashCollection(): Boolean
+
+    fun setUserPromptedForCrashCollection(value: Boolean)
+
     fun locationData(): LocationData
 
     fun setLocationData(value: LocationData)
@@ -27,6 +31,18 @@ class RealGeneralData(private val persistence: PreferencesPersistence) : General
         persistence.setPreferenceValue(SECTION_ID, EXPLICITLY_DISABLED_CRASH_COLLECTION, value)
     }
 
+    override fun userPromptedForCrashCollection(): Boolean {
+        return persistence.getPreferenceValue(
+            SECTION_ID,
+            USER_PROMPTED_FOR_CRASH_COLLECTION,
+            false,
+        )
+    }
+
+    override fun setUserPromptedForCrashCollection(value: Boolean) {
+        persistence.setPreferenceValue(SECTION_ID, USER_PROMPTED_FOR_CRASH_COLLECTION, value)
+    }
+
     override fun locationData(): LocationData {
         val lat = persistence.getPreferenceValue(SECTION_ID, LAT, 37.808332)
         val lon = persistence.getPreferenceValue(SECTION_ID, LON, -122.415715)
@@ -40,8 +56,13 @@ class RealGeneralData(private val persistence: PreferencesPersistence) : General
 
     companion object {
         private const val SECTION_ID = "general"
+
         private const val EXPLICITLY_DISABLED_CRASH_COLLECTION =
             "explicitly-disabled-crash-collection"
+
+        private const val USER_PROMPTED_FOR_CRASH_COLLECTION =
+            "user-prompted-for-crash-collection"
+
         private const val LAT = "lat_d"
         private const val LON = "lon_d"
     }
@@ -53,6 +74,14 @@ class FakeGeneralData : GeneralData {
     }
 
     override fun setExplicitlyDisabledCrashCollection(value: Boolean) {
+        // Do nothing.
+    }
+
+    override fun userPromptedForCrashCollection(): Boolean {
+        return true
+    }
+
+    override fun setUserPromptedForCrashCollection(value: Boolean) {
         // Do nothing.
     }
 

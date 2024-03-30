@@ -13,8 +13,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,10 +38,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -54,6 +62,7 @@ import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
+import com.pedronveloso.digitalframe.ui.MyTypography
 import com.pedronveloso.digitalframe.ui.deriveHUDColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -78,18 +87,35 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DigitalFrameTheme {
+                val context = LocalContext.current
+                val persistence = SharedPreferencesPersistence(context)
+                val generalData = RealGeneralData(persistence)
+                var userPromptedForCrashCollection by remember { mutableStateOf(generalData.userPromptedForCrashCollection()) }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     hideSystemUI(LocalView.current)
-                    MainScreen(
-                        photosBackgroundViewModel = viewModel(),
-                        clockViewModel = viewModel(),
-                        weatherViewModel = viewModel(),
-                        countdownViewModel = viewModel(),
-                    )
+                    // Plugin data sources.
+
+
+                    if (userPromptedForCrashCollection.not()) {
+                        ShowCrashCollectionNotice { userChoice ->
+                            userPromptedForCrashCollection = true
+                            generalData.setUserPromptedForCrashCollection(userChoice)
+                        }
+                    } else {
+                        DigitalAlbumScreen(
+                            photosBackgroundViewModel = viewModel(),
+                            clockViewModel = viewModel(),
+                            weatherViewModel = viewModel(),
+                            countdownViewModel = viewModel(),
+                            persistence,
+                            generalData
+                        )
+                    }
                 }
             }
         }
@@ -122,19 +148,83 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(
+fun ShowCrashCollectionNotice(userPickedCrashCollection: (Boolean) -> Unit) {
+    var crashCollectionEnabled by remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.crash_data_collection_title),
+                style = MyTypography.titleLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+
+            Text(
+                text = stringResource(id = R.string.crash_data_collection_description),
+                style = MyTypography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.pref_general_crash_reports),
+                    style = MyTypography.bodyLarge,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+
+                Switch(
+                    checked = crashCollectionEnabled,
+                    onCheckedChange = { crashCollectionEnabled = it },
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    userPickedCrashCollection(crashCollectionEnabled)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                Text(text = stringResource(id = R.string.save_btn))
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DigitalAlbumScreen(
     photosBackgroundViewModel: PhotosBackgroundViewModel,
     clockViewModel: ClockViewModel,
     weatherViewModel: WeatherViewModel,
     countdownViewModel: CountdownViewModel,
+    persistence: SharedPreferencesPersistence,
+    generalData: RealGeneralData
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    // Plugin data sources.
-    val persistence = SharedPreferencesPersistence(context)
-    val generalData = RealGeneralData(persistence)
+    // Other Plugin data sources.
     val clockData = RealClockData(persistence)
     val countdownData = RealCountdownData(persistence)
     val weatherData = RealWeatherData(persistence)
@@ -188,5 +278,14 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CrashCollectionNotice() {
+    DigitalFrameTheme {
+        ShowCrashCollectionNotice { }
     }
 }

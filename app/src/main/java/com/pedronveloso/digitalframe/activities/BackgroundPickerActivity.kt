@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.pedronveloso.digitalframe.elements.background.PhotosBackgroundViewModel
+import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.io.File
@@ -37,7 +37,7 @@ class BackgroundPickerActivity : ComponentActivity() {
                     copyImagesToInternalStorage(
                         context,
                         uris,
-                        PhotosBackgroundViewModel.BACKGROUND_PHOTOS_DIR,
+                        BackgroundAlbumViewModel.BACKGROUND_PHOTOS_DIR,
                     )
 
                     finish()

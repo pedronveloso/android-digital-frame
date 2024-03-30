@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import com.pedronveloso.digitalframe.R
-import com.pedronveloso.digitalframe.elements.background.PhotosBackgroundViewModel.Companion.BACKGROUND_PHOTOS_DIR
+import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel.Companion.BACKGROUND_PHOTOS_DIR
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.io.File
 

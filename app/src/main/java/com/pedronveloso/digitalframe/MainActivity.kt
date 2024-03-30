@@ -51,8 +51,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedronveloso.digitalframe.activities.PreferencesActivity
-import com.pedronveloso.digitalframe.elements.background.PhotosBackgroundViewModel
-import com.pedronveloso.digitalframe.elements.background.RenderBackground
+import com.pedronveloso.digitalframe.elements.background.AlbumBackground
+import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
@@ -213,7 +213,7 @@ fun ShowCrashCollectionNotice(userPickedCrashCollection: (Boolean) -> Unit) {
 
 @Composable
 fun DigitalAlbumScreen(
-    photosBackgroundViewModel: PhotosBackgroundViewModel,
+    photosBackgroundViewModel: BackgroundAlbumViewModel,
     clockViewModel: ClockViewModel,
     weatherViewModel: WeatherViewModel,
     countdownViewModel: CountdownViewModel,
@@ -245,7 +245,7 @@ fun DigitalAlbumScreen(
             },
     ) {
         val hudColor = deriveHUDColor(backgroundHsl)
-        RenderBackground(viewModel = photosBackgroundViewModel)
+        AlbumBackground(viewModel = photosBackgroundViewModel)
         clockViewModel.RenderClock(clockData = clockData, hudColor = hudColor)
         weatherViewModel.RenderWeather(weatherData, generalData, hudColor)
         countdownViewModel.CountdownDisplay(countdownData, hudColor)

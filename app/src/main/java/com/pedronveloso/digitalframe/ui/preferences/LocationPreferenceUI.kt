@@ -20,16 +20,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,13 +43,14 @@ import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.location.LocationData
 import com.pedronveloso.digitalframe.ui.MyTypography
-import kotlinx.coroutines.delay
+import com.pedronveloso.digitalframe.ui.reusable.SaveButton
 import java.util.concurrent.Executor
 
 @SuppressLint("MissingPermission")
 @Composable
 fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
-    val locationManager = LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val locationManager =
+        LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     val initialLocation = preference.initialValueProvider.invoke()
     var latitude by remember { mutableStateOf(initialLocation.latitude.toString()) }
@@ -67,9 +64,6 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
     } else {
         ContextCompat.getMainExecutor(context)
     }
-
-    var showSaveButtonCheckmark by remember { mutableStateOf(false) }
-    val saveButtonText = stringResource(id = R.string.pref_location_save)
 
     // Permission handling
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -138,8 +132,8 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(
-                onClick = {
+            SaveButton(
+                onSave = {
                     if (!latError && !lonError) {
                         preference.onChangeCallback?.invoke(
                             LocationData(
@@ -147,52 +141,54 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                                 longitude.toDouble()
                             )
                         )
-                        showSaveButtonCheckmark = true
                     }
                 },
-                enabled = !latError && !lonError
-            ) {
-                if (showSaveButtonCheckmark) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "Checkmark",
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    Text(saveButtonText)
-                }
-            }
+                enabled = !latError && !lonError,
+                buttonText = stringResource(id = R.string.pref_location_save)
+            )
 
-            // Revert the button contents after a delay.
-            LaunchedEffect(showSaveButtonCheckmark) {
-                if (showSaveButtonCheckmark) {
-                    delay(1000)
-                    showSaveButtonCheckmark = false
-                }
-            }
+            Spacer(modifier = Modifier
+                .height(8.dp)
+                .width(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp).width(8.dp))
+            GetCurrentLocationButton(
+                isLoading = isLoading,
+                onGetCurrent = {
+                    when (PackageManager.PERMISSION_GRANTED) {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) -> {
+                            isLoading = true
+                            getCurrentLocation(
+                                locationManager,
+                                executor,
+                                onLocationReceived = { location ->
+                                    latitude = location.latitude.toString()
+                                    longitude = location.longitude.toString()
+                                    isLoading = false
+                                })
+                        }
 
-            Button(onClick = {
-
-                when (PackageManager.PERMISSION_GRANTED) {
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                        isLoading = true
-                        getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
-                            latitude = location.latitude.toString()
-                            longitude = location.longitude.toString()
-                            isLoading = false
-                        })
+                        else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                    else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-            }) {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = Color.White)
-                } else {
-                    Text("Get current")
-                }
-            }
+            )
+        }
+    }
+}
+
+@Composable
+fun GetCurrentLocationButton(
+    isLoading: Boolean,
+    onGetCurrent: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(onClick = onGetCurrent, modifier = modifier) {
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.size(16.dp), color = Color.White)
+        } else {
+            Text("Get current")
         }
     }
 }

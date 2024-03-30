@@ -55,9 +55,17 @@ class ClockViewModel(
             ) {
                 val formatter: DateTimeFormatter =
                     if (clockPersistence.use24HClock()) {
-                        DateTimeFormatter.ofPattern("HH:mm:ss")
+                        if (clockPersistence.showSeconds()) {
+                            DateTimeFormatter.ofPattern("HH:mm:ss")
+                        } else {
+                            DateTimeFormatter.ofPattern("HH:mm")
+                        }
                     } else {
-                        DateTimeFormatter.ofPattern("hh:mm a")
+                        if (clockPersistence.showSeconds()) {
+                            DateTimeFormatter.ofPattern("hh:mm:ss a")
+                        } else {
+                            DateTimeFormatter.ofPattern("hh:mm a")
+                        }
                     }
                 Text(
                     text = formatter.format(currentTime),

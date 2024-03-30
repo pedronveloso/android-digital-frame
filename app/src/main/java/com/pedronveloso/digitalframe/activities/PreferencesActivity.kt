@@ -112,7 +112,19 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
 
+        val showSecondsPreference =
+            PreferenceItem.SwitchPref(
+                id = "show_seconds",
+                title = getString(R.string.pref_clock_show_seconds),
+                initialValueProvider = { clockData.showSeconds() },
+            ).apply {
+                onChangeCallback = { enabled ->
+                    clockData.setShowSeconds(enabled)
+                }
+            }
+
         clockSection.addPreference(use24HClock)
+        clockSection.addPreference(showSecondsPreference)
         clockSection.addPreference(showYearPreference)
         topLevelPrefs.addSection(clockSection.build())
     }

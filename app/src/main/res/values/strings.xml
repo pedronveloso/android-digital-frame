@@ -33,6 +33,7 @@
     <string name="pref_clock_title">Clock</string>
     <string name="pref_clock_24h_title">Use 24h format</string>
     <string name="pref_clock_24h_description">Use 24h format instead of AM/PM</string>
+    <string name="pref_clock_show_seconds">Show seconds</string>
     <string name="pref_clock_show_year">Show year</string>
 
     <!-- Countdown -->

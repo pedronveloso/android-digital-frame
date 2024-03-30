@@ -1,11 +1,11 @@
 package com.pedronveloso.digitalframe.elements.countdown
 
-import com.pedronveloso.digitalframe.persistence.PluginData
-import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_ENABLED
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence.Companion.PROPERTY_ENABLED
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 import java.time.LocalDate
 
-interface CountdownData : PluginData {
+interface CountdownPersistence : PluginDataPersistence {
     fun setTargetDate(value: LocalDate)
 
     fun getTargetDate(): LocalDate
@@ -15,7 +15,8 @@ interface CountdownData : PluginData {
     fun getMessage(): String
 }
 
-class RealCountdownData(private val persistence: PreferencesPersistence) : CountdownData {
+class RealCountdownPersistence(private val persistence: PreferencesPersistence) :
+    CountdownPersistence {
     override fun setTargetDate(value: LocalDate) {
         persistence.setPreferenceValue(SECTION_ID, TARGET_DATE, value)
     }

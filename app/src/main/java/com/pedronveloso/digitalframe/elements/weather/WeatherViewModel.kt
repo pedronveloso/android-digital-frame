@@ -28,8 +28,8 @@ import com.pedronveloso.digitalframe.data.exceptions.NetworkException
 import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.data.openweather.WeatherType
 import com.pedronveloso.digitalframe.data.vo.UiResult
-import com.pedronveloso.digitalframe.elements.general.FakeGeneralData
-import com.pedronveloso.digitalframe.elements.general.GeneralData
+import com.pedronveloso.digitalframe.elements.general.FakeGeneralDataPersistence
+import com.pedronveloso.digitalframe.elements.general.GeneralDataPersistence
 import com.pedronveloso.digitalframe.network.NetworkResult
 import com.pedronveloso.digitalframe.network.openweather.FakeWeatherService
 import com.pedronveloso.digitalframe.network.openweather.OpenWeatherService
@@ -58,16 +58,19 @@ class WeatherViewModel
     private var startedRepeatedExecution = false
     private val logger = LogStoreProvider.getLogStore()
 
-    private fun repeatedExecution(weatherData: WeatherData, generalData: GeneralData) {
+    private fun repeatedExecution(
+        weatherPersistence: WeatherPersistence,
+        generalDataPersistence: GeneralDataPersistence
+    ) {
         executionJob?.cancel()
         executionJob = viewModelScope.launch {
             fetchWeatherConditions(
-                generalData.locationData().latitude.toString(),
-                generalData.locationData().longitude.toString()
+                generalDataPersistence.locationData().latitude.toString(),
+                generalDataPersistence.locationData().longitude.toString()
             )
                 // How often to refresh the API. TODO: Make configurable.
             delay(1.hours)
-            repeatedExecution(weatherData, generalData)
+            repeatedExecution(weatherPersistence, generalDataPersistence)
             }
         }
 
@@ -95,13 +98,13 @@ class WeatherViewModel
 
         @Composable
         fun RenderWeather(
-            weatherData: WeatherData,
-            generalData: GeneralData,
+            weatherPersistence: WeatherPersistence,
+            generalDataPersistence: GeneralDataPersistence,
             hudColor: Color,
         ) {
             if (!startedRepeatedExecution) {
                 startedRepeatedExecution = true
-                repeatedExecution(weatherData, generalData)
+                repeatedExecution(weatherPersistence, generalDataPersistence)
             }
 
             FadingComposable {
@@ -146,7 +149,7 @@ class WeatherViewModel
                                 // Noon.
                                 Spacer(modifier = Modifier.size(16.dp))
                                 DrawWeatherElementWithIcon(
-                                    weatherData,
+                                    weatherPersistence,
                                     temperature = weatherResponse.main.temp,
                                     windSpeed = weatherResponse.wind.speed,
                                     weatherType = weatherResponse.weather.first().weatherType,
@@ -161,7 +164,7 @@ class WeatherViewModel
 
         @Composable
         fun DrawWeatherElementWithIcon(
-            weatherData: WeatherData,
+            weatherPersistence: WeatherPersistence,
             temperature: Double,
             windSpeed: Double,
             weatherType: WeatherType,
@@ -173,7 +176,7 @@ class WeatherViewModel
             ) {
                 // Temperature.
                 val dayTemp: String
-                if (weatherData.useCelsius()) {
+                if (weatherPersistence.useCelsius()) {
                     val dayTempValue = temperature.roundToInt()
                     dayTemp = "$dayTempValue °C"
                 } else {
@@ -187,7 +190,7 @@ class WeatherViewModel
                 )
 
                 // Wind Speed.
-                if (weatherData.showWind()) {
+                if (weatherPersistence.showWind()) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_wind),
@@ -237,8 +240,8 @@ class WeatherViewModel
 fun PreviewRenderWeather() {
     val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)
     val hudColor = deriveHUDColor(backgroundHsl)
-    val weatherData = FakeWeatherData()
-    val generalData = FakeGeneralData()
+    val weatherData = FakeWeatherPersistence()
+    val generalData = FakeGeneralDataPersistence()
 
     DigitalFrameTheme {
         WeatherViewModel(FakeWeatherService()).RenderWeather(

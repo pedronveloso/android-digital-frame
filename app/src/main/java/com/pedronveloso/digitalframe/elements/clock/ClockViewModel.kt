@@ -44,7 +44,7 @@ class ClockViewModel(
 
     @Composable
     fun RenderClock(
-        clockData: ClockData,
+        clockPersistence: ClockPersistence,
         hudColor: Color,
     ) {
         FadingComposable {
@@ -54,7 +54,7 @@ class ClockViewModel(
                     .fillMaxWidth(),
             ) {
                 val formatter: DateTimeFormatter =
-                    if (clockData.use24HClock()) {
+                    if (clockPersistence.use24HClock()) {
                         DateTimeFormatter.ofPattern("HH:mm:ss")
                     } else {
                         DateTimeFormatter.ofPattern("hh:mm a")
@@ -64,7 +64,7 @@ class ClockViewModel(
                     style = textStyleDisplayLarge(hudColor),
                 )
 
-                if (clockData.showYear()) {
+                if (clockPersistence.showYear()) {
                     Text(
                         text =
                             currentTime.format(

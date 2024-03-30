@@ -36,25 +36,25 @@ class CountdownViewModel(
     private var executionJob: Job? = null
     private var startedRepeatedExecution = false
 
-    private fun repeatedExecution(countdownData: CountdownData) {
+    private fun repeatedExecution(countdownPersistence: CountdownPersistence) {
         executionJob?.cancel()
         executionJob = viewModelScope.launch {
             val today = LocalDate.now()
-            val targetDate = countdownData.getTargetDate()
+            val targetDate = countdownPersistence.getTargetDate()
             daysUntilEvent = ChronoUnit.DAYS.between(today, targetDate)
             delay(1.minutes)
-            repeatedExecution(countdownData)
+            repeatedExecution(countdownPersistence)
         }
     }
 
     @Composable
     fun CountdownDisplay(
-        countdownData: CountdownData,
+        countdownPersistence: CountdownPersistence,
         hudColor: Color,
     ) {
         if (!startedRepeatedExecution) {
             startedRepeatedExecution = true
-            repeatedExecution(countdownData)
+            repeatedExecution(countdownPersistence)
         }
         FadingComposable {
             Column(
@@ -67,7 +67,7 @@ class CountdownViewModel(
             ) {
                 CountdownText(
                     daysUntil = daysUntilEvent,
-                    countdownData,
+                    countdownPersistence,
                     hudColor = hudColor,
                 )
             }
@@ -77,7 +77,7 @@ class CountdownViewModel(
     @Composable
     fun CountdownText(
         daysUntil: Long,
-        countdownData: CountdownData,
+        countdownPersistence: CountdownPersistence,
         hudColor: Color,
     ) {
         if (daysUntil >= 0) {
@@ -90,7 +90,7 @@ class CountdownViewModel(
                     style = FontStyles.textStyleDisplayMedium(hudColor),
                 )
                 Text(
-                    text = countdownData.getMessage().uppercase(),
+                    text = countdownPersistence.getMessage().uppercase(),
                     style = FontStyles.textStyleBodyLarge(hudColor),
                 )
             }

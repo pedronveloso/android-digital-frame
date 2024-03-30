@@ -3,7 +3,7 @@ package com.pedronveloso.digitalframe.elements.general
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.location.LocationData
 
-interface GeneralData {
+interface GeneralDataPersistence {
     fun explicitlyDisabledCrashCollection(): Boolean
 
     fun setExplicitlyDisabledCrashCollection(value: Boolean)
@@ -18,7 +18,8 @@ interface GeneralData {
 
 }
 
-class RealGeneralData(private val persistence: PreferencesPersistence) : GeneralData {
+class RealGeneralDataPersistence(private val persistence: PreferencesPersistence) :
+    GeneralDataPersistence {
     override fun explicitlyDisabledCrashCollection(): Boolean {
         return persistence.getPreferenceValue(
             SECTION_ID,
@@ -68,7 +69,7 @@ class RealGeneralData(private val persistence: PreferencesPersistence) : General
     }
 }
 
-class FakeGeneralData : GeneralData {
+class FakeGeneralDataPersistence : GeneralDataPersistence {
     override fun explicitlyDisabledCrashCollection(): Boolean {
         return false
     }

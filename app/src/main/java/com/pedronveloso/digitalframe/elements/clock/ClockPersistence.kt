@@ -1,10 +1,10 @@
 package com.pedronveloso.digitalframe.elements.clock
 
-import com.pedronveloso.digitalframe.persistence.PluginData
-import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_ENABLED
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence.Companion.PROPERTY_ENABLED
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 
-interface ClockData : PluginData {
+interface ClockPersistence : PluginDataPersistence {
     fun use24HClock(): Boolean
 
     fun setUse24HClock(value: Boolean)
@@ -12,9 +12,12 @@ interface ClockData : PluginData {
     fun showYear(): Boolean
 
     fun setShowYear(value: Boolean)
+
+    fun showSeconds(): Boolean
+    fun setShowSeconds(value: Boolean)
 }
 
-class RealClockData(private val persistence: PreferencesPersistence) : ClockData {
+class RealClockPersistence(private val persistence: PreferencesPersistence) : ClockPersistence {
     override fun use24HClock(): Boolean {
         return persistence.getPreferenceValue(
             SECTION_ID,
@@ -39,6 +42,18 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_SHOW_YEAR, value)
     }
 
+    override fun showSeconds(): Boolean {
+        return persistence.getPreferenceValue(
+            SECTION_ID,
+            PROPERTY_SHOW_SECONDS,
+            false,
+        )
+    }
+
+    override fun setShowSeconds(value: Boolean) {
+        persistence.setPreferenceValue(SECTION_ID, PROPERTY_SHOW_SECONDS, value)
+    }
+
     override fun isEnabled(): Boolean {
         return persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
     }
@@ -51,5 +66,6 @@ class RealClockData(private val persistence: PreferencesPersistence) : ClockData
         private const val SECTION_ID = "clock"
         private const val PROPERTY_24H_CLOCK = "24h-clock"
         private const val PROPERTY_SHOW_YEAR = "show-year"
+        private const val PROPERTY_SHOW_SECONDS = "show-seconds"
     }
 }

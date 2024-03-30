@@ -54,11 +54,11 @@ import com.pedronveloso.digitalframe.activities.PreferencesActivity
 import com.pedronveloso.digitalframe.elements.background.AlbumBackground
 import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
-import com.pedronveloso.digitalframe.elements.clock.RealClockData
+import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
-import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
-import com.pedronveloso.digitalframe.elements.general.RealGeneralData
-import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
+import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
+import com.pedronveloso.digitalframe.elements.general.RealGeneralDataPersistence
+import com.pedronveloso.digitalframe.elements.weather.RealWeatherPersistence
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
             DigitalFrameTheme {
                 val context = LocalContext.current
                 val persistence = SharedPreferencesPersistence(context)
-                val generalData = RealGeneralData(persistence)
+                val generalData = RealGeneralDataPersistence(persistence)
                 var userPromptedForCrashCollection by remember { mutableStateOf(generalData.userPromptedForCrashCollection()) }
 
                 // A surface container using the 'background' color from the theme
@@ -218,16 +218,16 @@ fun DigitalAlbumScreen(
     weatherViewModel: WeatherViewModel,
     countdownViewModel: CountdownViewModel,
     persistence: SharedPreferencesPersistence,
-    generalData: RealGeneralData
+    generalData: RealGeneralDataPersistence
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     // Other Plugin data sources.
-    val clockData = RealClockData(persistence)
-    val countdownData = RealCountdownData(persistence)
-    val weatherData = RealWeatherData(persistence)
+    val clockData = RealClockPersistence(persistence)
+    val countdownData = RealCountdownPersistence(persistence)
+    val weatherData = RealWeatherPersistence(persistence)
 
     val backgroundHsl by photosBackgroundViewModel.hsl.collectAsState()
 
@@ -246,7 +246,7 @@ fun DigitalAlbumScreen(
     ) {
         val hudColor = deriveHUDColor(backgroundHsl)
         AlbumBackground(viewModel = photosBackgroundViewModel)
-        clockViewModel.RenderClock(clockData = clockData, hudColor = hudColor)
+        clockViewModel.RenderClock(clockPersistence = clockData, hudColor = hudColor)
         weatherViewModel.RenderWeather(weatherData, generalData, hudColor)
         countdownViewModel.CountdownDisplay(countdownData, hudColor)
 

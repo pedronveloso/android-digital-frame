@@ -1,6 +1,6 @@
 package com.pedronveloso.digitalframe.persistence
 
-interface PluginData {
+interface PluginDataPersistence {
     fun isEnabled(): Boolean
 
     fun setEnabled(value: Boolean)

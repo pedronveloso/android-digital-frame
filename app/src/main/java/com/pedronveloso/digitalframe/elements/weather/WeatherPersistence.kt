@@ -1,10 +1,10 @@
 package com.pedronveloso.digitalframe.elements.weather
 
-import com.pedronveloso.digitalframe.persistence.PluginData
-import com.pedronveloso.digitalframe.persistence.PluginData.Companion.PROPERTY_ENABLED
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence
+import com.pedronveloso.digitalframe.persistence.PluginDataPersistence.Companion.PROPERTY_ENABLED
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
 
-interface WeatherData : PluginData {
+interface WeatherPersistence : PluginDataPersistence {
     fun setUseCelsius(value: Boolean)
 
     fun useCelsius(): Boolean
@@ -14,7 +14,7 @@ interface WeatherData : PluginData {
     fun setShowWind(value: Boolean)
 }
 
-class RealWeatherData(private val persistence: PreferencesPersistence) : WeatherData {
+class RealWeatherPersistence(private val persistence: PreferencesPersistence) : WeatherPersistence {
     override fun setUseCelsius(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, USE_CELSIUS, value)
     }
@@ -46,7 +46,7 @@ class RealWeatherData(private val persistence: PreferencesPersistence) : Weather
     }
 }
 
-class FakeWeatherData : WeatherData {
+class FakeWeatherPersistence : WeatherPersistence {
     private var enabled = true
     private var useCelsius = true
     private var showWind = true

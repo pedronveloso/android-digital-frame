@@ -35,10 +35,10 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.background.BackgroundPhotosEraser
-import com.pedronveloso.digitalframe.elements.clock.RealClockData
-import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
-import com.pedronveloso.digitalframe.elements.general.RealGeneralData
-import com.pedronveloso.digitalframe.elements.weather.RealWeatherData
+import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
+import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
+import com.pedronveloso.digitalframe.elements.general.RealGeneralDataPersistence
+import com.pedronveloso.digitalframe.elements.weather.RealWeatherPersistence
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
@@ -86,7 +86,7 @@ class PreferencesActivity : ComponentActivity() {
         topLevelPrefs: PreferencesRoot.Builder,
         dataPersistence: SharedPreferencesPersistence,
     ) {
-        val clockData = RealClockData(dataPersistence)
+        val clockData = RealClockPersistence(dataPersistence)
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
 
         val use24HClock =
@@ -153,7 +153,7 @@ class PreferencesActivity : ComponentActivity() {
         topLevelPrefs: PreferencesRoot.Builder,
         dataPersistence: SharedPreferencesPersistence,
     ) {
-        val countdownData = RealCountdownData(dataPersistence)
+        val countdownData = RealCountdownPersistence(dataPersistence)
         val countdownSection =
             PreferencesSection.Builder("countdown", getString(R.string.pref_countdown_title))
         val daysRemainingInput =
@@ -193,7 +193,7 @@ class PreferencesActivity : ComponentActivity() {
     ) {
         val weatherSection =
             PreferencesSection.Builder("weather", getString(R.string.pref_weather_title))
-        val weatherData = RealWeatherData(dataPersistence)
+        val weatherData = RealWeatherPersistence(dataPersistence)
 
         val useCelsiusPreference =
             PreferenceItem.SwitchPref(
@@ -229,7 +229,7 @@ class PreferencesActivity : ComponentActivity() {
     ) {
         val generalSection =
             PreferencesSection.Builder("general", getString(R.string.pref_general_title))
-        val generalData = RealGeneralData(dataPersistence)
+        val generalData = RealGeneralDataPersistence(dataPersistence)
 
         val allowCrashCollection =
             PreferenceItem.SwitchPref(

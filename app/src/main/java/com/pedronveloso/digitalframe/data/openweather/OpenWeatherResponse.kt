@@ -5,7 +5,11 @@ data class OpenWeatherResponse(
     val weather: List<Weather>,
     val main: TemperatureDetails,
     val wind: Wind
-)
+){
+    fun printForLogs() : String {
+        return "Weather: ${weather[0].main}, id: ${weather[0].id},  Temp: ${main.temp}, Wind: ${wind.speed}"
+    }
+}
 
 data class Weather(
     val id: Int,

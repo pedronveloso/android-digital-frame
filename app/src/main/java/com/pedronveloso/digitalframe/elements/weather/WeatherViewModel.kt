@@ -37,6 +37,7 @@ import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.FadingComposable
 import com.pedronveloso.digitalframe.ui.FontStyles
 import com.pedronveloso.digitalframe.ui.deriveHUDColor
+import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -55,6 +56,7 @@ class WeatherViewModel
 
     private var executionJob: Job? = null
     private var startedRepeatedExecution = false
+    private val logger = LogStoreProvider.getLogStore()
 
     private fun repeatedExecution(weatherData: WeatherData, generalData: GeneralData) {
         executionJob?.cancel()
@@ -72,15 +74,19 @@ class WeatherViewModel
     private fun fetchWeatherConditions(latitude: String, longitude: String) {
             weatherState = UiResult.Loading()
 
+        logger.log("Fetching weather for: $latitude, $longitude")
+
             viewModelScope.launch {
                 weatherState =
                     when (val result =
                         apiService.fetchCurrentWeatherConditions(latitude, longitude)) {
                         is NetworkResult.Failure -> {
+                            logger.logError("Failed to fetch weather data", result.exception)
                             UiResult.failure(NetworkException())
                         }
 
                         is NetworkResult.Success -> {
+                            logger.log("Fetched weather data: ${result.data.printForLogs()}")
                             UiResult.success(result.data)
                         }
                     }

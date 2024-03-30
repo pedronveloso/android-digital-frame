@@ -64,6 +64,7 @@ import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
 import com.pedronveloso.digitalframe.ui.preferences.LocationPreferenceComposable
+import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.text.SimpleDateFormat
 import java.time.MonthDay
 import java.time.Year
@@ -73,8 +74,12 @@ import java.util.Locale
 
 
 class PreferencesActivity : ComponentActivity() {
+
+    private val logger = LogStoreProvider.getLogStore()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        logger.log("Creating Settings screen")
 
         val dataPersistence = SharedPreferencesPersistence(this)
 

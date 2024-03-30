@@ -1,6 +1,7 @@
 package com.pedronveloso.digitalframe.preferences
 
 import com.pedronveloso.digitalframe.preferences.location.LocationData
+import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 
 sealed class PreferenceItem(open val id: String) {
     data class InputFieldPref(
@@ -22,6 +23,8 @@ sealed class PreferenceItem(open val id: String) {
         var onChangeCallback: ((Boolean) -> Unit)? = null
             set(value) {
                 field = { booleanValue ->
+                    val logger = LogStoreProvider.getLogStore()
+                    logger.log("SwitchPref $title changed to $booleanValue")
                     value?.invoke(booleanValue)
                 }
             }

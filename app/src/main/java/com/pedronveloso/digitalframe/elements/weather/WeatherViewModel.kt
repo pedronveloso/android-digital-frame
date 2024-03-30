@@ -206,12 +206,14 @@ class WeatherViewModel
                 }
 
                 // TODO: Consider day and night.
+                // TODO: Different icon for light snow.
                 val iconId =
                     when (weatherType) {
                         WeatherType.Clear -> R.drawable.day_clear
                         WeatherType.LightClouds -> R.drawable.day_partial_cloud
                         WeatherType.HeavyClouds -> R.drawable.cloudy
                         WeatherType.Rain -> R.drawable.rain
+                        WeatherType.LightSnow -> R.drawable.snow
                         WeatherType.Snow -> R.drawable.snow
                         WeatherType.Thunderstorm -> R.drawable.thunder
                         WeatherType.Drizzle -> R.drawable.day_rain

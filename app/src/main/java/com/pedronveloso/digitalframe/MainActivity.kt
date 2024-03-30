@@ -66,14 +66,12 @@ class MainActivity : ComponentActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            onCreateToggleImmersiveMode()
+            initialToggleImmersiveMode()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        onCreateToggleImmersiveMode()
 
         // Keep Screen On.
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -97,7 +95,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onCreateToggleImmersiveMode() {
+    private fun initialToggleImmersiveMode() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -106,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         } else {
-            window.insetsController?.let {
+            window?.insetsController?.let {
                 it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }

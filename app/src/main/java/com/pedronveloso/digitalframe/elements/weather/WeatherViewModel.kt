@@ -59,7 +59,10 @@ class WeatherViewModel
     private fun repeatedExecution(weatherData: WeatherData, generalData: GeneralData) {
         executionJob?.cancel()
         executionJob = viewModelScope.launch {
-            fetchWeatherConditions(generalData.lat(), generalData.lon())
+            fetchWeatherConditions(
+                generalData.locationData().latitude.toString(),
+                generalData.locationData().longitude.toString()
+            )
                 // How often to refresh the API. TODO: Make configurable.
             delay(1.hours)
             repeatedExecution(weatherData, generalData)

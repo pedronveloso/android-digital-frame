@@ -1,19 +1,17 @@
 package com.pedronveloso.digitalframe.elements.general
 
 import com.pedronveloso.digitalframe.persistence.PreferencesPersistence
+import com.pedronveloso.digitalframe.preferences.location.LocationData
 
 interface GeneralData {
     fun explicitlyDisabledCrashCollection(): Boolean
 
     fun setExplicitlyDisabledCrashCollection(value: Boolean)
 
-    fun lat(): String
+    fun locationData(): LocationData
 
-    fun lon(): String
+    fun setLocationData(value: LocationData)
 
-    fun setLat(value: String)
-
-    fun setLon(value: String)
 }
 
 class RealGeneralData(private val persistence: PreferencesPersistence) : GeneralData {
@@ -29,28 +27,23 @@ class RealGeneralData(private val persistence: PreferencesPersistence) : General
         persistence.setPreferenceValue(SECTION_ID, EXPLICITLY_DISABLED_CRASH_COLLECTION, value)
     }
 
-    override fun lat(): String {
-        return persistence.getPreferenceValue(SECTION_ID, LAT, "37.808332")
+    override fun locationData(): LocationData {
+        val lat = persistence.getPreferenceValue(SECTION_ID, LAT, 37.808332)
+        val lon = persistence.getPreferenceValue(SECTION_ID, LON, -122.415715)
+        return LocationData(lat, lon)
     }
 
-    override fun lon(): String {
-        return persistence.getPreferenceValue(SECTION_ID, LON, "-122.415715")
-    }
-
-    override fun setLat(value: String) {
-        persistence.setPreferenceValue(SECTION_ID, LAT, value)
-    }
-
-    override fun setLon(value: String) {
-        persistence.setPreferenceValue(SECTION_ID, LON, value)
+    override fun setLocationData(value: LocationData) {
+        persistence.setPreferenceValue(SECTION_ID, LAT, value.latitude)
+        persistence.setPreferenceValue(SECTION_ID, LON, value.longitude)
     }
 
     companion object {
         private const val SECTION_ID = "general"
         private const val EXPLICITLY_DISABLED_CRASH_COLLECTION =
             "explicitly-disabled-crash-collection"
-        private const val LAT = "lat"
-        private const val LON = "lon"
+        private const val LAT = "lat_d"
+        private const val LON = "lon_d"
     }
 }
 
@@ -63,19 +56,11 @@ class FakeGeneralData : GeneralData {
         // Do nothing.
     }
 
-    override fun lat(): String {
-        return "37.808332"
+    override fun locationData(): LocationData {
+        return LocationData(37.808332, -122.415715)
     }
 
-    override fun lon(): String {
-        return "-122.415715"
-    }
-
-    override fun setLat(value: String) {
-        // Do nothing.
-    }
-
-    override fun setLon(value: String) {
+    override fun setLocationData(value: LocationData) {
         // Do nothing.
     }
 }

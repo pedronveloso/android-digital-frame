@@ -63,12 +63,14 @@ import com.pedronveloso.digitalframe.preferences.PreferencesRoot
 import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
+import com.pedronveloso.digitalframe.ui.preferences.LocationPreferenceComposable
 import java.text.SimpleDateFormat
 import java.time.MonthDay
 import java.time.Year
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
+
 
 class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,7 +163,8 @@ class PreferencesActivity : ComponentActivity() {
                 type = InputType.DATE,
                 initialValueProvider = { countdownData.getTargetDate().toString() },
                 onChangeCallback = { value ->
-                    val dateValue = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(value)
+                    val dateValue =
+                        SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(value)
                     countdownData.setTargetDate(
                         dateValue.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                     )
@@ -241,37 +244,19 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
 
-        val locationDescriptionLabel =
-            PreferenceItem.Label(
-                id = "location_description",
-                text = getString(R.string.pref_general_location),
-            )
-
-        val latitudeInput =
-            PreferenceItem.InputFieldPref(
-                id = "latitude",
-                title = getString(R.string.pref_general_lat),
-                type = InputType.TEXT,
-                initialValueProvider = { generalData.lat() },
+        val locationInput =
+            PreferenceItem.LocationPref(
+                id = "location",
+                title = getString(R.string.pref_location_title),
+                description = getString(R.string.pref_location_description),
+                initialValueProvider = { generalData.locationData() },
                 onChangeCallback = { value ->
-                    generalData.setLat(value)
+                    generalData.setLocationData(value)
                 },
             )
 
-        val longitudeInput =
-            PreferenceItem.InputFieldPref(
-                id = "longitude",
-                title = getString(R.string.pref_general_lon),
-                type = InputType.TEXT,
-                initialValueProvider = { generalData.lon() },
-                onChangeCallback = { value ->
-                    generalData.setLon(value)
-                },
-            )
 
-        generalSection.addPreference(locationDescriptionLabel)
-        generalSection.addPreference(latitudeInput)
-        generalSection.addPreference(longitudeInput)
+        generalSection.addPreference(locationInput)
         generalSection.addPreference(allowCrashCollection)
         topLevelPrefs.addSection(generalSection.build())
     }
@@ -402,6 +387,7 @@ fun RenderPreferences(items: List<PreferenceItem>) {
                 is PreferenceItem.InputFieldPref -> InputFieldPreferenceComposable(preference)
                 is PreferenceItem.SwitchPref -> SwitchPreferenceComposable(preference)
                 is PreferenceItem.Button -> ButtonPreferenceComposable(preference)
+                is PreferenceItem.LocationPref -> LocationPreferenceComposable(preference)
             }
         }
     }
@@ -439,9 +425,9 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                 placeholder = { Text(preference.hint ?: "") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions =
-                    KeyboardActions(onDone = {
-                        preference.onChangeCallback?.invoke(text)
-                    }),
+                KeyboardActions(onDone = {
+                    preference.onChangeCallback?.invoke(text)
+                }),
                 singleLine = true,
                 modifier =
                 Modifier
@@ -462,7 +448,10 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                                 set(year, month, dayOfMonth)
                             }
                         text =
-                            SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(calendar.time)
+                            SimpleDateFormat(
+                                "MMM d, yyyy",
+                                Locale.getDefault()
+                            ).format(calendar.time)
                         preference.onChangeCallback?.invoke(text)
                     }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)
                 }

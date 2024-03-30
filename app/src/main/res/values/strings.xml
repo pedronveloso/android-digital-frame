@@ -14,9 +14,15 @@
     <string name="pref_general_title">General</string>
     <string name="pref_general_crash_reports">Crash report collection</string>
     <string name="pref_general_crash_reports_description">Allow the app to automatically collect crash reports via Firebase Crashlytics (a service operated by Google)</string>
-    <string name="pref_general_location">Device Location:\n\nYou can get the coordinates from Google Maps or just asking Google Search for it.</string>
-    <string name="pref_general_lat">Latitude</string>
-    <string name="pref_general_lon">Longitude</string>
+
+    <!-- Location -->
+    <string name="pref_location_title">Device Location</string>
+    <string name="pref_location_description">You can copy-paste the coordinates from Google Maps, or use the button below to prefill based on your device\'s GPS data.</string>
+    <string name="pref_location_lat">Latitude</string>
+    <string name="pref_location_lon">Longitude</string>
+    <string name="pref_location_lat_error">Enter a valid latitude (-90 to 90)</string>
+    <string name="pref_location_lon_error">Enter a valid longitude (-180 to 180)</string>
+    <string name="pref_location_save">Save location</string>
 
     <!-- Clock -->
     <string name="pref_clock_title">Clock</string>

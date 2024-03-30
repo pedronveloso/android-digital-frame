@@ -1,48 +1,30 @@
 package com.pedronveloso.digitalframe.activities
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -63,13 +45,14 @@ import com.pedronveloso.digitalframe.preferences.PreferencesRoot
 import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
+import com.pedronveloso.digitalframe.ui.preferences.ButtonPreferenceComposable
+import com.pedronveloso.digitalframe.ui.preferences.InputFieldPreferenceComposable
+import com.pedronveloso.digitalframe.ui.preferences.LabelPreferenceComposable
 import com.pedronveloso.digitalframe.ui.preferences.LocationPreferenceComposable
+import com.pedronveloso.digitalframe.ui.preferences.SwitchPreferenceComposable
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.text.SimpleDateFormat
-import java.time.MonthDay
-import java.time.Year
 import java.time.ZoneId
-import java.util.Calendar
 import java.util.Locale
 
 
@@ -410,118 +393,5 @@ fun RenderPreferences(items: List<PreferenceItem>) {
                 is PreferenceItem.LocationPref -> LocationPreferenceComposable(preference)
             }
         }
-    }
-}
-
-@Composable
-fun LabelPreferenceComposable(label: PreferenceItem.Label) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label.text,
-            textAlign = TextAlign.Center,
-            style = MyTypography.bodyLarge
-        )
-    }
-}
-
-@Composable
-fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
-    var text by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
-    val context = LocalContext.current
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = preference.title, style = MyTypography.bodyLarge)
-
-        if (preference.type != InputType.DATE) {
-            // Existing TextField for types other than DATE.
-            TextField(
-                value = text,
-                onValueChange = { text = it },
-                placeholder = { Text(preference.hint ?: "") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                keyboardActions =
-                KeyboardActions(onDone = {
-                    preference.onChangeCallback?.invoke(text)
-                }),
-                singleLine = true,
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (!focusState.isFocused) {
-                            preference.onChangeCallback?.invoke(text)
-                        }
-                    },
-            )
-        } else {
-            // Button that triggers a DatePicker dialog for DATE type.
-            val datePickerDialog =
-                remember {
-                    DatePickerDialog(context, { _, year, month, dayOfMonth ->
-                        val calendar =
-                            Calendar.getInstance().apply {
-                                set(year, month, dayOfMonth)
-                            }
-                        text =
-                            SimpleDateFormat(
-                                "MMM d, yyyy",
-                                Locale.getDefault()
-                            ).format(calendar.time)
-                        preference.onChangeCallback?.invoke(text)
-                    }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)
-                }
-
-            OutlinedButton(onClick = {
-                datePickerDialog.show()
-            }) {
-                Text(text = if (text.isBlank()) stringResource(id = R.string.pick_date_title) else text)
-            }
-        }
-    }
-}
-
-@Composable
-fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
-    var isChecked by remember { mutableStateOf(preference.initialValueProvider.invoke()) }
-
-    Row(
-        modifier =
-        Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = preference.title, style = MyTypography.titleMedium)
-            preference.description?.let {
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(text = it, style = MyTypography.bodyLarge)
-            }
-        }
-        Switch(
-            checked = isChecked,
-            onCheckedChange = {
-                isChecked = it
-                preference.onChangeCallback?.invoke(it)
-            },
-        )
-    }
-}
-
-@Composable
-fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
-    Button(
-        onClick = preference.action,
-        modifier =
-        Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-    ) {
-        Text(preference.label)
     }
 }

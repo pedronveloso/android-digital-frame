@@ -261,8 +261,24 @@ class PreferencesActivity : ComponentActivity() {
             )
 
 
+        val logScreenButton =
+            PreferenceItem.Button(
+                id = "log_screen_button",
+                label = getString(R.string.pref_logs_title),
+                action = {
+                    startActivity(
+                        Intent(
+                            this@PreferencesActivity,
+                            LogActivity::class.java,
+                        ),
+                    )
+                },
+            )
+
+
         generalSection.addPreference(locationInput)
         generalSection.addPreference(allowCrashCollection)
+        generalSection.addPreference(logScreenButton)
         topLevelPrefs.addSection(generalSection.build())
     }
 

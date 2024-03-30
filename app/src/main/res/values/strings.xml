@@ -47,6 +47,11 @@
     <string name="pref_about_intro">Thank you using Android Digital Frame. To learn more visit the project\'s page by pressing the button below:</string>
     <string name="pref_about_button">Visit project page</string>
 
+    <!-- Logs -->
+    <string name="pref_logs_title">App Logs</string>
+    <string name="pref_logs_copy_clipboard">Copy to Clipboard</string>
+    <string name="pref_logs_privacy_notice">These logs are collected to help with development. They will never be sent without user consent and explicit action.</string>
+
 
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

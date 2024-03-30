@@ -40,7 +40,7 @@ class InMemoryLogStore : LogStore {
 
     private fun determineCallingClass(): String {
         val stackTrace = Thread.currentThread().stackTrace
-        val callingClass = stackTrace[3].className
+        val callingClass = stackTrace[4].className.split(".").last()
         return callingClass
     }
 

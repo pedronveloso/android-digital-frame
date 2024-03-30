@@ -38,6 +38,7 @@
 
         <activity android:name=".activities.PreferencesActivity" />
         <activity android:name=".activities.BackgroundPickerActivity" />
+        <activity android:name=".activities.LogActivity" />
     </application>
 
 </manifest>

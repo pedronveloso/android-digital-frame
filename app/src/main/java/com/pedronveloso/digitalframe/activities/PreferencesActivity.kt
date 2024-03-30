@@ -3,10 +3,16 @@ package com.pedronveloso.digitalframe.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -21,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
@@ -47,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -54,13 +62,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
@@ -82,6 +88,8 @@ import java.time.Year
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.Executor
+
 
 class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -516,7 +524,9 @@ fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
 
 @SuppressLint("MissingPermission")
 @Composable
-fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref,fusedLocationProviderClient: FusedLocationProviderClient) {
+fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
+    val locationManager = LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
     val initialLocation = preference.initialValueProvider.invoke()
     var latitude by remember { mutableStateOf(initialLocation.latitude.toString()) }
     var longitude by remember { mutableStateOf(initialLocation.longitude.toString()) }
@@ -524,17 +534,22 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref,fusedLo
     var lonError by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val executor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        LocalContext.current.mainExecutor
+    } else {
+        ContextCompat.getMainExecutor(context)
+    }
 
     // Permission handling
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted: Boolean ->
             if (isGranted) {
-                getCurrentLocation(fusedLocationProviderClient) { lat, lon ->
-                    latitude = lat.toString()
-                    longitude = lon.toString()
+                getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
+                    latitude = location.latitude.toString()
+                    longitude = location.longitude.toString()
                     isLoading = false
-                }
+                })
             }
         }
     )
@@ -608,29 +623,62 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref,fusedLo
                 Text(stringResource(id = R.string.pref_location_save))
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp).width(8.dp))
 
             Button(onClick = {
 
                 when (PackageManager.PERMISSION_GRANTED) {
                     ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) -> {
                         isLoading = true
-                        getCurrentLocation(fusedLocationProviderClient) { lat, lon ->
-                            latitude = lat.toString()
-                            longitude = lon.toString()
+                        getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
+                            latitude = location.latitude.toString()
+                            longitude = location.longitude.toString()
                             isLoading = false
-                        }
+                        })
                     }
                     else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             }) {
                 if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = Color.White)
                 } else {
                     Text("Get current")
                 }
             }
         }
+    }
+}
+
+@SuppressLint("MissingPermission")
+private fun getCurrentLocation(
+    locationManager: LocationManager,
+    executor: Executor,
+    onLocationReceived: (Location) -> Unit
+) {
+    var locationListener: LocationListener? = null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        locationManager.getCurrentLocation(
+            LocationManager.GPS_PROVIDER,
+            null,
+            executor
+        ) { location ->
+            location?.let {
+                onLocationReceived(it)
+            }
+        }
+    } else {
+        locationListener = LocationListener { location ->
+            onLocationReceived(location)
+            locationListener?.let { locationManager.removeUpdates(it) }
+        }
+
+
+        locationManager.requestSingleUpdate(
+            LocationManager.GPS_PROVIDER,
+            locationListener,
+            Looper.getMainLooper()
+        )
+
     }
 }
 

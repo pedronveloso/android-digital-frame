@@ -34,6 +34,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
+import com.pedronveloso.digitalframe.elements.background.BackgroundPhotosEraser
 import com.pedronveloso.digitalframe.elements.clock.RealClockData
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownData
 import com.pedronveloso.digitalframe.elements.general.RealGeneralData
@@ -133,7 +134,18 @@ class PreferencesActivity : ComponentActivity() {
                 },
             )
 
+        val eraseAllPhotosButton =
+            PreferenceItem.Button(
+                id = "erase_all_photos",
+                label = getString(R.string.pref_bg_erase_all),
+                action = {
+                    val backgroundPhotosEraser = BackgroundPhotosEraser(this)
+                    backgroundPhotosEraser.showDeletePhotosConfirmationDialog()
+                },
+            )
+
         backgroundSection.addPreference(pickBackgroundImagesBtn)
+        backgroundSection.addPreference(eraseAllPhotosButton)
         topLevelPrefs.addSection(backgroundSection.build())
     }
 

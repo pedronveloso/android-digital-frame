@@ -10,6 +10,10 @@
 
     <!-- Background -->
     <string name="pref_bg_photo_picker">Pick photos</string>
+    <string name="pref_bg_erase_all">Erase all photos</string>
+    <string name="pref_bg_erase_all_warning">Are you sure you want to delete all photos from the digital album? This action cannot be undone.</string>
+    <string name="pref_bg_erase_success">Personal photos deleted successfully.</string>
+    <string name="pref_bg_erase_failed_empty">No personal photos found.</string>
 
     <!-- General Settings -->
     <string name="pref_general_title">General</string>

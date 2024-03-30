@@ -44,11 +44,13 @@ import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.location.LocationData
 import com.pedronveloso.digitalframe.ui.MyTypography
 import com.pedronveloso.digitalframe.ui.reusable.SaveButton
+import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.util.concurrent.Executor
 
 @SuppressLint("MissingPermission")
 @Composable
 fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
+    val logger = LogStoreProvider.getLogStore()
     val locationManager =
         LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -71,6 +73,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
         onResult = { isGranted: Boolean ->
             if (isGranted) {
                 getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
+                    logger.log("Location received - perm granted: $location")
                     latitude = location.latitude.toString()
                     longitude = location.longitude.toString()
                     isLoading = false
@@ -135,6 +138,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             SaveButton(
                 onSave = {
                     if (!latError && !lonError) {
+                        logger.log("Location saved: $latitude, $longitude")
                         preference.onChangeCallback?.invoke(
                             LocationData(
                                 latitude.toDouble(),
@@ -159,11 +163,13 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                             context,
                             Manifest.permission.ACCESS_FINE_LOCATION
                         ) -> {
+                            logger.log("Getting current location")
                             isLoading = true
                             getCurrentLocation(
                                 locationManager,
                                 executor,
                                 onLocationReceived = { location ->
+                                    logger.log("Location received: $location")
                                     latitude = location.latitude.toString()
                                     longitude = location.longitude.toString()
                                     isLoading = false

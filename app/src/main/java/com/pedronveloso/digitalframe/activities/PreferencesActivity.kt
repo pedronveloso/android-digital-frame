@@ -275,7 +275,6 @@ class PreferencesActivity : ComponentActivity() {
                 },
             )
 
-
         generalSection.addPreference(locationInput)
         generalSection.addPreference(allowCrashCollection)
         generalSection.addPreference(logScreenButton)

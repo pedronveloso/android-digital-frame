@@ -24,7 +24,10 @@ data class Weather(
                 in 200..299 -> WeatherType.Thunderstorm
                 in 300..399 -> WeatherType.Drizzle
                 in 500..599 -> WeatherType.Rain
-                in 600..699 -> WeatherType.Snow
+                600 -> WeatherType.LightSnow
+                in 615..620 -> WeatherType.LightSnow
+                in 601..614 -> WeatherType.Snow
+                in 621..622 -> WeatherType.Snow
                 in 700..799 -> WeatherType.Atmosphere
                 800 -> WeatherType.Clear
                 801 -> WeatherType.LightClouds
@@ -39,7 +42,9 @@ enum class WeatherType {
     LightClouds,
     HeavyClouds,
     Rain,
+    LightSnow,
     Snow,
+    HeavySnow,
     Thunderstorm,
     Drizzle,
     Atmosphere,

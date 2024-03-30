@@ -21,7 +21,7 @@ class RealCountdownData(private val persistence: PreferencesPersistence) : Count
     }
 
     override fun getTargetDate(): LocalDate {
-        return persistence.getPreferenceValue(SECTION_ID, TARGET_DATE, LocalDate.now())
+        return persistence.getPreferenceValue(SECTION_ID, TARGET_DATE, LocalDate.now().minusDays(1))
     }
 
     override fun setMessage(value: String) {

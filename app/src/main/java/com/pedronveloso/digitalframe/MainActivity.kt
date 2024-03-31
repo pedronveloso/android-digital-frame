@@ -61,6 +61,7 @@ import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
 import com.pedronveloso.digitalframe.elements.general.RealGeneralDataPersistence
 import com.pedronveloso.digitalframe.elements.weather.RealWeatherPersistence
+import com.pedronveloso.digitalframe.elements.weather.RenderWeather
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
@@ -73,7 +74,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    // Optional: Re-enter immersive mode after user interaction
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -254,7 +254,7 @@ fun DigitalAlbumScreen(
             clockPersistence = clockPersistence,
             hudColor = hudColor
         )
-        weatherViewModel.RenderWeather(weatherPersistence, generalDataPersistence, hudColor)
+        RenderWeather(weatherViewModel, weatherPersistence, generalDataPersistence, hudColor)
         CountdownDisplay(countdownViewModel, countdownPersistence, hudColor)
 
         // Fading Button

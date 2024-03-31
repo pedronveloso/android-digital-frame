@@ -2,7 +2,6 @@ package com.pedronveloso.digitalframe.elements.weather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pedronveloso.digitalframe.data.exceptions.NetworkException
 import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.elements.general.GeneralDataPersistence
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class WeatherViewModel
@@ -25,6 +24,7 @@ class WeatherViewModel
 constructor(
     private val apiService: OpenWeatherService,
 ) : ViewModel() {
+    private var previousWeatherState: UiResult<OpenWeatherResponse> = UiResult.Blank()
     private val _weatherState = MutableStateFlow<UiResult<OpenWeatherResponse>>(UiResult.Blank())
     val weatherState: StateFlow<UiResult<OpenWeatherResponse>> = _weatherState.asStateFlow()
 
@@ -54,12 +54,13 @@ constructor(
                 generalDataPersistence.locationData().longitude.toString()
             )
             // How often to refresh the API. TODO: Make configurable.
-            delay(1.hours)
+            delay(5.seconds)
             repeatedExecution(weatherPersistence, generalDataPersistence)
         }
     }
 
     private fun fetchWeatherConditions(latitude: String, longitude: String) {
+        previousWeatherState = _weatherState.value
         _weatherState.value = UiResult.Loading()
 
         logger.log("Fetching weather for: $latitude, $longitude")
@@ -70,7 +71,9 @@ constructor(
                     apiService.fetchCurrentWeatherConditions(latitude, longitude)) {
                     is NetworkResult.Failure -> {
                         logger.logError("Failed to fetch weather data", result.exception)
-                        UiResult.failure(NetworkException())
+
+                        // If failed to get new weather data, use latest known data.
+                        previousWeatherState
                     }
 
                     is NetworkResult.Success -> {

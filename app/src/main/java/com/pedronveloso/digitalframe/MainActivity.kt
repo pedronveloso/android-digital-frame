@@ -55,6 +55,7 @@ import com.pedronveloso.digitalframe.elements.background.AlbumBackground
 import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
+import com.pedronveloso.digitalframe.elements.clock.RenderClock
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
 import com.pedronveloso.digitalframe.elements.general.RealGeneralDataPersistence
@@ -88,9 +89,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             DigitalFrameTheme {
                 val context = LocalContext.current
-                val persistence = SharedPreferencesPersistence(context)
-                val generalData = RealGeneralDataPersistence(persistence)
-                var userPromptedForCrashCollection by remember { mutableStateOf(generalData.userPromptedForCrashCollection()) }
+                val sharedPrefsPersistence = SharedPreferencesPersistence(context)
+                val generalDataPersistence = RealGeneralDataPersistence(sharedPrefsPersistence)
+                var userPromptedForCrashCollection by remember {
+                    mutableStateOf(
+                        generalDataPersistence.userPromptedForCrashCollection()
+                    )
+                }
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -98,13 +103,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     hideSystemUI(LocalView.current)
-                    // Plugin data sources.
-
-
                     if (userPromptedForCrashCollection.not()) {
                         ShowCrashCollectionNotice { userChoice ->
                             userPromptedForCrashCollection = true
-                            generalData.setUserPromptedForCrashCollection(userChoice)
+                            generalDataPersistence.setUserPromptedForCrashCollection(userChoice)
                         }
                     } else {
                         DigitalAlbumScreen(
@@ -112,8 +114,8 @@ class MainActivity : ComponentActivity() {
                             clockViewModel = viewModel(),
                             weatherViewModel = viewModel(),
                             countdownViewModel = viewModel(),
-                            persistence,
-                            generalData
+                            sharedPrefsPersistence,
+                            generalDataPersistence
                         )
                     }
                 }
@@ -218,16 +220,16 @@ fun DigitalAlbumScreen(
     weatherViewModel: WeatherViewModel,
     countdownViewModel: CountdownViewModel,
     persistence: SharedPreferencesPersistence,
-    generalData: RealGeneralDataPersistence
+    generalDataPersistence: RealGeneralDataPersistence
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     // Other Plugin data sources.
-    val clockData = RealClockPersistence(persistence)
-    val countdownData = RealCountdownPersistence(persistence)
-    val weatherData = RealWeatherPersistence(persistence)
+    val clockPersistence = RealClockPersistence(persistence)
+    val countdownPersistence = RealCountdownPersistence(persistence)
+    val weatherPersistence = RealWeatherPersistence(persistence)
 
     val backgroundHsl by photosBackgroundViewModel.hsl.collectAsState()
 
@@ -246,9 +248,13 @@ fun DigitalAlbumScreen(
     ) {
         val hudColor = deriveHUDColor(backgroundHsl)
         AlbumBackground(viewModel = photosBackgroundViewModel)
-        clockViewModel.RenderClock(clockPersistence = clockData, hudColor = hudColor)
-        weatherViewModel.RenderWeather(weatherData, generalData, hudColor)
-        countdownViewModel.CountdownDisplay(countdownData, hudColor)
+        RenderClock(
+            clockViewModel = clockViewModel,
+            clockPersistence = clockPersistence,
+            hudColor = hudColor
+        )
+        weatherViewModel.RenderWeather(weatherPersistence, generalDataPersistence, hudColor)
+        countdownViewModel.CountdownDisplay(countdownPersistence, hudColor)
 
         // Fading Button
         AnimatedVisibility(

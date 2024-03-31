@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pedronveloso.digitalframe.R
@@ -28,9 +27,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.minutes
 
-class CountdownViewModel(
-    private val savedState: SavedStateHandle,
-) : ViewModel() {
+class CountdownViewModel : ViewModel() {
     private var daysUntilEvent by mutableLongStateOf(0)
 
     private var executionJob: Job? = null

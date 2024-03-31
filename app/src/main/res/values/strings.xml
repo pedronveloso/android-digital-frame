@@ -40,7 +40,10 @@
     <string name="pref_countdown_title">Countdown</string>
     <string name="pref_countdown_days_remaining">Days remaining</string>
     <string name="pref_countdown_message">Countdown message</string>
-    <string name="countdown_days_remaining">%s days</string>
+    <plurals name="countdown_days_remaining">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
 
     <!-- Weather -->
     <string name="pref_weather_title">Weather</string>

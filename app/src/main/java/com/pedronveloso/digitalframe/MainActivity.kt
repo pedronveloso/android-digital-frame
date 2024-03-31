@@ -56,6 +56,7 @@ import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewMode
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel
 import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
 import com.pedronveloso.digitalframe.elements.clock.RenderClock
+import com.pedronveloso.digitalframe.elements.countdown.CountdownDisplay
 import com.pedronveloso.digitalframe.elements.countdown.CountdownViewModel
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
 import com.pedronveloso.digitalframe.elements.general.RealGeneralDataPersistence
@@ -254,7 +255,7 @@ fun DigitalAlbumScreen(
             hudColor = hudColor
         )
         weatherViewModel.RenderWeather(weatherPersistence, generalDataPersistence, hudColor)
-        countdownViewModel.CountdownDisplay(countdownPersistence, hudColor)
+        CountdownDisplay(countdownViewModel, countdownPersistence, hudColor)
 
         // Fading Button
         AnimatedVisibility(

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.hours
 
 @HiltViewModel
 class WeatherViewModel
@@ -54,7 +54,7 @@ constructor(
                 generalDataPersistence.locationData().longitude.toString()
             )
             // How often to refresh the API. TODO: Make configurable.
-            delay(5.seconds)
+            delay(1.hours)
             repeatedExecution(weatherPersistence, generalDataPersistence)
         }
     }

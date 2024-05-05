@@ -18,11 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.data.openweather.OpenWeatherResponse
 import com.pedronveloso.digitalframe.data.openweather.WeatherType
+import com.pedronveloso.digitalframe.data.openweather.Wind
+import com.pedronveloso.digitalframe.data.openweather.WindSpeedUnit
 import com.pedronveloso.digitalframe.data.vo.UiResult
 import com.pedronveloso.digitalframe.elements.general.FakeGeneralDataPersistence
 import com.pedronveloso.digitalframe.elements.general.GeneralDataPersistence
@@ -87,7 +90,7 @@ fun RenderWeather(
                         DrawWeatherElementWithIcon(
                             weatherPersistence,
                             temperature = weatherResponse.main.temp,
-                            windSpeed = weatherResponse.wind.speed,
+                            windSpeed = weatherResponse.wind,
                             weatherType = weatherResponse.weather.first().weatherType,
                             hudColor = hudColor,
                         )
@@ -102,7 +105,7 @@ fun RenderWeather(
 fun DrawWeatherElementWithIcon(
     weatherPersistence: WeatherPersistence,
     temperature: Double,
-    windSpeed: Double,
+    windSpeed: Wind,
     weatherType: WeatherType,
     hudColor: Color,
 ) {
@@ -135,8 +138,33 @@ fun DrawWeatherElementWithIcon(
                     colorFilter = ColorFilter.tint(hudColor),
                 )
                 Spacer(modifier = Modifier.size(4.dp))
-                val windSpeedValue = windSpeed.roundToInt()
-                val windSpeedLabel = "$windSpeedValue m/s"
+
+                // Apply the correct unit to the wind speed.
+                val windUnit = weatherPersistence.windSpeedUnit()
+                val windSpeedLabel = when (windUnit) {
+                    WindSpeedUnit.MetersPerSecond -> {
+                        stringResource(id = R.string.wind_meters_per_second, windSpeed.speed)
+                    }
+
+                    WindSpeedUnit.KilometersPerHour -> {
+                        stringResource(
+                            id = R.string.wind_kilometers_per_hour,
+                            windSpeed.getWindSpeedInKmHour()
+                        )
+                    }
+
+                    WindSpeedUnit.MilesPerHour -> {
+                        stringResource(
+                            id = R.string.wind_miles_per_hour,
+                            windSpeed.getWindSpeedInMilesHour()
+                        )
+                    }
+
+                    WindSpeedUnit.Knots -> {
+                        stringResource(id = R.string.wind_knots, windSpeed.getWindSpeedInKnots())
+                    }
+                }
+
                 Text(
                     text = windSpeedLabel,
                     style = FontStyles.textStyleBodyLarge(hudColor),
@@ -170,7 +198,7 @@ fun DrawWeatherElementWithIcon(
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun PreviewRenderWeather() {
     val backgroundHsl = floatArrayOf(210f, 0.9f, 0.5f)

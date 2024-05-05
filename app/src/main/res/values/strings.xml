@@ -50,6 +50,15 @@
     <string name="pref_weather_use_celcius">Use Celsius</string>
     <string name="pref_weather_use_celcius_description">Use Celsius instead of Fahrenheit</string>
     <string name="pref_weather_show_wind_speed">Show Wind Speed</string>
+    <string name="pref_weather_wind_unit">Wind Unit</string>
+    <string name="pref_weather_wind_unit_meters_second">Meters per second</string>
+    <string name="pref_weather_wind_unit_kilometers_hour">Kilometers per hour</string>
+    <string name="pref_weather_wind_unit_miles_hour">Miles per hour</string>
+    <string name="pref_weather_wind_unit_knots">Knots</string>
+    <string name="wind_meters_per_second">%.0f m/s</string>
+    <string name="wind_kilometers_per_hour">%.0f km/h</string>
+    <string name="wind_miles_per_hour">%.0f mph</string>
+    <string name="wind_knots">%.0f knots</string>
 
     <!-- About -->
     <string name="pref_about_title">About</string>

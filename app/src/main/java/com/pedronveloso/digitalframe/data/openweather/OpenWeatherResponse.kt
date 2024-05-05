@@ -65,6 +65,21 @@ data class TemperatureDetails(
     val temp_max: Double
 )
 
+/**
+ * By default, wind speed from OpenWeather is in meters per second.
+ */
 data class Wind(
     val speed: Double
-)
+) {
+    fun getWindSpeedInKmHour(): Double {
+        return speed / 1000f
+    }
+
+    fun getWindSpeedInMilesHour(): Double {
+        return speed / 1609.344
+    }
+
+    fun getWindSpeedInKnots(): Double {
+        return speed / 0.514444
+    }
+}

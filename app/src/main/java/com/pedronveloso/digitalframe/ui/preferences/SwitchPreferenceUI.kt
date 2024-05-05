@@ -31,7 +31,8 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = preference.title, style = MyTypography.titleMedium)
+            Text(text = preference.title, style = MyTypography.titleSmall)
+
             preference.description?.let {
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(text = it, style = MyTypography.bodyLarge)

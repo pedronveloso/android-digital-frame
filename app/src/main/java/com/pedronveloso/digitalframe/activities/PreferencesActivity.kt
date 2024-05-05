@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,6 +34,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
+import com.pedronveloso.digitalframe.data.openweather.WindSpeedUnit
 import com.pedronveloso.digitalframe.elements.background.BackgroundPhotosEraser
 import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
@@ -47,6 +48,7 @@ import com.pedronveloso.digitalframe.preferences.PreferencesSection
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
 import com.pedronveloso.digitalframe.ui.preferences.ButtonPreferenceComposable
+import com.pedronveloso.digitalframe.ui.preferences.DropdownPreferenceUI
 import com.pedronveloso.digitalframe.ui.preferences.InputFieldPreferenceComposable
 import com.pedronveloso.digitalframe.ui.preferences.LabelPreferenceComposable
 import com.pedronveloso.digitalframe.ui.preferences.LocationPreferenceComposable
@@ -230,8 +232,38 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
 
+
+        val windSpeedOptions = ArrayList<String>()
+        windSpeedOptions.add(getString(R.string.pref_weather_wind_unit_meters_second))
+        windSpeedOptions.add(getString(R.string.pref_weather_wind_unit_miles_hour))
+        windSpeedOptions.add(getString(R.string.pref_weather_wind_unit_kilometers_hour))
+        windSpeedOptions.add(getString(R.string.pref_weather_wind_unit_knots))
+
+        val initialWindUnit = weatherData.windSpeedUnit().toDisplayString(this)
+
+        val windSpeedUnitPreference =
+            PreferenceItem.DropdownPref(
+                id = "wind_speed_unit",
+                title = getString(R.string.pref_weather_wind_unit),
+                options = windSpeedOptions,
+                initialValueProvider = { initialWindUnit },
+            ).apply {
+                onChangeCallback = { position, value ->
+                    weatherData.setWindSpeedUnit(
+                        when (position) {
+                            0 -> WindSpeedUnit.MetersPerSecond
+                            1 -> WindSpeedUnit.MilesPerHour
+                            2 -> WindSpeedUnit.KilometersPerHour
+                            3 -> WindSpeedUnit.Knots
+                            else -> WindSpeedUnit.MetersPerSecond
+                        }
+                    )
+                }
+            }
+
         weatherSection.addPreference(useCelsiusPreference)
         weatherSection.addPreference(showWindSpeedPreference)
+        weatherSection.addPreference(windSpeedUnitPreference)
         topLevelPrefs.addSection(weatherSection.build())
     }
 
@@ -401,7 +433,7 @@ fun PreferenceSectionItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = section.title, modifier = Modifier.weight(1f), style = MyTypography.bodyLarge)
-        Icon(Icons.Default.ArrowForward, contentDescription = "Go to section")
+        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Go to section")
     }
 }
 
@@ -415,6 +447,7 @@ fun RenderPreferences(items: List<PreferenceItem>) {
                 is PreferenceItem.SwitchPref -> SwitchPreferenceComposable(preference)
                 is PreferenceItem.Button -> ButtonPreferenceComposable(preference)
                 is PreferenceItem.LocationPref -> LocationPreferenceComposable(preference)
+                is PreferenceItem.DropdownPref -> DropdownPreferenceUI(preference)
             }
         }
     }

@@ -43,7 +43,7 @@ import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
 import com.pedronveloso.digitalframe.preferences.location.LocationData
 import com.pedronveloso.digitalframe.ui.MyTypography
-import com.pedronveloso.digitalframe.ui.reusable.SaveButton
+import com.pedronveloso.digitalframe.ui.controls.SaveButton
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.util.concurrent.Executor
 

@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.preferences.InputType
 import com.pedronveloso.digitalframe.preferences.PreferenceItem
-import com.pedronveloso.digitalframe.ui.MyTypography
 import java.text.SimpleDateFormat
 import java.time.MonthDay
 import java.time.Year
@@ -36,7 +35,7 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
     val context = LocalContext.current
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = preference.title, style = MyTypography.bodyLarge)
+        PreferenceTitle(title = preference.title)
 
         if (preference.type != InputType.DATE) {
             // Existing TextField for types other than DATE.

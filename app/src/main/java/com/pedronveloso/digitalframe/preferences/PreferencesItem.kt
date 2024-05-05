@@ -35,12 +35,20 @@ sealed class PreferenceItem(open val id: String) {
 
     data class Label(override val id: String, val text: String) : PreferenceItem(id)
 
-    class LocationPref(
+    data class LocationPref(
         override val id: String,
         val title: String,
         val description: String? = null,
         val initialValueProvider: () -> LocationData,
         val onChangeCallback: ((LocationData) -> Unit)? = null
+    ) : PreferenceItem(id)
+
+    data class DropdownPref(
+        override val id: String,
+        val title: String,
+        val options: List<String>,
+        val initialValueProvider: () -> String,
+        var onChangeCallback: ((Int, String) -> Unit)? = null
     ) : PreferenceItem(id)
 
 }

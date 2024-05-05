@@ -8,7 +8,7 @@ class WindUnitConversionTests {
 
     @Test
     fun `test conversion from meters per second to kilometers per hour`() {
-        val expectedKmh = 0.01
+        val expectedKmh = 36.0
         val windSpeed = Wind(10.0)
         val actualKmh = windSpeed.getWindSpeedInKmHour()
         assertEquals(expectedKmh, actualKmh, 0.1)
@@ -16,7 +16,7 @@ class WindUnitConversionTests {
 
     @Test
     fun `test conversion from meters per second to miles per hour`() {
-        val expectedMph = 0.00621371
+        val expectedMph = 22.37
         val windSpeed = Wind(10.0)
         val actualMph = windSpeed.getWindSpeedInMilesHour()
         assertEquals(expectedMph, actualMph, 0.001)

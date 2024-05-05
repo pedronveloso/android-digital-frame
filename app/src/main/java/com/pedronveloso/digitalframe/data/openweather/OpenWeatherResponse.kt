@@ -72,14 +72,14 @@ data class Wind(
     val speed: Double
 ) {
     fun getWindSpeedInKmHour(): Double {
-        return speed / 1000f
+        return speed * 3.6
     }
 
     fun getWindSpeedInMilesHour(): Double {
-        return speed / 1609.344
+        return speed * 2.23694
     }
 
     fun getWindSpeedInKnots(): Double {
-        return speed / 0.514444
+        return speed * 1.94384
     }
 }

@@ -1,0 +1,75 @@
+<resources>
+    <!-- Main -->
+    <string name="pick_date_title">Seleccionar fecha</string>
+    <string name="preferences_title">Preferencias</string>
+    <string name="pref_bg_title">Fondo</string>
+    <string name="settings_btn">Configuración</string>
+    <string name="save_btn">Guardar</string>
+
+    <!-- Background -->
+    <string name="pref_bg_photo_picker">Seleccionar fotos</string>
+    <string name="pref_bg_erase_all">Borrar todas las fotos</string>
+    <string name="pref_bg_erase_all_warning">¿Estás seguro de que quieres borrar todas las fotos del álbum digital? Esta acción no se puede deshacer.</string>
+    <string name="pref_bg_erase_success">Fotos personales borradas con éxito.</string>
+    <string name="pref_bg_erase_failed_empty">No se encontraron fotos personales.</string>
+
+    <!-- General Settings -->
+    <string name="pref_general_title">General</string>
+    <string name="pref_general_crash_reports">Recolección de informes de fallos</string>
+    <string name="pref_general_crash_reports_description">Permitir que la aplicación recolecte automáticamente informes de fallos a través de Firebase Crashlytics (un servicio operado por Google)</string>
+
+    <!-- Location -->
+    <string name="pref_location_title">Ubicación del dispositivo</string>
+    <string name="pref_location_description">Puedes copiar y pegar las coordenadas de Google Maps o usar el botón de abajo para rellenarlas automáticamente según los datos GPS de tu dispositivo.</string>
+    <string name="pref_location_lat">Latitud</string>
+    <string name="pref_location_lon">Longitud</string>
+    <string name="pref_location_lat_error">Introduce una latitud válida (-90 a 90)</string>
+    <string name="pref_location_lon_error">Introduce una longitud válida (-180 a 180)</string>
+    <string name="pref_location_save">Guardar ubicación</string>
+
+    <!-- Clock -->
+    <string name="pref_clock_title">Reloj</string>
+    <string name="pref_clock_24h_title">Usar formato 24h</string>
+    <string name="pref_clock_24h_description">Usar formato 24h en lugar de AM/PM</string>
+    <string name="pref_clock_show_seconds">Mostrar segundos</string>
+    <string name="pref_clock_show_year">Mostrar año</string>
+
+    <!-- Countdown -->
+    <string name="pref_countdown_title">Cuenta atrás</string>
+    <string name="pref_countdown_days_remaining">Días restantes</string>
+    <string name="pref_countdown_message">Mensaje de cuenta atrás</string>
+    <plurals name="countdown_days_remaining">
+        <item quantity="one">%d día</item>
+        <item quantity="many">%d días</item>
+    </plurals>
+
+    <!-- Weather -->
+    <string name="pref_weather_title">Clima</string>
+    <string name="pref_weather_use_celcius">Usar Celsius</string>
+    <string name="pref_weather_use_celcius_description">Usar Celsius en lugar de Fahrenheit</string>
+    <string name="pref_weather_show_wind_speed">Mostrar velocidad del viento</string>
+    <string name="pref_weather_wind_unit">Unidad de viento</string>
+    <string name="pref_weather_wind_unit_meters_second">Metros por segundo</string>
+    <string name="pref_weather_wind_unit_kilometers_hour">Kilómetros por hora</string>
+    <string name="pref_weather_wind_unit_miles_hour">Millas por hora</string>
+    <string name="pref_weather_wind_unit_knots">Nudos</string>
+    <string name="wind_meters_per_second">%.0f m/s</string>
+    <string name="wind_kilometers_per_hour">%.0f km/h</string>
+    <string name="wind_miles_per_hour">%.0f mph</string>
+    <string name="wind_knots">%.0f nudos</string>
+
+    <!-- About -->
+    <string name="pref_about_title">Acerca de</string>
+    <string name="pref_about_intro">Gracias por usar Android Digital Frame. Para aprender más, visita la página del proyecto presionando el botón de abajo:</string>
+    <string name="pref_about_button">Visitar página del proyecto</string>
+
+    <!-- Logs -->
+    <string name="pref_logs_title">Registros de la aplicación</string>
+    <string name="pref_logs_copy_clipboard">Copiar al portapapeles</string>
+    <string name="pref_logs_privacy_notice">Estos registros se recopilan para ayudar con el desarrollo. Nunca se enviarán sin el consentimiento y la aprobación explícita del usuario.</string>
+
+    <!-- Data Collection onboarding -->
+    <string name="crash_data_collection_title">Informe de datos de fallos</string>
+    <string name="crash_data_collection_description">Valoramos tu privacidad y nos esforzamos por proporcionar una experiencia de aplicación estable y confiable. Para ayudarnos a identificar y solucionar problemas que puedan causar que la aplicación falle, utilizamos Firebase Crashlytics, un servicio propiedad de Google que recopila informes de fallos anónimos.\n\nEl informe de fallos recopila datos solo cuando la aplicación falla inesperadamente o encuentra un error crítico. No se recopila información personal identificable y los datos no se comparten con terceros.\n\nTienes control total sobre esta función y puedes desactivarla fácilmente en cualquier momento desde la Configuración de la aplicación.</string>
+
+</resources>

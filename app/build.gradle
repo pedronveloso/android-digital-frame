@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id "org.jetbrains.kotlin.plugin.compose"
 }
 
 android {
@@ -16,7 +17,7 @@ android {
         minSdk 21
         targetSdk 34
         versionCode 8
-        versionName "0.0.9-Alpha"
+        versionName "0.0.10-Alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,10 +43,9 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion "1.5.13"
-    }
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -64,13 +64,16 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
 
-    // Jetpack Compose.
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.2.1'
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.activity:activity-compose:1.9.0'
-    implementation 'androidx.test.ext:junit-ktx:1.1.5'
-    implementation 'androidx.navigation:navigation-compose:2.7.7'
+    // Compose BOM.
+    implementation platform('androidx.compose:compose-bom:2024.05.00')
+    implementation "androidx.compose.material3:material3"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.activity:activity-compose"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.navigation:navigation-compose:2.7.7"
+
 
     // Networking libraries.
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -90,21 +93,21 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     // Import the BoM for the Firebase platform.
-    implementation(platform('com.google.firebase:firebase-bom:33.1.0'))
+    implementation(platform('com.google.firebase:firebase-bom:33.1.1'))
     implementation("com.google.firebase:firebase-crashlytics")
 
     // Dev Tooling.
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling"
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation 'androidx.test.ext:junit:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.8"
 
 
     // Unit testing support.
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.google.truth:truth:1.4.2'
-    testImplementation "androidx.test:core-ktx:1.5.0"
+    testImplementation 'androidx.test:core-ktx:1.6.0'
     testImplementation 'org.robolectric:robolectric:4.12.2'
 }
 

@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 
 object FontStyles {
-
     fun textStyleTitleLarge(textColor: Color) =
         MyTypography.titleLarge.copy(
             color = textColor,
@@ -22,11 +21,11 @@ object FontStyles {
         MyTypography.titleMedium.copy(
             color = textColor,
             shadow =
-            Shadow(
-                color = Color.Black,
-                offset = Offset(0f, 2f),
-                blurRadius = 1f,
-            ),
+                Shadow(
+                    color = Color.Black,
+                    offset = Offset(0f, 2f),
+                    blurRadius = 1f,
+                ),
         )
 
     fun textStyleBodyLarge(textColor: Color) =
@@ -51,8 +50,8 @@ object FontStyles {
                 ),
         )
 
-    fun textStyleDisplayLarge(textColor: Color): TextStyle {
-        return MyTypography.displayLarge.copy(
+    fun textStyleDisplayLarge(textColor: Color): TextStyle =
+        MyTypography.displayLarge.copy(
             color = textColor,
             shadow =
                 Shadow(
@@ -61,7 +60,6 @@ object FontStyles {
                     blurRadius = 1f,
                 ),
         )
-    }
 
     fun textStyleDisplayMedium(textColor: Color) =
         MyTypography.displayMedium.copy(
@@ -73,5 +71,4 @@ object FontStyles {
                     blurRadius = 1f,
                 ),
         )
-
 }

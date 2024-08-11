@@ -37,7 +37,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class LogActivity : ComponentActivity() {
-
     private val logger = LogStoreProvider.getLogStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,18 +47,17 @@ class LogActivity : ComponentActivity() {
                 val context = LocalContext.current
 
                 LogScreen(logEntries = logger.getLogs()) {
-
                     val clipboardManager =
                         context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-                    val logText = logger.getLogs().joinToString(separator = "\n\n") { logEntry ->
-                        "${logEntry.timestamp} [${logEntry.level}] ${logEntry.tag}: ${logEntry.message}"
-                    }
+                    val logText =
+                        logger.getLogs().joinToString(separator = "\n\n") { logEntry ->
+                            "${logEntry.timestamp} [${logEntry.level}] ${logEntry.tag}: ${logEntry.message}"
+                        }
                     val clipData = ClipData.newPlainText("Log Entries", logText)
                     clipboardManager.setPrimaryClip(clipData)
 
                     Toast.makeText(context, "Logs copied to clipboard", Toast.LENGTH_SHORT).show()
-
                 }
             }
         }
@@ -67,7 +65,10 @@ class LogActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun LogScreen(logEntries: List<LogEntry>, onCopyToClipboard: () -> Unit) {
+    fun LogScreen(
+        logEntries: List<LogEntry>,
+        onCopyToClipboard: () -> Unit,
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -76,25 +77,28 @@ class LogActivity : ComponentActivity() {
             },
             content = { padding ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(rememberScrollState())
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .verticalScroll(rememberScrollState()),
                 ) {
                     Text(
                         text = stringResource(id = R.string.pref_logs_privacy_notice),
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        modifier =
+                            Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
                     )
 
                     Button(
                         onClick = onCopyToClipboard,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally)
+                        modifier =
+                            Modifier
+                                .padding(16.dp)
+                                .align(Alignment.CenterHorizontally),
                     ) {
                         Text(stringResource(id = R.string.pref_logs_copy_clipboard))
                     }
@@ -103,34 +107,36 @@ class LogActivity : ComponentActivity() {
                         LogEntryItem(logEntry)
                     }
                 }
-            }
+            },
         )
     }
 
     @Composable
     fun LogEntryItem(logEntry: LogEntry) {
-        val color = if (logEntry.level == LogLevel.ERROR) {
-            Color(0xFFFF6B6B)
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
+        val color =
+            if (logEntry.level == LogLevel.ERROR) {
+                Color(0xFFFF6B6B)
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
 
         val formattedTimestamp = logEntry.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
         Text(
             text = "$formattedTimestamp ${logEntry.tag}: ${logEntry.message}",
             color = color,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
         )
     }
 
     @Composable
     @Preview
     fun LogScreenPreview() {
-        val logEntries = listOf(
-            LogEntry("MainActivity", "App started", LocalDateTime.now(), LogLevel.INFO),
-            LogEntry("NetworkService", "Error fetching data", LocalDateTime.now(), LogLevel.ERROR)
-        )
+        val logEntries =
+            listOf(
+                LogEntry("MainActivity", "App started", LocalDateTime.now(), LogLevel.INFO),
+                LogEntry("NetworkService", "Error fetching data", LocalDateTime.now(), LogLevel.ERROR),
+            )
 
         DigitalFrameTheme {
             LogScreen(logEntries) {

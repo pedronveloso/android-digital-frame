@@ -19,9 +19,7 @@ class SharedPreferencesPersistence(
     private fun buildKey(
         sectionId: String,
         propertyId: String,
-    ): String {
-        return "$sectionId:$propertyId"
-    }
+    ): String = "$sectionId:$propertyId"
 
     override fun getPreferenceValue(
         sectionId: String,

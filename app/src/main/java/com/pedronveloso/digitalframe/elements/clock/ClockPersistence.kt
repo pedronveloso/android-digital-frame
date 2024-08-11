@@ -14,49 +14,47 @@ interface ClockPersistence : PluginDataPersistence {
     fun setShowYear(value: Boolean)
 
     fun showSeconds(): Boolean
+
     fun setShowSeconds(value: Boolean)
 }
 
-class RealClockPersistence(private val persistence: PreferencesPersistence) : ClockPersistence {
-    override fun use24HClock(): Boolean {
-        return persistence.getPreferenceValue(
+class RealClockPersistence(
+    private val persistence: PreferencesPersistence,
+) : ClockPersistence {
+    override fun use24HClock(): Boolean =
+        persistence.getPreferenceValue(
             SECTION_ID,
             PROPERTY_24H_CLOCK,
             false,
         )
-    }
 
     override fun setUse24HClock(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_24H_CLOCK, value)
     }
 
-    override fun showYear(): Boolean {
-        return persistence.getPreferenceValue(
+    override fun showYear(): Boolean =
+        persistence.getPreferenceValue(
             SECTION_ID,
             PROPERTY_SHOW_YEAR,
             true,
         )
-    }
 
     override fun setShowYear(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_SHOW_YEAR, value)
     }
 
-    override fun showSeconds(): Boolean {
-        return persistence.getPreferenceValue(
+    override fun showSeconds(): Boolean =
+        persistence.getPreferenceValue(
             SECTION_ID,
             PROPERTY_SHOW_SECONDS,
             false,
         )
-    }
 
     override fun setShowSeconds(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_SHOW_SECONDS, value)
     }
 
-    override fun isEnabled(): Boolean {
-        return persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
-    }
+    override fun isEnabled(): Boolean = persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
 
     override fun setEnabled(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_ENABLED, value)

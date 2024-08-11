@@ -11,7 +11,6 @@ import java.time.LocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
 class ClockViewModel : ViewModel() {
-
     private val _currentTime = MutableStateFlow(LocalDateTime.now())
     val currentTime: StateFlow<LocalDateTime> = _currentTime.asStateFlow()
 
@@ -26,5 +25,4 @@ class ClockViewModel : ViewModel() {
             repeatedExecution()
         }
     }
-
 }

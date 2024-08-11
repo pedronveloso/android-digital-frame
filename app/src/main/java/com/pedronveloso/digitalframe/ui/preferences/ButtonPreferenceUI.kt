@@ -14,9 +14,9 @@ fun ButtonPreferenceComposable(preference: PreferenceItem.Button) {
     Button(
         onClick = preference.action,
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
     ) {
         Text(preference.label)
     }

@@ -61,26 +61,28 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
     var lonError by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val executor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        LocalContext.current.mainExecutor
-    } else {
-        ContextCompat.getMainExecutor(context)
-    }
+    val executor =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            LocalContext.current.mainExecutor
+        } else {
+            ContextCompat.getMainExecutor(context)
+        }
 
     // Permission handling
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted: Boolean ->
-            if (isGranted) {
-                getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
-                    logger.log("Location received - perm granted: $location")
-                    latitude = location.latitude.toString()
-                    longitude = location.longitude.toString()
-                    isLoading = false
-                })
-            }
-        }
-    )
+    val locationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted: Boolean ->
+                if (isGranted) {
+                    getCurrentLocation(locationManager, executor, onLocationReceived = { location ->
+                        logger.log("Location received - perm granted: $location")
+                        latitude = location.latitude.toString()
+                        longitude = location.longitude.toString()
+                        isLoading = false
+                    })
+                }
+            },
+        )
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = preference.title, style = MyTypography.titleMedium)
@@ -97,17 +99,18 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             },
             isError = latError,
             label = { stringResource(id = R.string.pref_location_lat) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
+            keyboardOptions =
+                KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next,
+                ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         if (latError) {
             Text(
                 stringResource(id = R.string.pref_location_lat_error),
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -119,17 +122,18 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             },
             isError = lonError,
             label = { Text(stringResource(id = R.string.pref_location_lon)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
+            keyboardOptions =
+                KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         if (lonError) {
             Text(
                 stringResource(id = R.string.pref_location_lon_error),
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -142,18 +146,21 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                         preference.onChangeCallback?.invoke(
                             LocationData(
                                 latitude.toDouble(),
-                                longitude.toDouble()
-                            )
+                                longitude.toDouble(),
+                            ),
                         )
                     }
                 },
                 enabled = !latError && !lonError,
-                buttonText = stringResource(id = R.string.pref_location_save)
+                buttonText = stringResource(id = R.string.pref_location_save),
             )
 
-            Spacer(modifier = Modifier
-                .height(8.dp)
-                .width(8.dp))
+            Spacer(
+                modifier =
+                    Modifier
+                        .height(8.dp)
+                        .width(8.dp),
+            )
 
             GetCurrentLocationButton(
                 isLoading = isLoading,
@@ -161,8 +168,9 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                     when (PackageManager.PERMISSION_GRANTED) {
                         ContextCompat.checkSelfPermission(
                             context,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ) -> {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                        ),
+                        -> {
                             logger.log("Getting current location")
                             isLoading = true
                             getCurrentLocation(
@@ -173,12 +181,13 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                                     latitude = location.latitude.toString()
                                     longitude = location.longitude.toString()
                                     isLoading = false
-                                })
+                                },
+                            )
                         }
 
                         else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                }
+                },
             )
         }
     }
@@ -188,7 +197,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
 fun GetCurrentLocationButton(
     isLoading: Boolean,
     onGetCurrent: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(onClick = onGetCurrent, modifier = modifier) {
         if (isLoading) {
@@ -199,42 +208,38 @@ fun GetCurrentLocationButton(
     }
 }
 
-
 @SuppressLint("MissingPermission")
 private fun getCurrentLocation(
     locationManager: LocationManager,
     executor: Executor,
-    onLocationReceived: (Location) -> Unit
+    onLocationReceived: (Location) -> Unit,
 ) {
     var locationListener: LocationListener? = null
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         locationManager.getCurrentLocation(
             LocationManager.GPS_PROVIDER,
             null,
-            executor
+            executor,
         ) { location ->
             location?.let {
                 onLocationReceived(it)
             }
         }
     } else {
-        locationListener = LocationListener { location ->
-            onLocationReceived(location)
-            locationListener?.let { locationManager.removeUpdates(it) }
-        }
-
+        locationListener =
+            LocationListener { location ->
+                onLocationReceived(location)
+                locationListener?.let { locationManager.removeUpdates(it) }
+            }
 
         locationManager.requestSingleUpdate(
             LocationManager.GPS_PROVIDER,
             locationListener,
-            Looper.getMainLooper()
+            Looper.getMainLooper(),
         )
-
     }
 }
 
-fun isValidLatitude(value: String): Boolean =
-    value.toDoubleOrNull()?.let { it in -90.0..90.0 } ?: false
+fun isValidLatitude(value: String): Boolean = value.toDoubleOrNull()?.let { it in -90.0..90.0 } ?: false
 
-fun isValidLongitude(value: String): Boolean =
-    value.toDoubleOrNull()?.let { it in -180.0..180.0 } ?: false
+fun isValidLongitude(value: String): Boolean = value.toDoubleOrNull()?.let { it in -180.0..180.0 } ?: false

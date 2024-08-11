@@ -25,9 +25,9 @@ fun SwitchPreferenceComposable(preference: PreferenceItem.SwitchPref) {
 
     Row(
         modifier =
-        Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {

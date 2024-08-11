@@ -57,11 +57,12 @@ fun CountdownText(
                 .fillMaxWidth(),
         ) {
             Text(
-                text = pluralStringResource(
-                    id = R.plurals.countdown_days_remaining,
-                    daysUntil.toInt(),
-                    daysUntil.toInt()
-                ),
+                text =
+                    pluralStringResource(
+                        id = R.plurals.countdown_days_remaining,
+                        daysUntil.toInt(),
+                        daysUntil.toInt(),
+                    ),
                 style = FontStyles.textStyleDisplayMedium(hudColor),
             )
             Text(

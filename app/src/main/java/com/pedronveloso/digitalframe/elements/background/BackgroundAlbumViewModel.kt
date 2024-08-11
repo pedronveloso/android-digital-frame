@@ -27,7 +27,9 @@ sealed class PhotoResource {
         @DrawableRes val id: Int,
     ) : PhotoResource()
 
-    data class FileResource(val filePath: String) : PhotoResource()
+    data class FileResource(
+        val filePath: String,
+    ) : PhotoResource()
 }
 
 @HiltViewModel
@@ -42,10 +44,10 @@ class BackgroundAlbumViewModel
             const val BACKGROUND_PHOTOS_DIR = "background"
         }
 
-    private val _currentPhotoFlow = MutableStateFlow(loadInitialPhoto())
-    val currentPhotoFlow: StateFlow<PhotoResource> = _currentPhotoFlow
+        private val _currentPhotoFlow = MutableStateFlow(loadInitialPhoto())
+        val currentPhotoFlow: StateFlow<PhotoResource> = _currentPhotoFlow
 
-    private var rotationJob: Job? = null
+        private var rotationJob: Job? = null
 
         private val backgroundHSL = MutableStateFlow(FloatArray(3).apply { this[2] = 0.5f })
         val hsl: StateFlow<FloatArray> = backgroundHSL
@@ -54,11 +56,12 @@ class BackgroundAlbumViewModel
             refreshBackgroundImages()
         }
 
-    fun refreshBackgroundImages() {
-        rotationJob?.cancel()
-        rotationJob = viewModelScope.launch {
-                backgroundRotation(appContext)
-            }
+        fun refreshBackgroundImages() {
+            rotationJob?.cancel()
+            rotationJob =
+                viewModelScope.launch {
+                    backgroundRotation(appContext)
+                }
         }
 
         private suspend fun backgroundRotation(context: Context) {
@@ -81,7 +84,8 @@ class BackgroundAlbumViewModel
                 val bitmap =
                     when (photoResource) {
                         is PhotoResource.DrawableResource ->
-                            context.getDrawable(photoResource.id)
+                            context
+                                .getDrawable(photoResource.id)
                                 ?.toBitmap()
 
                         is PhotoResource.FileResource -> BitmapFactory.decodeFile(photoResource.filePath)
@@ -124,12 +128,10 @@ class BackgroundAlbumViewModel
             return images.ifEmpty { loadDefaultPhotos() }
         }
 
-        private fun loadDefaultPhotos(): List<PhotoResource> {
-            return listOf(
+        private fun loadDefaultPhotos(): List<PhotoResource> =
+            listOf(
                 PhotoResource.DrawableResource(R.drawable.photo1),
                 PhotoResource.DrawableResource(R.drawable.photo2),
                 PhotoResource.DrawableResource(R.drawable.photo3),
             )
-        }
     }
-

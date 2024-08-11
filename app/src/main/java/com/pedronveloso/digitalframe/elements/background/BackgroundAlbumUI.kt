@@ -35,54 +35,54 @@ fun AlbumBackground(viewModel: BackgroundAlbumViewModel) {
         initialValue = 1f,
         targetValue = 1.3f,
         animationSpec =
-        infiniteRepeatable(
-            animation =
-            tween(
-                BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing,
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse,
-        ),
         label = "ken-burns-bg-scale",
     )
     val offsetX by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 100f,
         animationSpec =
-        infiniteRepeatable(
-            animation =
-            tween(
-                BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing,
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse,
-        ),
         label = "ken-burns-bg-offset-x",
     )
     val offsetY by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 50f,
         animationSpec =
-        infiniteRepeatable(
-            animation =
-            tween(
-                BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
-                easing = LinearEasing,
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        BackgroundAlbumViewModel.EFFECT_DURATION.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse,
-        ),
         label = "ken-burns-bg-offset-y",
     )
     Box(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offsetX,
-                translationY = offsetY,
-            ),
+            Modifier
+                .fillMaxSize()
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offsetX,
+                    translationY = offsetY,
+                ),
     ) {
         Image(
             painter = painter,

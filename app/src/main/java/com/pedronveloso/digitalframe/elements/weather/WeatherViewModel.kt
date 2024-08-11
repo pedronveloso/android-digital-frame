@@ -20,70 +20,72 @@ import kotlin.time.Duration.Companion.hours
 
 @HiltViewModel
 class WeatherViewModel
-@Inject
-constructor(
-    private val apiService: OpenWeatherService,
-) : ViewModel() {
-    private var previousWeatherState: UiResult<OpenWeatherResponse> = UiResult.Blank()
-    private val _weatherState = MutableStateFlow<UiResult<OpenWeatherResponse>>(UiResult.Blank())
-    val weatherState: StateFlow<UiResult<OpenWeatherResponse>> = _weatherState.asStateFlow()
+    @Inject
+    constructor(
+        private val apiService: OpenWeatherService,
+    ) : ViewModel() {
+        private var previousWeatherState: UiResult<OpenWeatherResponse> = UiResult.Blank()
+        private val _weatherState = MutableStateFlow<UiResult<OpenWeatherResponse>>(UiResult.Blank())
+        val weatherState: StateFlow<UiResult<OpenWeatherResponse>> = _weatherState.asStateFlow()
 
-    private var executionJob: Job? = null
-    private var startedRepeatedExecution = false
-    private val logger = LogStoreProvider.getLogStore()
+        private var executionJob: Job? = null
+        private var startedRepeatedExecution = false
+        private val logger = LogStoreProvider.getLogStore()
 
-
-    fun startRepeatedExecution(
-        weatherPersistence: WeatherPersistence,
-        generalDataPersistence: GeneralDataPersistence
-    ) {
-        if (!startedRepeatedExecution) {
-            startedRepeatedExecution = true
-            repeatedExecution(weatherPersistence, generalDataPersistence)
+        fun startRepeatedExecution(
+            weatherPersistence: WeatherPersistence,
+            generalDataPersistence: GeneralDataPersistence,
+        ) {
+            if (!startedRepeatedExecution) {
+                startedRepeatedExecution = true
+                repeatedExecution(weatherPersistence, generalDataPersistence)
+            }
         }
-    }
 
-    private fun repeatedExecution(
-        weatherPersistence: WeatherPersistence,
-        generalDataPersistence: GeneralDataPersistence
-    ) {
-        executionJob?.cancel()
-        executionJob = viewModelScope.launch {
-            fetchWeatherConditions(
-                generalDataPersistence.locationData().latitude.toString(),
-                generalDataPersistence.locationData().longitude.toString()
-            )
-            // How often to refresh the API. TODO: Make configurable.
-            delay(1.hours)
-            repeatedExecution(weatherPersistence, generalDataPersistence)
-        }
-    }
-
-    private fun fetchWeatherConditions(latitude: String, longitude: String) {
-        previousWeatherState = _weatherState.value
-        _weatherState.value = UiResult.Loading()
-
-        logger.log("Fetching weather for: $latitude, $longitude")
-
-        viewModelScope.launch {
-            _weatherState.value =
-                when (val result =
-                    apiService.fetchCurrentWeatherConditions(latitude, longitude)) {
-                    is NetworkResult.Failure -> {
-                        logger.logError("Failed to fetch weather data", result.exception)
-
-                        // If failed to get new weather data, use latest known data.
-                        previousWeatherState
-                    }
-
-                    is NetworkResult.Success -> {
-                        logger.log("Fetched weather data: ${result.data.printForLogs()}")
-                        UiResult.success(result.data)
-                    }
+        private fun repeatedExecution(
+            weatherPersistence: WeatherPersistence,
+            generalDataPersistence: GeneralDataPersistence,
+        ) {
+            executionJob?.cancel()
+            executionJob =
+                viewModelScope.launch {
+                    fetchWeatherConditions(
+                        generalDataPersistence.locationData().latitude.toString(),
+                        generalDataPersistence.locationData().longitude.toString(),
+                    )
+                    // How often to refresh the API. TODO: Make configurable.
+                    delay(1.hours)
+                    repeatedExecution(weatherPersistence, generalDataPersistence)
                 }
         }
+
+        private fun fetchWeatherConditions(
+            latitude: String,
+            longitude: String,
+        ) {
+            previousWeatherState = _weatherState.value
+            _weatherState.value = UiResult.Loading()
+
+            logger.log("Fetching weather for: $latitude, $longitude")
+
+            viewModelScope.launch {
+                _weatherState.value =
+                    when (
+                        val result =
+                            apiService.fetchCurrentWeatherConditions(latitude, longitude)
+                    ) {
+                        is NetworkResult.Failure -> {
+                            logger.logError("Failed to fetch weather data", result.exception)
+
+                            // If failed to get new weather data, use latest known data.
+                            previousWeatherState
+                        }
+
+                        is NetworkResult.Success -> {
+                            logger.log("Fetched weather data: ${result.data.printForLogs()}")
+                            UiResult.success(result.data)
+                        }
+                    }
+            }
+        }
     }
-
-}
-
-

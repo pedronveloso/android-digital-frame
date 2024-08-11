@@ -45,18 +45,18 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                 placeholder = { Text(preference.hint ?: "") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions =
-                KeyboardActions(onDone = {
-                    preference.onChangeCallback?.invoke(text)
-                }),
+                    KeyboardActions(onDone = {
+                        preference.onChangeCallback?.invoke(text)
+                    }),
                 singleLine = true,
                 modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (!focusState.isFocused) {
-                            preference.onChangeCallback?.invoke(text)
-                        }
-                    },
+                    Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { focusState ->
+                            if (!focusState.isFocused) {
+                                preference.onChangeCallback?.invoke(text)
+                            }
+                        },
             )
         } else {
             // Button that triggers a DatePicker dialog for DATE type.
@@ -70,7 +70,7 @@ fun InputFieldPreferenceComposable(preference: PreferenceItem.InputFieldPref) {
                         text =
                             SimpleDateFormat(
                                 "MMM d, yyyy",
-                                Locale.getDefault()
+                                Locale.getDefault(),
                             ).format(calendar.time)
                         preference.onChangeCallback?.invoke(text)
                     }, Year.now().value, MonthDay.now().monthValue - 1, MonthDay.now().dayOfMonth)

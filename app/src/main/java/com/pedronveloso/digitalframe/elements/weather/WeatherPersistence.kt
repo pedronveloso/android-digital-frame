@@ -19,40 +19,35 @@ interface WeatherPersistence : PluginDataPersistence {
     fun setShowWind(value: Boolean)
 }
 
-class RealWeatherPersistence(private val persistence: PreferencesPersistence) : WeatherPersistence {
+class RealWeatherPersistence(
+    private val persistence: PreferencesPersistence,
+) : WeatherPersistence {
     override fun setUseCelsius(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, USE_CELSIUS, value)
     }
 
-    override fun useCelsius(): Boolean {
-        return persistence.getPreferenceValue(SECTION_ID, USE_CELSIUS, true)
-    }
+    override fun useCelsius(): Boolean = persistence.getPreferenceValue(SECTION_ID, USE_CELSIUS, true)
 
-    override fun windSpeedUnit(): WindSpeedUnit {
-        return WindSpeedUnit.valueOf(
+    override fun windSpeedUnit(): WindSpeedUnit =
+        WindSpeedUnit.valueOf(
             persistence.getPreferenceValue(
                 SECTION_ID,
                 WIND_SPEED_UNIT,
-                WindSpeedUnit.MetersPerSecond.name
-            )
+                WindSpeedUnit.MetersPerSecond.name,
+            ),
         )
-    }
 
     override fun setWindSpeedUnit(value: WindSpeedUnit) {
         persistence.setPreferenceValue(SECTION_ID, WIND_SPEED_UNIT, value.name)
     }
 
-    override fun showWind(): Boolean {
-        return persistence.getPreferenceValue(SECTION_ID, SHOW_WIND, true)
-    }
+    override fun showWind(): Boolean = persistence.getPreferenceValue(SECTION_ID, SHOW_WIND, true)
 
     override fun setShowWind(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, SHOW_WIND, value)
     }
 
-    override fun isEnabled(): Boolean {
-        return persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
-    }
+    override fun isEnabled(): Boolean = persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
 
     override fun setEnabled(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_ENABLED, value)
@@ -76,29 +71,21 @@ class FakeWeatherPersistence : WeatherPersistence {
         useCelsius = value
     }
 
-    override fun useCelsius(): Boolean {
-        return useCelsius
-    }
+    override fun useCelsius(): Boolean = useCelsius
 
-    override fun windSpeedUnit(): WindSpeedUnit {
-        return windSpeedUnit
-    }
+    override fun windSpeedUnit(): WindSpeedUnit = windSpeedUnit
 
     override fun setWindSpeedUnit(value: WindSpeedUnit) {
         windSpeedUnit = value
     }
 
-    override fun showWind(): Boolean {
-        return showWind
-    }
+    override fun showWind(): Boolean = showWind
 
     override fun setShowWind(value: Boolean) {
         showWind = value
     }
 
-    override fun isEnabled(): Boolean {
-        return enabled
-    }
+    override fun isEnabled(): Boolean = enabled
 
     override fun setEnabled(value: Boolean) {
         enabled = value

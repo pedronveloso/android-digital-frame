@@ -6,18 +6,18 @@ import javax.inject.Inject
 
 class OpenWeatherServiceImpl
     @Inject
-    constructor(private val retrofit: OpenWeatherServiceApi) :
-    OpenWeatherService {
-    override suspend fun fetchCurrentWeatherConditions(
-        lat: String,
-        lon: String
-    ): NetworkResult<OpenWeatherResponse> {
-            return try {
+    constructor(
+        private val retrofit: OpenWeatherServiceApi,
+    ) : OpenWeatherService {
+        override suspend fun fetchCurrentWeatherConditions(
+            lat: String,
+            lon: String,
+        ): NetworkResult<OpenWeatherResponse> =
+            try {
                 val weatherResponse = retrofit.fetchCurrentWeatherConditions(lat, lon)
                 // TODO: Check if response code is actually 200.
                 NetworkResult.success(weatherResponse)
             } catch (e: Exception) {
                 NetworkResult.failure(e)
             }
-        }
     }

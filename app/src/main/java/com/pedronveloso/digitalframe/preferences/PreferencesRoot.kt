@@ -1,7 +1,9 @@
 package com.pedronveloso.digitalframe.preferences
 
-data class PreferencesRoot(val sections: List<PreferencesSection>) {
-    class Builder() {
+data class PreferencesRoot(
+    val sections: List<PreferencesSection>,
+) {
+    class Builder {
         private val sections = mutableListOf<PreferencesSection>()
         private val sectionIds = mutableSetOf<String>()
 

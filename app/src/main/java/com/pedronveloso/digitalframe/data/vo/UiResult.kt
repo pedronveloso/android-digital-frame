@@ -10,9 +10,13 @@ sealed class UiResult<in T> {
 
     class Loading<T> : UiResult<T>()
 
-    class Failure<T>(val exception: Exception) : UiResult<T>()
+    class Failure<T>(
+        val exception: Exception,
+    ) : UiResult<T>()
 
-    class Success<T>(val data: T) : UiResult<T>()
+    class Success<T>(
+        val data: T,
+    ) : UiResult<T>()
 
     companion object {
         fun <T> success(data: T): UiResult<T> = Success(data)

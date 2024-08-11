@@ -73,7 +73,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -94,7 +93,7 @@ class MainActivity : ComponentActivity() {
                 val generalDataPersistence = RealGeneralDataPersistence(sharedPrefsPersistence)
                 var userPromptedForCrashCollection by remember {
                     mutableStateOf(
-                        generalDataPersistence.userPromptedForCrashCollection()
+                        generalDataPersistence.userPromptedForCrashCollection(),
                     )
                 }
 
@@ -116,7 +115,7 @@ class MainActivity : ComponentActivity() {
                             weatherViewModel = viewModel(),
                             countdownViewModel = viewModel(),
                             sharedPrefsPersistence,
-                            generalDataPersistence
+                            generalDataPersistence,
                         )
                     }
                 }
@@ -127,12 +126,14 @@ class MainActivity : ComponentActivity() {
     @Suppress("DEPRECATION")
     private fun initialToggleImmersiveMode() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
+            window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            )
         } else {
             window?.insetsController?.let {
                 it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
@@ -156,45 +157,47 @@ fun ShowCrashCollectionNotice(userPickedCrashCollection: (Boolean) -> Unit) {
     var crashCollectionEnabled by remember { mutableStateOf(true) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(id = R.string.crash_data_collection_title),
                 style = MyTypography.titleLarge,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 32.dp)
+                modifier = Modifier.padding(top = 32.dp),
             )
 
             Text(
                 text = stringResource(id = R.string.crash_data_collection_description),
                 style = MyTypography.bodyLarge,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = 16.dp),
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(id = R.string.pref_general_crash_reports),
                     style = MyTypography.bodyLarge,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(end = 16.dp),
                 )
 
                 Switch(
                     checked = crashCollectionEnabled,
                     onCheckedChange = { crashCollectionEnabled = it },
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp),
                 )
             }
 
@@ -204,16 +207,16 @@ fun ShowCrashCollectionNotice(userPickedCrashCollection: (Boolean) -> Unit) {
                 onClick = {
                     userPickedCrashCollection(crashCollectionEnabled)
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
             ) {
                 Text(text = stringResource(id = R.string.save_btn))
             }
         }
     }
 }
-
 
 @Composable
 fun DigitalAlbumScreen(
@@ -222,7 +225,7 @@ fun DigitalAlbumScreen(
     weatherViewModel: WeatherViewModel,
     countdownViewModel: CountdownViewModel,
     persistence: SharedPreferencesPersistence,
-    generalDataPersistence: RealGeneralDataPersistence
+    generalDataPersistence: RealGeneralDataPersistence,
 ) {
     var showButton by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -237,23 +240,23 @@ fun DigitalAlbumScreen(
 
     Box(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        showButton = true
-                    },
-                )
-            },
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = {
+                            showButton = true
+                        },
+                    )
+                },
     ) {
         val hudColor = deriveHUDColor(backgroundHsl)
         AlbumBackground(viewModel = photosBackgroundViewModel)
         RenderClock(
             clockViewModel = clockViewModel,
             clockPersistence = clockPersistence,
-            hudColor = hudColor
+            hudColor = hudColor,
         )
         RenderWeather(weatherViewModel, weatherPersistence, generalDataPersistence, hudColor)
         CountdownDisplay(countdownViewModel, countdownPersistence, hudColor)
@@ -269,9 +272,9 @@ fun DigitalAlbumScreen(
                     context.startActivity(Intent(context, PreferencesActivity::class.java))
                 },
                 modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .padding(16.dp),
+                    Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp),
             ) {
                 Text(stringResource(id = R.string.settings_btn))
             }
@@ -288,7 +291,6 @@ fun DigitalAlbumScreen(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

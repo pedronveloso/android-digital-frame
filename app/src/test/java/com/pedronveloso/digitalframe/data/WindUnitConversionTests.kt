@@ -5,7 +5,6 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class WindUnitConversionTests {
-
     @Test
     fun `test conversion from meters per second to kilometers per hour`() {
         val expectedKmh = 36.0

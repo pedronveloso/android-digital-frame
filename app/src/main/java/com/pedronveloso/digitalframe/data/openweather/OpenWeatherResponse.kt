@@ -1,21 +1,18 @@
 package com.pedronveloso.digitalframe.data.openweather
 
-
 data class OpenWeatherResponse(
     val weather: List<Weather>,
     val main: TemperatureDetails,
-    val wind: Wind
-){
-    fun printForLogs() : String {
-        return "Weather: ${weather[0].main}, id: ${weather[0].id},  Temp: ${main.temp}, Wind: ${wind.speed}"
-    }
+    val wind: Wind,
+) {
+    fun printForLogs(): String = "Weather: ${weather[0].main}, id: ${weather[0].id},  Temp: ${main.temp}, Wind: ${wind.speed}"
 }
 
 data class Weather(
     val id: Int,
     val main: String,
     val description: String,
-    val icon: String
+    val icon: String,
 ) {
     val weatherType: WeatherType
         get() {
@@ -56,30 +53,24 @@ enum class WeatherType {
     Sand,
     Ash,
     Squall,
-    Tornado
+    Tornado,
 }
 
 data class TemperatureDetails(
     val temp: Double,
     val temp_min: Double,
-    val temp_max: Double
+    val temp_max: Double,
 )
 
 /**
  * By default, wind speed from OpenWeather is in meters per second.
  */
 data class Wind(
-    val speed: Double
+    val speed: Double,
 ) {
-    fun getWindSpeedInKmHour(): Double {
-        return speed * 3.6
-    }
+    fun getWindSpeedInKmHour(): Double = speed * 3.6
 
-    fun getWindSpeedInMilesHour(): Double {
-        return speed * 2.23694
-    }
+    fun getWindSpeedInMilesHour(): Double = speed * 2.23694
 
-    fun getWindSpeedInKnots(): Double {
-        return speed * 1.94384
-    }
+    fun getWindSpeedInKnots(): Double = speed * 1.94384
 }

@@ -21,7 +21,7 @@ fun SaveButton(
     onSave: () -> Unit,
     enabled: Boolean,
     buttonText: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showCheckmark by remember { mutableStateOf(false) }
 
@@ -31,13 +31,13 @@ fun SaveButton(
             showCheckmark = true
         },
         enabled = enabled,
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (showCheckmark) {
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = "Checkmark",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         } else {
             Text(buttonText)

@@ -27,7 +27,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -68,7 +68,6 @@ dependencies {
     implementation(libs.uiToolingPreview)
     implementation(libs.ui)
     implementation(libs.material3)
-
 
     // Networking libraries.
     implementation(libs.retrofit)

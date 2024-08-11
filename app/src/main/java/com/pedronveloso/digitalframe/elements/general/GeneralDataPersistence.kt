@@ -15,30 +15,28 @@ interface GeneralDataPersistence {
     fun locationData(): LocationData
 
     fun setLocationData(value: LocationData)
-
 }
 
-class RealGeneralDataPersistence(private val persistence: PreferencesPersistence) :
-    GeneralDataPersistence {
-    override fun explicitlyDisabledCrashCollection(): Boolean {
-        return persistence.getPreferenceValue(
+class RealGeneralDataPersistence(
+    private val persistence: PreferencesPersistence,
+) : GeneralDataPersistence {
+    override fun explicitlyDisabledCrashCollection(): Boolean =
+        persistence.getPreferenceValue(
             SECTION_ID,
             EXPLICITLY_DISABLED_CRASH_COLLECTION,
             false,
         )
-    }
 
     override fun setExplicitlyDisabledCrashCollection(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, EXPLICITLY_DISABLED_CRASH_COLLECTION, value)
     }
 
-    override fun userPromptedForCrashCollection(): Boolean {
-        return persistence.getPreferenceValue(
+    override fun userPromptedForCrashCollection(): Boolean =
+        persistence.getPreferenceValue(
             SECTION_ID,
             USER_PROMPTED_FOR_CRASH_COLLECTION,
             false,
         )
-    }
 
     override fun setUserPromptedForCrashCollection(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, USER_PROMPTED_FOR_CRASH_COLLECTION, value)
@@ -70,25 +68,19 @@ class RealGeneralDataPersistence(private val persistence: PreferencesPersistence
 }
 
 class FakeGeneralDataPersistence : GeneralDataPersistence {
-    override fun explicitlyDisabledCrashCollection(): Boolean {
-        return false
-    }
+    override fun explicitlyDisabledCrashCollection(): Boolean = false
 
     override fun setExplicitlyDisabledCrashCollection(value: Boolean) {
         // Do nothing.
     }
 
-    override fun userPromptedForCrashCollection(): Boolean {
-        return true
-    }
+    override fun userPromptedForCrashCollection(): Boolean = true
 
     override fun setUserPromptedForCrashCollection(value: Boolean) {
         // Do nothing.
     }
 
-    override fun locationData(): LocationData {
-        return LocationData(37.808332, -122.415715)
-    }
+    override fun locationData(): LocationData = LocationData(37.808332, -122.415715)
 
     override fun setLocationData(value: LocationData) {
         // Do nothing.

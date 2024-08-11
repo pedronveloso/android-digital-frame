@@ -141,29 +141,30 @@ fun DrawWeatherElementWithIcon(
 
                 // Apply the correct unit to the wind speed.
                 val windUnit = weatherPersistence.windSpeedUnit()
-                val windSpeedLabel = when (windUnit) {
-                    WindSpeedUnit.MetersPerSecond -> {
-                        stringResource(id = R.string.wind_meters_per_second, windSpeed.speed)
-                    }
+                val windSpeedLabel =
+                    when (windUnit) {
+                        WindSpeedUnit.MetersPerSecond -> {
+                            stringResource(id = R.string.wind_meters_per_second, windSpeed.speed)
+                        }
 
-                    WindSpeedUnit.KilometersPerHour -> {
-                        stringResource(
-                            id = R.string.wind_kilometers_per_hour,
-                            windSpeed.getWindSpeedInKmHour()
-                        )
-                    }
+                        WindSpeedUnit.KilometersPerHour -> {
+                            stringResource(
+                                id = R.string.wind_kilometers_per_hour,
+                                windSpeed.getWindSpeedInKmHour(),
+                            )
+                        }
 
-                    WindSpeedUnit.MilesPerHour -> {
-                        stringResource(
-                            id = R.string.wind_miles_per_hour,
-                            windSpeed.getWindSpeedInMilesHour()
-                        )
-                    }
+                        WindSpeedUnit.MilesPerHour -> {
+                            stringResource(
+                                id = R.string.wind_miles_per_hour,
+                                windSpeed.getWindSpeedInMilesHour(),
+                            )
+                        }
 
-                    WindSpeedUnit.Knots -> {
-                        stringResource(id = R.string.wind_knots, windSpeed.getWindSpeedInKnots())
+                        WindSpeedUnit.Knots -> {
+                            stringResource(id = R.string.wind_knots, windSpeed.getWindSpeedInKnots())
+                        }
                     }
-                }
 
                 Text(
                     text = windSpeedLabel,
@@ -193,7 +194,7 @@ fun DrawWeatherElementWithIcon(
         Image(
             painter = painterResource(id = iconId),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(hudColor)
+            colorFilter = ColorFilter.tint(hudColor),
         )
     }
 }
@@ -211,7 +212,7 @@ fun PreviewRenderWeather() {
             WeatherViewModel(FakeWeatherService()),
             weatherData,
             generalData,
-            hudColor
+            hudColor,
         )
     }
 }

@@ -4,9 +4,7 @@ class LogStoreProvider {
     companion object {
         private var logStore: LogStore = InMemoryLogStore()
 
-        fun getLogStore(): LogStore {
-            return logStore
-        }
+        fun getLogStore(): LogStore = logStore
 
         fun setLogStore(newLogStore: LogStore) {
             logStore = newLogStore

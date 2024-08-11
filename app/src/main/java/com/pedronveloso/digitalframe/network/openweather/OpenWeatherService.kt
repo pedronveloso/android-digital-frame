@@ -6,6 +6,6 @@ import com.pedronveloso.digitalframe.network.NetworkResult
 interface OpenWeatherService {
     suspend fun fetchCurrentWeatherConditions(
         lat: String,
-        lon: String
+        lon: String,
     ): NetworkResult<OpenWeatherResponse>
 }

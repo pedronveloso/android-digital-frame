@@ -15,27 +15,22 @@ interface CountdownPersistence : PluginDataPersistence {
     fun getMessage(): String
 }
 
-class RealCountdownPersistence(private val persistence: PreferencesPersistence) :
-    CountdownPersistence {
+class RealCountdownPersistence(
+    private val persistence: PreferencesPersistence,
+) : CountdownPersistence {
     override fun setTargetDate(value: LocalDate) {
         persistence.setPreferenceValue(SECTION_ID, TARGET_DATE, value)
     }
 
-    override fun getTargetDate(): LocalDate {
-        return persistence.getPreferenceValue(SECTION_ID, TARGET_DATE, LocalDate.now().minusDays(1))
-    }
+    override fun getTargetDate(): LocalDate = persistence.getPreferenceValue(SECTION_ID, TARGET_DATE, LocalDate.now().minusDays(1))
 
     override fun setMessage(value: String) {
         persistence.setPreferenceValue(SECTION_ID, MESSAGE, value)
     }
 
-    override fun getMessage(): String {
-        return persistence.getPreferenceValue(SECTION_ID, MESSAGE, "")
-    }
+    override fun getMessage(): String = persistence.getPreferenceValue(SECTION_ID, MESSAGE, "")
 
-    override fun isEnabled(): Boolean {
-        return persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
-    }
+    override fun isEnabled(): Boolean = persistence.getPreferenceValue(SECTION_ID, PROPERTY_ENABLED, true)
 
     override fun setEnabled(value: Boolean) {
         persistence.setPreferenceValue(SECTION_ID, PROPERTY_ENABLED, value)

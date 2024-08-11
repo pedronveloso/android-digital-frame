@@ -52,10 +52,11 @@ fun RenderClock(
             if (clockPersistence.showYear()) {
                 Text(
                     text =
-                    currentTime.format(
-                        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                            .withLocale(Locale.getDefault()),
-                    ),
+                        currentTime.format(
+                            DateTimeFormatter
+                                .ofLocalizedDate(FormatStyle.MEDIUM)
+                                .withLocale(Locale.getDefault()),
+                        ),
                     style = FontStyles.textStyleTitleLarge(hudColor),
                 )
             } else {

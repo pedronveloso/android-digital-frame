@@ -5,7 +5,10 @@ data class PreferencesSection(
     val title: String,
     val preferenceItems: List<PreferenceItem>,
 ) {
-    class Builder(private val sectionId: String, private val title: String) {
+    class Builder(
+        private val sectionId: String,
+        private val title: String,
+    ) {
         private val preferences = mutableListOf<PreferenceItem>()
         private val preferenceIds = mutableSetOf<String>()
 
@@ -20,8 +23,6 @@ data class PreferencesSection(
             preferences.add(preference)
         }
 
-        fun build(): PreferencesSection {
-            return PreferencesSection(sectionId, title, preferences)
-        }
+        fun build(): PreferencesSection = PreferencesSection(sectionId, title, preferences)
     }
 }

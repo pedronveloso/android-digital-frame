@@ -1,6 +1,5 @@
 package com.pedronveloso.digitalframe.data.openweather
 
-
 object MockWeatherProvider {
     val mockWeatherResponse =
         OpenWeatherResponse(
@@ -9,16 +8,16 @@ object MockWeatherProvider {
                     800,
                     "Clear",
                     "clear sky",
-                    "01d"
-                )
+                    "01d",
+                ),
             ),
             TemperatureDetails(
                 20.0,
                 19.0,
-                21.0
+                21.0,
             ),
             Wind(
-                2.0
-            )
+                2.0,
+            ),
         )
 }

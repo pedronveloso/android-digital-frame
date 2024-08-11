@@ -15,15 +15,16 @@ import com.pedronveloso.digitalframe.ui.MyTypography
 @Composable
 fun LabelPreferenceComposable(label: PreferenceItem.Label) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label.text,
             textAlign = TextAlign.Center,
-            style = MyTypography.bodyLarge
+            style = MyTypography.bodyLarge,
         )
     }
 }

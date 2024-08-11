@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 import java.util.LinkedList
 
 class InMemoryLogStore : LogStore {
-
     private val logs = LinkedList<LogEntry>()
 
     override fun log(message: String) {
@@ -14,22 +13,23 @@ class InMemoryLogStore : LogStore {
         Log.v(callingClass, message)
     }
 
-    override fun logError(message: String, throwable: Throwable?) {
+    override fun logError(
+        message: String,
+        throwable: Throwable?,
+    ) {
         val callingClass = determineCallingClass()
         addLogEntry(
             LogEntry(
                 callingClass,
                 "$message: ${throwable?.message}",
                 LocalDateTime.now(),
-                LogLevel.ERROR
-            )
+                LogLevel.ERROR,
+            ),
         )
         Log.e(callingClass, message, throwable)
     }
 
-    override fun getLogs(): List<LogEntry> {
-        return logs.toList()
-    }
+    override fun getLogs(): List<LogEntry> = logs.toList()
 
     private fun addLogEntry(logEntry: LogEntry) {
         if (logs.size >= MAX_LOG_ENTRIES) {

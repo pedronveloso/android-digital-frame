@@ -13,10 +13,9 @@ class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?,
-    ): LocalDateTime {
-        return LocalDateTime.ofInstant(
+    ): LocalDateTime =
+        LocalDateTime.ofInstant(
             Instant.ofEpochSecond(json?.asLong ?: 0),
             ZoneId.systemDefault(),
         )
-    }
 }

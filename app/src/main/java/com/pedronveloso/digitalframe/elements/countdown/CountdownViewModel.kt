@@ -21,13 +21,14 @@ class CountdownViewModel : ViewModel() {
 
     private fun repeatedExecution(countdownPersistence: CountdownPersistence) {
         executionJob?.cancel()
-        executionJob = viewModelScope.launch {
-            val today = LocalDate.now()
-            val targetDate = countdownPersistence.getTargetDate()
-            _daysUntilEvent.value = ChronoUnit.DAYS.between(today, targetDate)
-            delay(1.minutes)
-            repeatedExecution(countdownPersistence)
-        }
+        executionJob =
+            viewModelScope.launch {
+                val today = LocalDate.now()
+                val targetDate = countdownPersistence.getTargetDate()
+                _daysUntilEvent.value = ChronoUnit.DAYS.between(today, targetDate)
+                delay(1.minutes)
+                repeatedExecution(countdownPersistence)
+            }
     }
 
     fun startRepeatedExecution(countdownPersistence: CountdownPersistence) {
@@ -36,6 +37,4 @@ class CountdownViewModel : ViewModel() {
             repeatedExecution(countdownPersistence)
         }
     }
-
-
 }

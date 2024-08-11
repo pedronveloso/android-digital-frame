@@ -21,7 +21,6 @@ import java.io.InputStream
 import kotlin.math.max
 
 class BackgroundPickerActivity : ComponentActivity() {
-
     private val logger = LogStoreProvider.getLogStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,8 +119,4 @@ class BackgroundPickerActivity : ComponentActivity() {
 
         return BitmapFactory.decodeFile(file.absolutePath, options)
     }
-
 }
-
-
-

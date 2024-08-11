@@ -8,9 +8,9 @@ import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewMode
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 import java.io.File
 
-
-class BackgroundPhotosEraser(private val context: Context) {
-
+class BackgroundPhotosEraser(
+    private val context: Context,
+) {
     private val logger = LogStoreProvider.getLogStore()
 
     /**
@@ -47,4 +47,3 @@ class BackgroundPhotosEraser(private val context: Context) {
         }
     }
 }
-

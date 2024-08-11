@@ -58,9 +58,7 @@ import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.Locale
 
-
 class PreferencesActivity : ComponentActivity() {
-
     private val logger = LogStoreProvider.getLogStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,38 +90,41 @@ class PreferencesActivity : ComponentActivity() {
         val clockSection = PreferencesSection.Builder("clock", getString(R.string.pref_clock_title))
 
         val use24HClock =
-            PreferenceItem.SwitchPref(
-                id = "use_24h_format",
-                title = getString(R.string.pref_clock_24h_title),
-                description = getString(R.string.pref_clock_24h_description),
-                initialValueProvider = { clockData.use24HClock() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    clockData.setUse24HClock(enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "use_24h_format",
+                    title = getString(R.string.pref_clock_24h_title),
+                    description = getString(R.string.pref_clock_24h_description),
+                    initialValueProvider = { clockData.use24HClock() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        clockData.setUse24HClock(enabled)
+                    }
                 }
-            }
 
         val showYearPreference =
-            PreferenceItem.SwitchPref(
-                id = "show_year",
-                title = getString(R.string.pref_clock_show_year),
-                initialValueProvider = { clockData.showYear() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    clockData.setShowYear(enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "show_year",
+                    title = getString(R.string.pref_clock_show_year),
+                    initialValueProvider = { clockData.showYear() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        clockData.setShowYear(enabled)
+                    }
                 }
-            }
 
         val showSecondsPreference =
-            PreferenceItem.SwitchPref(
-                id = "show_seconds",
-                title = getString(R.string.pref_clock_show_seconds),
-                initialValueProvider = { clockData.showSeconds() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    clockData.setShowSeconds(enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "show_seconds",
+                    title = getString(R.string.pref_clock_show_seconds),
+                    initialValueProvider = { clockData.showSeconds() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        clockData.setShowSeconds(enabled)
+                    }
                 }
-            }
 
         clockSection.addPreference(use24HClock)
         clockSection.addPreference(showSecondsPreference)
@@ -210,28 +211,29 @@ class PreferencesActivity : ComponentActivity() {
         val weatherData = RealWeatherPersistence(dataPersistence)
 
         val useCelsiusPreference =
-            PreferenceItem.SwitchPref(
-                id = "use_celsius",
-                title = getString(R.string.pref_weather_use_celcius),
-                description = getString(R.string.pref_weather_use_celcius_description),
-                initialValueProvider = { weatherData.useCelsius() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    weatherData.setUseCelsius(enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "use_celsius",
+                    title = getString(R.string.pref_weather_use_celcius),
+                    description = getString(R.string.pref_weather_use_celcius_description),
+                    initialValueProvider = { weatherData.useCelsius() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        weatherData.setUseCelsius(enabled)
+                    }
                 }
-            }
 
         val showWindSpeedPreference =
-            PreferenceItem.SwitchPref(
-                id = "show_wind_speed",
-                title = getString(R.string.pref_weather_show_wind_speed),
-                initialValueProvider = { weatherData.showWind() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    weatherData.setShowWind(enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "show_wind_speed",
+                    title = getString(R.string.pref_weather_show_wind_speed),
+                    initialValueProvider = { weatherData.showWind() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        weatherData.setShowWind(enabled)
+                    }
                 }
-            }
-
 
         val windSpeedOptions = ArrayList<String>()
         windSpeedOptions.add(getString(R.string.pref_weather_wind_unit_meters_second))
@@ -242,24 +244,25 @@ class PreferencesActivity : ComponentActivity() {
         val initialWindUnit = weatherData.windSpeedUnit().toDisplayString(this)
 
         val windSpeedUnitPreference =
-            PreferenceItem.DropdownPref(
-                id = "wind_speed_unit",
-                title = getString(R.string.pref_weather_wind_unit),
-                options = windSpeedOptions,
-                initialValueProvider = { initialWindUnit },
-            ).apply {
-                onChangeCallback = { position, value ->
-                    weatherData.setWindSpeedUnit(
-                        when (position) {
-                            0 -> WindSpeedUnit.MetersPerSecond
-                            1 -> WindSpeedUnit.MilesPerHour
-                            2 -> WindSpeedUnit.KilometersPerHour
-                            3 -> WindSpeedUnit.Knots
-                            else -> WindSpeedUnit.MetersPerSecond
-                        }
-                    )
+            PreferenceItem
+                .DropdownPref(
+                    id = "wind_speed_unit",
+                    title = getString(R.string.pref_weather_wind_unit),
+                    options = windSpeedOptions,
+                    initialValueProvider = { initialWindUnit },
+                ).apply {
+                    onChangeCallback = { position, value ->
+                        weatherData.setWindSpeedUnit(
+                            when (position) {
+                                0 -> WindSpeedUnit.MetersPerSecond
+                                1 -> WindSpeedUnit.MilesPerHour
+                                2 -> WindSpeedUnit.KilometersPerHour
+                                3 -> WindSpeedUnit.Knots
+                                else -> WindSpeedUnit.MetersPerSecond
+                            },
+                        )
+                    }
                 }
-            }
 
         weatherSection.addPreference(useCelsiusPreference)
         weatherSection.addPreference(showWindSpeedPreference)
@@ -276,17 +279,18 @@ class PreferencesActivity : ComponentActivity() {
         val generalData = RealGeneralDataPersistence(dataPersistence)
 
         val allowCrashCollection =
-            PreferenceItem.SwitchPref(
-                id = "allow_crash_collection",
-                title = getString(R.string.pref_general_crash_reports),
-                description = getString(R.string.pref_general_crash_reports_description),
-                initialValueProvider = { !generalData.explicitlyDisabledCrashCollection() },
-            ).apply {
-                onChangeCallback = { enabled ->
-                    FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
-                    generalData.setExplicitlyDisabledCrashCollection(!enabled)
+            PreferenceItem
+                .SwitchPref(
+                    id = "allow_crash_collection",
+                    title = getString(R.string.pref_general_crash_reports),
+                    description = getString(R.string.pref_general_crash_reports_description),
+                    initialValueProvider = { !generalData.explicitlyDisabledCrashCollection() },
+                ).apply {
+                    onChangeCallback = { enabled ->
+                        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
+                        generalData.setExplicitlyDisabledCrashCollection(!enabled)
+                    }
                 }
-            }
 
         val locationInput =
             PreferenceItem.LocationPref(
@@ -298,7 +302,6 @@ class PreferencesActivity : ComponentActivity() {
                     generalData.setLocationData(value)
                 },
             )
-
 
         val logScreenButton =
             PreferenceItem.Button(
@@ -337,7 +340,6 @@ class PreferencesActivity : ComponentActivity() {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
                     startActivity(intent)
-
                 },
             )
         aboutSection.addPreference(aboutPreference)
@@ -371,9 +373,9 @@ fun PreferenceSectionsScreen(
 fun AppVersionFooter() {
     Column(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -426,10 +428,10 @@ fun PreferenceSectionItem(
 ) {
     Row(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .clickable(onClick = navigateToSection)
-            .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = navigateToSection)
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = section.title, modifier = Modifier.weight(1f), style = MyTypography.bodyLarge)

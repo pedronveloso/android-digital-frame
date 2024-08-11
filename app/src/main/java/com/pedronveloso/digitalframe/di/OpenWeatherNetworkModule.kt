@@ -27,16 +27,15 @@ object OpenWeatherNetworkModule {
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
                 .create()
 
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
     @Provides
-    fun profileRetrofitServiceApi(retrofit: Retrofit): OpenWeatherServiceApi {
-        return retrofit.create(OpenWeatherServiceApi::class.java)
-    }
+    fun profileRetrofitServiceApi(retrofit: Retrofit): OpenWeatherServiceApi = retrofit.create(OpenWeatherServiceApi::class.java)
 }
 
 @Module

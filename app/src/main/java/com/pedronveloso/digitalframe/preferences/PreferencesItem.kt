@@ -3,7 +3,9 @@ package com.pedronveloso.digitalframe.preferences
 import com.pedronveloso.digitalframe.preferences.location.LocationData
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
 
-sealed class PreferenceItem(open val id: String) {
+sealed class PreferenceItem(
+    open val id: String,
+) {
     data class InputFieldPref(
         override val id: String,
         val title: String,
@@ -30,17 +32,23 @@ sealed class PreferenceItem(open val id: String) {
             }
     }
 
-    data class Button(override val id: String, val label: String, val action: () -> Unit) :
-        PreferenceItem(id)
+    data class Button(
+        override val id: String,
+        val label: String,
+        val action: () -> Unit,
+    ) : PreferenceItem(id)
 
-    data class Label(override val id: String, val text: String) : PreferenceItem(id)
+    data class Label(
+        override val id: String,
+        val text: String,
+    ) : PreferenceItem(id)
 
     data class LocationPref(
         override val id: String,
         val title: String,
         val description: String? = null,
         val initialValueProvider: () -> LocationData,
-        val onChangeCallback: ((LocationData) -> Unit)? = null
+        val onChangeCallback: ((LocationData) -> Unit)? = null,
     ) : PreferenceItem(id)
 
     data class DropdownPref(
@@ -48,9 +56,8 @@ sealed class PreferenceItem(open val id: String) {
         val title: String,
         val options: List<String>,
         val initialValueProvider: () -> String,
-        var onChangeCallback: ((Int, String) -> Unit)? = null
+        var onChangeCallback: ((Int, String) -> Unit)? = null,
     ) : PreferenceItem(id)
-
 }
 
 enum class InputType {

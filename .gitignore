@@ -89,3 +89,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 /.idea/deploymentTargetSelector.xml
+/.idea/runConfigurations.xml
+/.idea/other.xml

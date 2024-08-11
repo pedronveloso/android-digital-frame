@@ -1,0 +1,61 @@
+[versions]
+desugar_jdk_libs = "2.0.4"
+kotlin = "2.0.0"
+gradle = "8.5.2"
+googleServices = "4.4.2"
+crashlytics = "3.0.1"
+hilt = "2.51.1"
+lifecycle = "2.8.2"
+retrofit = "2.11.0"
+coil = "2.6.0"
+composeBom = "2024.05.00"
+firebaseBom = "33.1.1"
+truth = "1.4.2"
+robolectric = "4.12.2"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+espresso = "3.6.0"
+junitExt = "1.2.0"
+navigationCompose = "2.7.7"
+palette = "1.0.0"
+
+[libraries]
+desugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+hiltPlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+hiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hiltCompiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycleViewmodelSavedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "retrofit" }
+retrofitGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+paletteKtx = { module = "androidx.palette:palette-ktx", version.ref = "palette" }
+firebaseCrashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+androidTestJunit = { module = "androidx.test.ext:junit", version.ref = "junitExt" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+ui = { module = "androidx.compose.ui:ui" }
+material3 = { module = "androidx.compose.material3:material3" }
+uiTooling = { module = "androidx.compose.ui:ui-tooling" }
+uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+uiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "gradle" }
+androidLibrary = { id = "com.android.library", version.ref = "gradle" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

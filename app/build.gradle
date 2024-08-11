@@ -1,11 +1,11 @@
 plugins {
-    id 'com.android.application'
-    id 'dagger.hilt.android.plugin'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id "org.jetbrains.kotlin.plugin.compose"
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.googleServices)
+    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinKapt)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
@@ -55,59 +55,53 @@ android {
 dependencies {
 
     // Android X Libraries.
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation(libs.coreKtx)
 
     // ViewModel & Lifecycle.
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation(libs.lifecycleViewmodelKtx)
+    implementation(libs.lifecycleViewmodelCompose)
+    implementation(libs.lifecycleRuntimeKtx)
+    implementation(libs.lifecycleViewmodelSavedstate)
 
     // Compose BOM.
-    implementation platform('androidx.compose:compose-bom:2024.05.00')
-    implementation "androidx.compose.material3:material3"
-    implementation "androidx.compose.ui:ui-tooling"
-    implementation "androidx.compose.ui:ui-tooling-preview"
-    implementation "androidx.compose.ui:ui"
-    implementation "androidx.activity:activity-compose"
-    implementation "androidx.compose.runtime:runtime-livedata"
-    implementation "androidx.navigation:navigation-compose:2.7.7"
-
+    implementation(platform(libs.composeBom))
+    implementation(libs.uiTooling)
+    implementation(libs.uiToolingPreview)
+    implementation(libs.ui)
+    implementation(libs.material3)
+    implementation(libs.navigationCompose)
 
     // Networking libraries.
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.google.code.gson:gson:$retrofit_gson_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation(libs.retrofit)
+    implementation(libs.gson)
+    implementation(libs.retrofitGson)
 
     // Image handling.
-    implementation "io.coil-kt:coil-compose:$coil_version"
-    implementation 'androidx.palette:palette-ktx:1.0.0'
+    implementation(libs.coilCompose)
+    implementation(libs.paletteKtx)
 
     // Dependency Injection.
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation(libs.hiltAndroid)
+    kapt(libs.hiltCompiler)
 
     // Java 8 Desugaring. 🍬
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    coreLibraryDesugaring(libs.desugarJdkLibs)
 
     // Import the BoM for the Firebase platform.
-    implementation(platform('com.google.firebase:firebase-bom:33.1.1'))
-    implementation("com.google.firebase:firebase-crashlytics")
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebaseCrashlytics)
 
     // Dev Tooling.
-    debugImplementation "androidx.compose.ui:ui-tooling"
+    debugImplementation(libs.uiTooling)
 
-    androidTestImplementation 'androidx.test.ext:junit:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.8"
-
+    androidTestImplementation(libs.androidTestJunit)
+    androidTestImplementation(libs.espressoCore)
+    androidTestImplementation(libs.uiTestJunit4)
 
     // Unit testing support.
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'com.google.truth:truth:1.4.2'
-    testImplementation 'androidx.test:core-ktx:1.6.0'
-    testImplementation 'org.robolectric:robolectric:4.12.2'
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.robolectric)
 }
 
 // Allow references to generated code

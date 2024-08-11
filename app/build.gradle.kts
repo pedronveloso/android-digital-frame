@@ -48,6 +48,14 @@ android {
         compose = true
         buildConfig = true
     }
+
+    lint {
+        abortOnError = true
+        checkAllWarnings = true
+        warningsAsErrors = true
+        htmlReport = true
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {

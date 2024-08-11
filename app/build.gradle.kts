@@ -54,6 +54,7 @@ dependencies {
 
     // Android X Libraries.
     implementation(libs.coreKtx)
+    implementation(libs.navigationCompose)
 
     // ViewModel & Lifecycle.
     implementation(libs.lifecycleViewmodelKtx)
@@ -67,7 +68,7 @@ dependencies {
     implementation(libs.uiToolingPreview)
     implementation(libs.ui)
     implementation(libs.material3)
-    implementation(libs.navigationCompose)
+
 
     // Networking libraries.
     implementation(libs.retrofit)

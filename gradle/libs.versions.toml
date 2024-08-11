@@ -48,7 +48,6 @@ ui = { module = "androidx.compose.ui:ui" }
 material3 = { module = "androidx.compose.material3:material3" }
 uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
-uiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "gradle" }

@@ -9,31 +9,35 @@ plugins {
 }
 
 android {
-    namespace 'com.pedronveloso.digitalframe'
-    compileSdk 34
+    namespace = "com.pedronveloso.digitalframe"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.pedronveloso.digitalframe"
-        minSdk 21
-        targetSdk 34
-        versionCode 11
-        versionName "0.0.11-DEV"
+        applicationId = "com.pedronveloso.digitalframe"
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 11
+        versionName = "0.0.11-DEV"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
 
         // Flag to enable support for the new language APIs.
-        coreLibraryDesugaringEnabled true
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -41,14 +45,8 @@ android {
     }
 
     buildFeatures {
-        compose true
-        buildConfig true
-    }
-
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+        compose = true
+        buildConfig = true
     }
 }
 
@@ -96,7 +94,6 @@ dependencies {
 
     androidTestImplementation(libs.androidTestJunit)
     androidTestImplementation(libs.espressoCore)
-    androidTestImplementation(libs.uiTestJunit4)
 
     // Unit testing support.
     testImplementation(libs.junit)
@@ -106,5 +103,5 @@ dependencies {
 
 // Allow references to generated code
 kapt {
-    correctErrorTypes true
+    correctErrorTypes = true
 }

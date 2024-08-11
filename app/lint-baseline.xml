@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.5.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.5.2)" variant="all" version="8.5.2">
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.day_rain_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/day_rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.day_sleet` appears to be unused">
+        <location
+            file="src/main/res/drawable/day_sleet.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.day_snow` appears to be unused">
+        <location
+            file="src/main/res/drawable/day_snow.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.day_snow_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/day_snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_clear` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_clear.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_partial_cloud` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_partial_cloud.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_rain` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_rain.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_rain_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_sleet` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_sleet.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_snow` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_snow.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.night_snow_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/night_snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.overcast` appears to be unused">
+        <location
+            file="src/main/res/drawable/overcast.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.rain_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sleet` appears to be unused">
+        <location
+            file="src/main/res/drawable/sleet.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.snow_thunder` appears to be unused">
+        <location
+            file="src/main/res/drawable/snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.lorem_ipsum` appears to be unused"
+        errorLine1="    &lt;string name=&quot;lorem_ipsum&quot; translatable=&quot;false&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="78"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-hdpi/ic_launcher_monochrome.webp`: expected 72x72, but was 162x162">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_monochrome.webp"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-mdpi/ic_launcher_monochrome.webp`: expected 48x48, but was 108x108">
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher_monochrome.webp"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xhdpi/ic_launcher_monochrome.webp`: expected 96x96, but was 216x216">
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher_monochrome.webp"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxhdpi/ic_launcher_monochrome.webp`: expected 144x144, but was 324x324">
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher_monochrome.webp"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxxhdpi/ic_launcher_monochrome.webp`: expected 192x192, but was 432x432">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_monochrome.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/cloudy.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/cloudy.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_clear.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_clear.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_partial_cloud.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_partial_cloud.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_rain.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_rain.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_rain_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_sleet.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_sleet.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_snow.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_snow.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/day_snow_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/day_snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/fog.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/fog.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/mist.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/mist.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_clear.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_clear.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_partial_cloud.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_partial_cloud.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_rain.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_rain.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_rain_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_sleet.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_sleet.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_snow.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_snow.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/night_snow_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/night_snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/overcast.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/overcast.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/photo1.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/photo1.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/photo2.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/photo2.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/photo3.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/photo3.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/rain.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/rain.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/rain_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/rain_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sleet.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sleet.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/snow.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/snow.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/snow_thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/snow_thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/thunder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/thunder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/tornado.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/tornado.webp"/>
+    </issue>
+
+</issues>

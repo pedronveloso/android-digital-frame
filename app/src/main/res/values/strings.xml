@@ -22,7 +22,7 @@
 
     <!-- Location -->
     <string name="pref_location_title">Device Location</string>
-    <string name="pref_location_description">You can copy-paste the coordinates from Google Maps, or use the button below to prefill based on your device\'s GPS data.</string>
+    <string name="pref_location_description">You can copy-paste the coordinates from Google Maps, or use the button below to prefill based on your device\’s GPS data.</string>
     <string name="pref_location_lat">Latitude</string>
     <string name="pref_location_lon">Longitude</string>
     <string name="pref_location_lat_error">Enter a valid latitude (-90 to 90)</string>
@@ -62,7 +62,7 @@
 
     <!-- About -->
     <string name="pref_about_title">About</string>
-    <string name="pref_about_intro">Thank you using Android Digital Frame. To learn more visit the project\'s page by pressing the button below:</string>
+    <string name="pref_about_intro">Thank you using Android Digital Frame. To learn more visit the project\’s page by pressing the button below:</string>
     <string name="pref_about_button">Visit project page</string>
 
     <!-- Logs -->
@@ -72,7 +72,7 @@
 
     <!-- Data Collection onboarding -->
     <string name="crash_data_collection_title">Crash Data reporting</string>
-    <string name="crash_data_collection_description">We value your privacy and strive to provide a stable and reliable app experience. To help us identify and fix issues that may cause the app to crash, we use Firebase Crashlytics, a Google owned service that collects anonymous crash reports.\n\nCrash reporting collects data only when the app unexpectedly crashes or encounters a critical error. No personally identifiable information is collected, and data is not shared with any third parties.\n\nYou have full control over this feature and can easily disable it at any time from the app\'s Settings.</string>
+    <string name="crash_data_collection_description">We value your privacy and strive to provide a stable and reliable app experience. To help us identify and fix issues that may cause the app to crash, we use Firebase Crashlytics, a Google owned service that collects anonymous crash reports.\n\nCrash reporting collects data only when the app unexpectedly crashes or encounters a critical error. No personally identifiable information is collected, and data is not shared with any third parties.\n\nYou have full control over this feature and can easily disable it at any time from the app\’s Settings.</string>
 
 
     <string name="lorem_ipsum" translatable="false">

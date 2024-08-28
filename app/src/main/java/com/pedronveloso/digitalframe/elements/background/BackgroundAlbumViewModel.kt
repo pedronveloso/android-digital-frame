@@ -56,7 +56,7 @@ class BackgroundAlbumViewModel
             refreshBackgroundImages()
         }
 
-        fun refreshBackgroundImages() {
+        private fun refreshBackgroundImages() {
             rotationJob?.cancel()
             rotationJob =
                 viewModelScope.launch {

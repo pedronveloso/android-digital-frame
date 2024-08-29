@@ -192,6 +192,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                                         latitude = location.latitude.toString()
                                         longitude = location.longitude.toString()
                                         isLoading = false
+                                        hasChanges = true
                                     },
                                     logger = logger,
                                     onError = { reason ->

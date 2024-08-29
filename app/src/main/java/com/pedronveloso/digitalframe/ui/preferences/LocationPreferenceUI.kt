@@ -77,6 +77,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
     var latError by remember { mutableStateOf(false) }
     var lonError by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var hasChanges by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     val locationPermissionLauncher =
@@ -122,6 +123,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             onValueChange = {
                 latitude = it
                 latError = !isValidLatitude(it)
+                hasChanges = true
             },
             isError = latError,
             label = { stringResource(id = R.string.pref_location_lat) },
@@ -145,6 +147,7 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
             onValueChange = {
                 longitude = it
                 lonError = !isValidLongitude(it)
+                hasChanges = true
             },
             isError = lonError,
             label = { Text(stringResource(id = R.string.pref_location_lon)) },
@@ -165,29 +168,6 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            SaveButton(
-                onSave = {
-                    if (!latError && !lonError) {
-                        logger.log("Location saved: $latitude, $longitude")
-                        preference.onChangeCallback?.invoke(
-                            LocationData(
-                                latitude.toDouble(),
-                                longitude.toDouble(),
-                            ),
-                        )
-                    }
-                },
-                enabled = !latError && !lonError,
-                buttonText = stringResource(id = R.string.pref_location_save),
-            )
-
-            Spacer(
-                modifier =
-                    Modifier
-                        .height(8.dp)
-                        .width(8.dp),
-            )
-
             GetCurrentLocationButton(
                 isLoading = isLoading,
                 onGetCurrent = {
@@ -224,6 +204,30 @@ fun LocationPreferenceComposable(preference: PreferenceItem.LocationPref) {
                         }
                     }
                 },
+            )
+
+            Spacer(
+                modifier =
+                Modifier
+                    .height(8.dp)
+                    .width(8.dp),
+            )
+
+            SaveButton(
+                onSave = {
+                    if (!latError && !lonError) {
+                        logger.log("Location saved: $latitude, $longitude")
+                        preference.onChangeCallback?.invoke(
+                            LocationData(
+                                latitude.toDouble(),
+                                longitude.toDouble(),
+                            ),
+                        )
+                        hasChanges = false
+                    }
+                },
+                enabled = hasChanges && !latError && !lonError,
+                buttonText = stringResource(id = R.string.pref_location_save),
             )
 
             if (showLocationSettingsDialog) {

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">Digital Photo Album</string>
 
+    <!-- General purpose -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Main -->
     <string name="pick_date_title">Select Date</string>
     <string name="preferences_title">Preferences</string>
@@ -28,6 +32,10 @@
     <string name="pref_location_lat_error">Enter a valid latitude (-90 to 90)</string>
     <string name="pref_location_lon_error">Enter a valid longitude (-180 to 180)</string>
     <string name="pref_location_save">Save location</string>
+    <string name="pref_location_get_from_device">Get device location</string>
+    <string name="pref_location_high_accuracy_title">Enable High Accuracy Location</string>
+    <string name="pref_location_high_accuracy_description">For the best location accuracy, please enable GPS and Network location in your device settings. This should be named Google Location Accuracy on most devices, make sure it is turned on.</string>
+    <string name="pref_location_high_accuracy_settings">Open Location Settings</string>
 
     <!-- Clock -->
     <string name="pref_clock_title">Clock</string>

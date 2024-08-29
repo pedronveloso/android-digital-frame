@@ -75,7 +75,7 @@ class WeatherViewModel
                             apiService.fetchCurrentWeatherConditions(latitude, longitude)
                     ) {
                         is NetworkResult.Failure -> {
-                            logger.logError("Failed to fetch weather data", result.exception)
+                            logger.error("Failed to fetch weather data", result.exception)
 
                             // If failed to get new weather data, use latest known data.
                             previousWeatherState

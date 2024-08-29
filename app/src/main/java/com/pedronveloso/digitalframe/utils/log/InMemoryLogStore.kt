@@ -13,7 +13,7 @@ class InMemoryLogStore : LogStore {
         Log.v(callingClass, message)
     }
 
-    override fun logError(
+    override fun error(
         message: String,
         throwable: Throwable?,
     ) {

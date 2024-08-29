@@ -17,9 +17,9 @@ class LogEntry(
 interface LogStore {
     fun log(message: String)
 
-    fun logError(
+    fun error(
         message: String,
-        throwable: Throwable?,
+        throwable: Throwable? = null,
     )
 
     fun getLogs(): List<LogEntry>

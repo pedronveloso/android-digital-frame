@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -38,7 +37,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -64,6 +62,7 @@ import com.pedronveloso.digitalframe.elements.weather.RealWeatherPersistence
 import com.pedronveloso.digitalframe.elements.weather.RenderWeather
 import com.pedronveloso.digitalframe.elements.weather.WeatherViewModel
 import com.pedronveloso.digitalframe.persistence.SharedPreferencesPersistence
+import com.pedronveloso.digitalframe.ui.AppColorScheme
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.ui.MyTypography
 import com.pedronveloso.digitalframe.ui.deriveHUDColor
@@ -100,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+                    color = AppColorScheme.background,
                 ) {
                     hideSystemUI(LocalView.current)
                     if (userPromptedForCrashCollection.not()) {
@@ -160,7 +159,7 @@ fun ShowCrashCollectionNotice(userPickedCrashCollection: (Boolean) -> Unit) {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(AppColorScheme.background),
     ) {
         Column(
             modifier =
@@ -296,6 +295,11 @@ fun DigitalAlbumScreen(
 @Composable
 fun CrashCollectionNotice() {
     DigitalFrameTheme {
-        ShowCrashCollectionNotice { }
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = AppColorScheme.background,
+        ) {
+            ShowCrashCollectionNotice { }
+        }
     }
 }

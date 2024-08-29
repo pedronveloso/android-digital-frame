@@ -1,4 +1,4 @@
-package com.pedronveloso.digitalframe
+package com.pedronveloso.digitalframe.activities
 
 import android.content.Intent
 import android.os.Build
@@ -50,7 +50,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.pedronveloso.digitalframe.activities.PreferencesActivity
+import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.background.AlbumBackground
 import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.elements.clock.ClockViewModel

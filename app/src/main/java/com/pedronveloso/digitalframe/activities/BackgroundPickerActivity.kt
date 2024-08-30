@@ -11,13 +11,30 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.exifinterface.media.ExifInterface
+import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.ui.DigitalFrameTheme
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -34,22 +51,49 @@ class BackgroundPickerActivity : ComponentActivity() {
         setContent {
             DigitalFrameTheme {
                 val context = LocalContext.current
+                val coroutineScope = rememberCoroutineScope()
 
-                ImagePickerLauncher { uris ->
-                    copyImagesToInternalStorage(
-                        context,
-                        uris,
-                        BackgroundAlbumViewModel.BACKGROUND_PHOTOS_DIR,
-                    )
+                val progress = remember { mutableStateOf(0) }
+                val totalImages = remember { mutableStateOf(0) }
+                val isLoading = remember { mutableStateOf(false) }
 
-                    finish()
-                }
+                ImagePickerLauncher(
+                    onImagesPicked = { uris ->
+                        totalImages.value = uris.size
+                        isLoading.value = true
+
+                        coroutineScope.launch(Dispatchers.IO) {
+                            withContext(Dispatchers.Main) {
+                            }
+                            copyImagesToInternalStorage(
+                                context = context,
+                                imageUris = uris,
+                                directoryName = BackgroundAlbumViewModel.BACKGROUND_PHOTOS_DIR,
+                                onProgress = { currentProgress ->
+                                        progress.value = currentProgress
+                                }
+                            )
+                            withContext(Dispatchers.Main) {
+                                isLoading.value = false
+                                finish()
+                            }
+                        }
+                    },
+                    isLoading = isLoading.value,
+                    progress = progress.value,
+                    totalImages = totalImages.value
+                )
             }
         }
     }
 
     @Composable
-    fun ImagePickerLauncher(onImagesPicked: (List<Uri>) -> Unit) {
+    fun ImagePickerLauncher(
+        onImagesPicked: (List<Uri>) -> Unit,
+        isLoading: Boolean,
+        progress: Int,
+        totalImages: Int
+    ) {
         val launcher =
             rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.GetMultipleContents(),
@@ -60,9 +104,33 @@ class BackgroundPickerActivity : ComponentActivity() {
         LaunchedEffect(Unit) {
             launcher.launch("image/*")
         }
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Text(
+                        text = stringResource(
+                            R.string.pref_bg_import_progress,
+                            progress,
+                            totalImages
+                        ),
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
+        }
     }
 
-    private fun copyImagesToInternalStorage(context: Context, imageUris: List<Uri>, directoryName: String) {
+    private suspend fun copyImagesToInternalStorage(
+        context: Context,
+        imageUris: List<Uri>,
+        directoryName: String,
+        onProgress: (Int) -> Unit
+    ) {
         logger.log("Copying ${imageUris.size} image(s) to internal storage")
 
         val directory = File(context.filesDir, directoryName)
@@ -72,7 +140,7 @@ class BackgroundPickerActivity : ComponentActivity() {
 
         val largestDimen = (getLargestScreenDimension(context) * 1.1).toInt()
 
-        imageUris.forEach { uri ->
+        imageUris.forEachIndexed { index, uri ->
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
             inputStream?.use { stream ->
                 val fileName = getFileNameFromUri(context, uri)
@@ -100,6 +168,10 @@ class BackgroundPickerActivity : ComponentActivity() {
 
                 tempFile.delete()
             }
+
+            withContext(Dispatchers.Main) {
+                onProgress(index + 1)
+            }
         }
     }
 
@@ -109,7 +181,6 @@ class BackgroundPickerActivity : ComponentActivity() {
     }
 
     private fun resizeImage(context: Context, file: File, targetSize: Int): Bitmap {
-        // Read the EXIF data from the original file
         val originalExif = ExifInterface(file.absolutePath)
 
         val options = BitmapFactory.Options().apply {
@@ -126,7 +197,6 @@ class BackgroundPickerActivity : ComponentActivity() {
 
         var resizedBitmap = BitmapFactory.decodeFile(file.absolutePath, options)
 
-        // Handle rotation based on EXIF data
         val orientation = originalExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
         val matrix = Matrix()
         when (orientation) {
@@ -136,13 +206,11 @@ class BackgroundPickerActivity : ComponentActivity() {
         }
         resizedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.width, resizedBitmap.height, matrix, true)
 
-        // Create a temporary file to store the resized image with EXIF data
         val tempFile = File.createTempFile("temp_resized", ".jpg", context.cacheDir)
         FileOutputStream(tempFile).use { out ->
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
         }
 
-        // Copy the original EXIF data to the new file
         val newExif = ExifInterface(tempFile.absolutePath)
         copyExifAttributes(originalExif, newExif)
         newExif.saveAttributes()
@@ -170,11 +238,9 @@ class BackgroundPickerActivity : ComponentActivity() {
         }
     }
 
-
     private fun getFileNameFromUri(context: Context, uri: Uri): String {
         var fileName = "image_${System.currentTimeMillis()}"
 
-        // Try to fetch the display name from the content resolver
         context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
             val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             if (nameIndex != -1 && cursor.moveToFirst()) {
@@ -182,18 +248,13 @@ class BackgroundPickerActivity : ComponentActivity() {
             }
         }
 
-        // Remove the file extension and any preceding path
         fileName = fileName.substringBeforeLast('.').substringAfterLast('/')
-
-        // Remove any non-alphanumeric characters except underscore
         fileName = fileName.replace(Regex("[^A-Za-z0-9_]"), "")
 
-        // Ensure the filename is not empty
         if (fileName.isEmpty()) {
             fileName = "image_${System.currentTimeMillis()}"
         }
 
         return fileName
     }
-
 }

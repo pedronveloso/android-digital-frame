@@ -40,7 +40,7 @@ class BackgroundPhotosEraser(
         if (backgroundPhotosDir.exists()) {
             backgroundPhotosDir.deleteRecursively()
             logger.log("Background photos directory contents deleted.")
-            Toast.makeText(context, R.string.pref_bg_erase_success, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.pref_bg_erase_success, Toast.LENGTH_LONG).show()
         } else {
             logger.log("Background photos directory is empty.")
             Toast.makeText(context, R.string.pref_bg_erase_failed_empty, Toast.LENGTH_SHORT).show()

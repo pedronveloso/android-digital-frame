@@ -35,6 +35,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pedronveloso.digitalframe.BuildConfig
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.data.openweather.WindSpeedUnit
+import com.pedronveloso.digitalframe.elements.background.BackgroundAlbumViewModel
 import com.pedronveloso.digitalframe.elements.background.BackgroundPhotosEraser
 import com.pedronveloso.digitalframe.elements.clock.RealClockPersistence
 import com.pedronveloso.digitalframe.elements.countdown.RealCountdownPersistence
@@ -54,6 +55,7 @@ import com.pedronveloso.digitalframe.ui.preferences.LabelPreferenceComposable
 import com.pedronveloso.digitalframe.ui.preferences.LocationPreferenceComposable
 import com.pedronveloso.digitalframe.ui.preferences.SwitchPreferenceComposable
 import com.pedronveloso.digitalframe.utils.log.LogStoreProvider
+import java.io.File
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.Locale
@@ -135,6 +137,14 @@ class PreferencesActivity : ComponentActivity() {
     private fun addBackgroundMenuSection(topLevelPrefs: PreferencesRoot.Builder) {
         val backgroundSection =
             PreferencesSection.Builder("background", getString(R.string.pref_bg_title))
+
+        val photoPickerLabel = PreferenceItem.Label(id = "photo_picker_label", text = getString(R.string.pref_bg_photo_picker_notice))
+
+        val photoCountLabel = PreferenceItem.Label(
+            id = "photo_count_label",
+            text = getString(R.string.pref_bg_photo_count, getPhotoCount())
+        )
+
         val pickBackgroundImagesBtn =
             PreferenceItem.Button(
                 id = "pick_background_images",
@@ -149,7 +159,7 @@ class PreferencesActivity : ComponentActivity() {
                 },
             )
 
-        val eraseAllPhotosButton =
+        val eraseAllPhotosBtn =
             PreferenceItem.Button(
                 id = "erase_all_photos",
                 label = getString(R.string.pref_bg_erase_all),
@@ -159,9 +169,20 @@ class PreferencesActivity : ComponentActivity() {
                 },
             )
 
+        backgroundSection.addPreference(photoPickerLabel)
         backgroundSection.addPreference(pickBackgroundImagesBtn)
-        backgroundSection.addPreference(eraseAllPhotosButton)
+        backgroundSection.addPreference(eraseAllPhotosBtn)
+        backgroundSection.addPreference(photoCountLabel)
         topLevelPrefs.addSection(backgroundSection.build())
+    }
+
+    private fun getPhotoCount(): Int {
+        val directory = File(filesDir, BackgroundAlbumViewModel.BACKGROUND_PHOTOS_DIR)
+        return if (directory.exists() && directory.isDirectory) {
+            directory.listFiles { file -> file.isFile && file.extension.lowercase() in listOf("jpg", "jpeg", "png") }?.size ?: 0
+        } else {
+            0
+        }
     }
 
     private fun addCountdownMenuSection(

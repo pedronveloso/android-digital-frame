@@ -13,11 +13,15 @@
     <string name="save_btn">Save</string>
 
     <!-- Background -->
+    <string name="pref_bg_photo_picker_notice">When using the photo picker below, pictures will be copied into the application’s internal storage. If you make subsequent changes to your pictures directory they won’t be reflected in the app, you must use this file picker to add new photos.</string>
     <string name="pref_bg_photo_picker">Pick photos</string>
     <string name="pref_bg_erase_all">Erase all photos</string>
     <string name="pref_bg_erase_all_warning">Are you sure you want to delete all photos from the digital album? This action cannot be undone.</string>
     <string name="pref_bg_erase_success">Personal photos deleted successfully.</string>
     <string name="pref_bg_erase_failed_empty">No personal photos found.</string>
+    <string name="pref_bg_import_progress">Loading image %1$s out of %2$s</string>
+    <string name="pref_bg_photo_count">Number of photos: %1$d\n\nNote: Currently this number doesn’t update until you re-enter the settings menu.</string>
+
 
     <!-- General Settings -->
     <string name="pref_general_title">General</string>
@@ -119,6 +123,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="pref_bg_import_progress">Loading image %1$s out of %2$s</string>
+
 
 </resources>

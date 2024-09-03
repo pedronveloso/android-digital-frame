@@ -105,6 +105,7 @@ dependencies {
     androidTestImplementation(libs.espressoCore)
 
     // Unit testing support.
+    testImplementation(libs.testCoreKtx)
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.robolectric)

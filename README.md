@@ -62,5 +62,10 @@ Let's keep this project free and accessible for all!
 
 ## License 📜
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file
-for details.
+This project is licensed under a dual license setup:
+
+- **GNU General Public License v3.0**: The software is available under the GPLv3 license for non-commercial use. You can view the full license text in the [LICENSE](LICENSE) file.
+
+- **Commercial License**: For any commercial use of the software, including but not limited to integrating it into proprietary products or using it in a commercial environment, prior authorization is required. Please review the [COMMERCIAL LICENSE](COMMERCIAL_LICENSE.md) file for details on obtaining a commercial license and contact information.
+
+By using this software, you agree to abide by the terms of the relevant license.

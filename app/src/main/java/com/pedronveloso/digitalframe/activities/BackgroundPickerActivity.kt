@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,13 +54,13 @@ class BackgroundPickerActivity : ComponentActivity() {
                 val context = LocalContext.current
                 val coroutineScope = rememberCoroutineScope()
 
-                val progress = remember { mutableStateOf(0) }
-                val totalImages = remember { mutableStateOf(0) }
+                val progress = remember { mutableIntStateOf(0) }
+                val totalImages = remember { mutableIntStateOf(0) }
                 val isLoading = remember { mutableStateOf(false) }
 
                 ImagePickerLauncher(
                     onImagesPicked = { uris ->
-                        totalImages.value = uris.size
+                        totalImages.intValue = uris.size
                         isLoading.value = true
 
                         coroutineScope.launch(Dispatchers.IO) {
@@ -70,7 +71,7 @@ class BackgroundPickerActivity : ComponentActivity() {
                                 imageUris = uris,
                                 directoryName = BackgroundAlbumViewModel.BACKGROUND_PHOTOS_DIR,
                                 onProgress = { currentProgress ->
-                                        progress.value = currentProgress
+                                        progress.intValue = currentProgress
                                 }
                             )
                             withContext(Dispatchers.Main) {
@@ -80,8 +81,8 @@ class BackgroundPickerActivity : ComponentActivity() {
                         }
                     },
                     isLoading = isLoading.value,
-                    progress = progress.value,
-                    totalImages = totalImages.value
+                    progress = progress.intValue,
+                    totalImages = totalImages.intValue
                 )
             }
         }

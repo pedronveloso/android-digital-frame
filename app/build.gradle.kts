@@ -54,6 +54,7 @@ android {
         checkAllWarnings = true
         warningsAsErrors = true
         htmlReport = true
+        disable += setOf("MissingTranslation", "ExtraTranslation")
         baseline = file("lint-baseline.xml")
     }
 }

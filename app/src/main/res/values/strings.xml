@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">Digital Photo Album</string>
 
     <!-- General purpose -->
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
     <!-- Main -->

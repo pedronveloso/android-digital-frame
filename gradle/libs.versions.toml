@@ -1,7 +1,7 @@
 [versions]
 desugar_jdk_libs = "2.0.4"
 kotlin = "2.0.20"
-gradle = "8.5.2"
+gradle = "8.6.0"
 googleServices = "4.4.2"
 crashlytics = "3.0.2"
 hilt = "2.52"

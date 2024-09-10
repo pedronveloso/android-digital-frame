@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.pedronveloso.digitalframe"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pedronveloso.digitalframe"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 12
         versionName = "0.0.12-DEV"
 

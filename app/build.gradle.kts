@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.coreKtx)
     implementation(libs.navigationCompose)
     implementation(libs.exifInterface)
+    implementation(libs.androidxActivity)
 
     // ViewModel & Lifecycle.
     implementation(libs.lifecycleViewmodelKtx)

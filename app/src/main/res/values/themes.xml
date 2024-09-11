@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="Theme.DigitalFrame" parent="android:Theme.Material.Light.NoActionBar.Fullscreen" />
+    <style name="Theme.DigitalFrame" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
+    </style>
 
 </resources>

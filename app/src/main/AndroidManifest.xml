@@ -19,11 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DigitalFrame"
         android:largeHeap="true"
-        tools:targetApi="34">
+        tools:targetApi="35">
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
-            android:immersive="true"
             android:theme="@style/Theme.DigitalFrame">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

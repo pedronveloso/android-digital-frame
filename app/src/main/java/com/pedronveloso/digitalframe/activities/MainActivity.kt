@@ -9,6 +9,7 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -39,14 +40,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedronveloso.digitalframe.R
 import com.pedronveloso.digitalframe.elements.background.AlbumBackground
@@ -85,6 +82,8 @@ class MainActivity : ComponentActivity() {
         // Keep Screen On.
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        enableEdgeToEdge()
+
         setContent {
             DigitalFrameTheme {
                 val context = LocalContext.current
@@ -96,12 +95,13 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     color = AppColorScheme.background,
                 ) {
-                    hideSystemUI(LocalView.current)
                     if (userPromptedForCrashCollection.not()) {
                         ShowCrashCollectionNotice { userChoice ->
                             userPromptedForCrashCollection = true
@@ -141,14 +141,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun hideSystemUI(view: View) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, view).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
 }
 
 @Composable
